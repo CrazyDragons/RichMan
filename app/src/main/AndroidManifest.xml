@@ -10,8 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RichMan">
         <activity
+            android:name=".Game"
+            android:exported="false"
+            android:screenOrientation="landscape"/>
+        <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.RichMan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
