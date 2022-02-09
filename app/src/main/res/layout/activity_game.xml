@@ -5,37 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context=".Game">
+    tools:context=".activity.GameActivity">
 
-    <HorizontalScrollView
-        android:id="@+id/mCamera"
+    <FrameLayout
         android:layout_weight="3"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_height="wrap_content">
 
-        <FrameLayout
+        <HorizontalScrollView
+            android:id="@+id/mCamera"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <com.hzw.android.richman.MapView
-                android:id="@+id/mMap"
+            <FrameLayout
+                android:id="@+id/mRootMap"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/mPlayer"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@color/green"/>
+                <com.hzw.android.richman.view.MapView
+                    android:id="@+id/mBaseMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
 
 
-        </FrameLayout>
+            </FrameLayout>
 
-    </HorizontalScrollView>
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:textColor="@color/white"
+            android:text="城池信息"
+            android:gravity="center"
+            android:background="@color/red"
+            android:layout_gravity="center"/>
+
+
+    </FrameLayout>
+
+
 
     <LinearLayout
         android:layout_weight="1"

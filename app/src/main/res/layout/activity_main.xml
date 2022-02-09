@@ -7,9 +7,10 @@
     android:background="@drawable/bg_main"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <TextView
+        android:id="@+id/mTvGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
@@ -20,6 +21,7 @@
         android:textSize="32sp" />
 
     <TextView
+        android:id="@+id/mTvGoOn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -42,6 +44,7 @@
         android:textSize="32sp" />
 
     <TextView
+        android:id="@+id/mTvExit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

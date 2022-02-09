@@ -1,8 +1,10 @@
-package com.hzw.android.richman
+package com.hzw.android.richman.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import com.hzw.android.richman.R
+import com.hzw.android.richman.bean.AreaBean
 import kotlinx.android.synthetic.main.view_city.view.*
 
 /**
@@ -12,7 +14,7 @@ import kotlinx.android.synthetic.main.view_city.view.*
  * note
  * create date 2022/2/9
  */
-class CityView @JvmOverloads constructor(
+class AreaView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -23,11 +25,11 @@ class CityView @JvmOverloads constructor(
     }
 
     private fun initViews(context: Context) {
-        inflate(context, R.layout.view_city, this)
+        inflate(context, R.layout.view_area, this)
     }
 
-    fun setData(i: Int) {
-        mTvName.text = "建筑$i"
+    fun setData(areaBean: AreaBean) {
+        mTvName.text = areaBean.name
     }
 
 

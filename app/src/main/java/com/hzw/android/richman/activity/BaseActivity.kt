@@ -1,12 +1,17 @@
-package com.hzw.android.richman
+package com.hzw.android.richman.activity
 
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 
-
-class MainActivity : AppCompatActivity() {
-
+/**
+ * class BaseActivity
+ * @author CrazyDragon
+ * description
+ * note
+ * create date 2022/2/10
+ */
+open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,9 +20,5 @@ class MainActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        setContentView(R.layout.activity_main)
-
-
     }
-
 }
