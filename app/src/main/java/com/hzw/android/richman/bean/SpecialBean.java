@@ -14,12 +14,11 @@ import com.hzw.android.richman.R;
  */
 public class SpecialBean extends BaseMapBean {
 
-    MapType mapType;
     @ColorInt
     int color;
 
     public SpecialBean(MapType mapType) {
-        this.mapType = mapType;
+        this.type = mapType;
         if (mapType == MapType.START) {
             name =  "起点";
         }
@@ -51,31 +50,31 @@ public class SpecialBean extends BaseMapBean {
 
     public int getColor() {
 
-        if (mapType == MapType.START) {
+        if (type == MapType.START) {
             return R.color.start;
         }
-        if (mapType == MapType.ARMY) {
+        if (type == MapType.ARMY) {
             return R.color.army;
         }
-        if (mapType == MapType.GENERALS) {
+        if (type == MapType.GENERALS) {
             return R.color.generals;
         }
-        if (mapType == MapType.CHANCE) {
+        if (type == MapType.CHANCE) {
             return R.color.change;
         }
-        if (mapType == MapType.SHOP) {
+        if (type == MapType.SHOP) {
             return R.color.shop;
         }
-        if (mapType == MapType.MONEY) {
+        if (type == MapType.MONEY) {
             return R.color.money;
         }
-        if (mapType == MapType.BIG_MONEY) {
+        if (type == MapType.BIG_MONEY) {
             return R.color.big_money;
         }
-        if (mapType == MapType.FREE_GENERALS) {
+        if (type == MapType.FREE_GENERALS) {
             return R.color.free_generals;
         }
-        if (mapType == MapType.PRISON) {
+        if (type == MapType.PRISON) {
             return R.color.prison;
         }
         return 0;

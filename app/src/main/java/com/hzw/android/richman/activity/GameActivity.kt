@@ -22,6 +22,8 @@ class GameActivity : BaseActivity(),OnWalkListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        val isNewGame = intent.getBooleanExtra("newGame", true)
+
         playerOffset = ScreenUtil.dp2px(this, Value.PLAYER_OFFSET)
         cameraOffsetX = (ScreenUtil.screenWidth * Value.CAMERA_OFFSET).toInt()
 

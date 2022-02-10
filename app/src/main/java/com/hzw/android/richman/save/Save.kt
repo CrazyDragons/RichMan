@@ -16,6 +16,7 @@ class Save : BaseSave() {
         }
 
         private const val MAP = "map"
+        private const val PLAYER = "player"
     }
 
     fun saveMap(json: String) {
@@ -26,7 +27,16 @@ class Save : BaseSave() {
         return getStringData(MAP, "")
     }
 
+    fun savePlayer(json : String) {
+        putStringData(PLAYER, json)
+    }
+
+    fun loadPlayer(): String {
+        return getStringData(PLAYER, "")
+    }
+
     fun clean() {
         saveMap("")
+        savePlayer("")
     }
 }

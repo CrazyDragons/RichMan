@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import com.hzw.android.richman.R
 import com.hzw.android.richman.save.Save
-import com.hzw.android.richman.utils.LogUiti
 import com.hzw.android.richman.utils.ScreenUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -20,16 +19,18 @@ class MainActivity : BaseActivity() {
         ScreenUtil.getScreenHeight(this)
 
         mTvGame.setOnClickListener {
-            startActivity(Intent(this, GameActivity::class.java))
+            startActivity(Intent(this, ReadyActivity::class.java))
             finish()
         }
 
         mTvGoOn.setOnClickListener {
-            LogUiti.Print(Save.INSTANCE.loadMap())
+            startActivity(Intent(this, GameActivity::class.java).putExtra(("newGame"), false))
+            finish()
         }
 
         mTvExit.setOnClickListener {
             Save.INSTANCE.clean()
+            finish()
         }
     }
 
