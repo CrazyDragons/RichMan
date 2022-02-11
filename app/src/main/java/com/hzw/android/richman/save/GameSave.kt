@@ -7,12 +7,12 @@ package com.hzw.android.richman.save
  * note
  * create date 2022/2/10
  */
-class Save : BaseSave() {
+class GameSave : BaseSave() {
 
     companion object {
 
-        val INSTANCE: Save by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-            Save()
+        val INSTANCE: GameSave by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+            GameSave()
         }
 
         private const val MAP = "map"

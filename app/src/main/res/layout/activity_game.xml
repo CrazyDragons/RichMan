@@ -71,7 +71,7 @@
             android:textColor="@color/white"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:background="@color/design_default_color_secondary"
+            android:background="@color/area"
             android:gravity="center">
 
             <TextView
@@ -95,7 +95,7 @@
                 android:layout_width="45dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:background="#FF0011"
+                android:background="@drawable/selector_btn"
                 android:textColor="@color/white"
                 android:text="投掷"/>
 
@@ -105,7 +105,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
                 android:gravity="center"
-                android:background="#FF0011"
+                android:background="@drawable/selector_btn"
                 android:textColor="@color/white"
                 android:text="结束"/>
 

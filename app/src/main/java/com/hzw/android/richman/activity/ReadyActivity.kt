@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.AddPlayerAdapter
 import com.hzw.android.richman.bean.PlayerBean
-import com.hzw.android.richman.save.Save
+import com.hzw.android.richman.save.GameSave
 import kotlinx.android.synthetic.main.activity_ready.*
 
 
@@ -49,7 +49,7 @@ class ReadyActivity : BaseActivity() {
                     adapter.data[i].name = adapter.data[i].name + (i+1).toString()
                 }
             }
-            Save.INSTANCE.savePlayer(JSON.toJSONString(adapter.data))
+            GameSave.INSTANCE.savePlayer(JSON.toJSONString(adapter.data))
             startActivity(Intent(this, GameActivity::class.java).putExtra(("newGame"), true))
             finish()
         }

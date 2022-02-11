@@ -2,7 +2,7 @@ package com.hzw.android.richman.date
 
 import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.bean.PlayerBean
-import com.hzw.android.richman.save.Save
+import com.hzw.android.richman.save.GameSave
 
 /**
  * class Date
@@ -22,7 +22,7 @@ class GameData private constructor() {
     }
 
     fun load() {
-        playerData = JSON.parseArray(Save.INSTANCE.loadPlayer(), PlayerBean::class.java)
+        playerData = JSON.parseArray(GameSave.INSTANCE.loadPlayer(), PlayerBean::class.java)
     }
 
 

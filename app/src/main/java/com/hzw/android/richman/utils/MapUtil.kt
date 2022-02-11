@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  */
 object MapUtil {
 
-    var mDisposable: Disposable? = null
+    var mWalkDisposable: Disposable? = null
 
     fun walk(onWalkListener: OnWalkListener) {
         Observable.interval(0, WALK_TURN_TIME, TimeUnit.MILLISECONDS)
@@ -27,15 +27,15 @@ object MapUtil {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Long?> {
                 override fun onSubscribe(d: Disposable) {
-                    mDisposable = d
+                    mWalkDisposable = d
                 }
 
                 override fun onNext(t: Long) {
-
+                    val count = (Math.random() * MAX_WALK + 1).toInt()
+                    onWalkListener.onWalkFinish(count, false)
                     if (t == WALK_TURN) {
-                        val count = (Math.random() * MAX_WALK + 1).toInt()
-                        onWalkListener.onWalkFinish(count)
-                        mDisposable?.dispose()
+                        onWalkListener.onWalkFinish(count, true)
+                        mWalkDisposable?.dispose()
                     }
 
                 }
