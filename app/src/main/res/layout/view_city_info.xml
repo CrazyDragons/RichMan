@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
+    android:background="@color/red"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/mIvCityCover"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/gray"/>
+
+    <LinearLayout
+        android:id="@+id/mLlInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="@id/mIvCityCover"
+        app:layout_constraintStart_toEndOf="@id/mIvCityCover"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp">
+
+        <TextView
+            android:id="@+id/mTvCityName"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="城池"/>
+
+        <TextView
+            android:id="@+id/mTvCityLevel"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="4"/>
+
+        <ImageView
+            android:id="@+id/mIvCityGeneral"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:textColor="@color/white"
+            android:text="4"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mLlLevel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="@id/mLlInfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mLlInfo"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/mTvCityLevelCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="1000"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/mTvCityLevel_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="1000"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/mTvCityLevel_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="1000"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/mTvCityLevel_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="1000"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/mTvCityLevel_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1000"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/mTvCitySale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/mLlInfo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="1000"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/mTvCityDesc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@id/mIvCityCover"
+        app:layout_constraintEnd_toEndOf="@id/mIvCityCover"
+        app:layout_constraintTop_toBottomOf="@id/mIvCityCover"
+        android:text="持有全部同色城池，则过路费翻倍"
+        android:textColor="@color/white"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

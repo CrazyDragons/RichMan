@@ -3,6 +3,7 @@ package com.hzw.android.richman.bean;
 import androidx.annotation.ColorInt;
 
 import com.hzw.android.richman.R;
+import com.hzw.android.richman.base.BaseMapBean;
 
 /**
  * class MapBean

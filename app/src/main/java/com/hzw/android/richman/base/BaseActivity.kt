@@ -1,4 +1,4 @@
-package com.hzw.android.richman.activity
+package com.hzw.android.richman.base
 
 import android.os.Bundle
 import android.view.View
@@ -33,8 +33,8 @@ open class BaseActivity : AppCompatActivity() {
             (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        playerOffsetX = ScreenUtil.dp2px(this, Value.PLAYER_OFFSETX)
-        playerOffsetY = ScreenUtil.dp2px(this, Value.PLAYER_OFFSETY)
+        playerOffsetX = ScreenUtil.dp2px(this, Value.PLAYER_OFFSET_X)
+        playerOffsetY = ScreenUtil.dp2px(this, Value.PLAYER_OFFSET_Y)
         cameraOffsetX = (ScreenUtil.screenWidth * Value.CAMERA_OFFSET).toInt()
     }
 }

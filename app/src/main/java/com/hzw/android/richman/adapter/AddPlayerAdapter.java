@@ -22,7 +22,7 @@ public class AddPlayerAdapter extends BaseQuickAdapter<PlayerBean, BaseViewHolde
     public AddPlayerAdapter() {
         super(R.layout.item_add_player);
         addChildClickViewIds(R.id.mTvDelete);
-        setNewInstance(new ArrayList<PlayerBean>());
+        setNewInstance(new ArrayList<>());
     }
 
     @Override

@@ -4,7 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.hzw.android.richman.R
-import com.hzw.android.richman.save.GameSave
+import com.hzw.android.richman.base.BaseActivity
+import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.utils.LogUiti
 import com.hzw.android.richman.utils.ScreenUtil
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,8 +18,8 @@ class MainActivity : BaseActivity(),View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        LogUiti.Print(""+ScreenUtil.getScreenWidth(this))
-        LogUiti.Print(""+ScreenUtil.getScreenHeight(this))
+        LogUiti.print(""+ScreenUtil.getScreenWidth(this))
+        LogUiti.print(""+ScreenUtil.getScreenHeight(this))
 
         mTvGame.setOnClickListener(this)
         mTvGoOn.setOnClickListener(this)

@@ -36,13 +36,11 @@
 
         </HorizontalScrollView>
 
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            android:textColor="@color/white"
-            android:text="城池信息"
-            android:gravity="center"
-            android:background="@color/red"
+        <com.hzw.android.richman.view.CityInfoView
+            android:id="@+id/mCityInfoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_gravity="center"/>
 
 

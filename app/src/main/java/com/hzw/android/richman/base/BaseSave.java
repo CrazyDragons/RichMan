@@ -1,4 +1,4 @@
-package com.hzw.android.richman.save;
+package com.hzw.android.richman.base;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,11 +9,7 @@ import androidx.annotation.NonNull;
 import com.hzw.android.richman.MyApplication;
 
 /**
- * 轻量级存储工具
- * <p>
- * Created by AdminFun on 2013-10
- *
- * @version 1.0
+ * @author hezhongwei
  */
 public abstract class BaseSave {
 
@@ -26,7 +22,6 @@ public abstract class BaseSave {
         this.editor = preferences.edit();
     }
 
-    //// int
     protected boolean putIntData(String key, int value) {
         this.editor.putInt(key, value);
         return editor.commit();
@@ -40,7 +35,6 @@ public abstract class BaseSave {
         return preferences.getInt(key, default_);
     }
 
-    //// String
     protected boolean putStringData(@NonNull String key, @NonNull String value) {
         this.editor.putString(key, value);
         return editor.commit();
@@ -54,7 +48,6 @@ public abstract class BaseSave {
         return preferences.getString(key, default_);
     }
 
-    //// long
     protected boolean putLongData(String key, long value) {
         this.editor.putLong(key, value);
         return editor.commit();
@@ -64,7 +57,6 @@ public abstract class BaseSave {
         return preferences.getLong(key, -1);
     }
 
-    //// boolean
     protected boolean putBoolearnData(String key, boolean istrue) {
         this.editor.putBoolean(key, istrue);
         return editor.commit();

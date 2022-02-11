@@ -11,7 +11,7 @@ import android.util.Log;
  * create date 2022/2/9
  */
 public class LogUiti {
-    public static void Print(String msg) {
+    public static void print(String msg) {
         Log.e("日志", msg);
     }
 } 

@@ -10,8 +10,8 @@ package com.hzw.android.richman.config;
  */
 public class Value {
 
-    public static final int PLAYER_OFFSETX = 20;
-    public static final int PLAYER_OFFSETY = 30;
+    public static final int PLAYER_OFFSET_X = 20;
+    public static final int PLAYER_OFFSET_Y = 30;
     public static final float CAMERA_OFFSET = 0.375f;
 
     public static final int MAX_WALK = 30;

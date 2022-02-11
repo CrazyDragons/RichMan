@@ -1,4 +1,4 @@
-package com.hzw.android.richman.bean;
+package com.hzw.android.richman.base;
 
 /**
  * class BaseMapBean

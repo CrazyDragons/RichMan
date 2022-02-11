@@ -1,5 +1,7 @@
 package com.hzw.android.richman.bean;
 
+import com.hzw.android.richman.base.BaseMapBean;
+
 /**
  * class AreaBean
  *
@@ -8,7 +10,7 @@ package com.hzw.android.richman.bean;
  * note
  * create date 2022/2/9
  */
-public class AreaBean extends BaseMapBean{
+public class AreaBean extends BaseMapBean {
     int buyPrice = 1000;
     int salePrice;
 

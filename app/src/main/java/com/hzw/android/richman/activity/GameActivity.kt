@@ -6,10 +6,14 @@ import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import com.hzw.android.richman.R
+import com.hzw.android.richman.base.BaseActivity
+import com.hzw.android.richman.base.BaseMapBean
+import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
-import com.hzw.android.richman.date.GameData
+import com.hzw.android.richman.game.GameData
+import com.hzw.android.richman.game.GameSave
+import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.listener.OnWalkListener
-import com.hzw.android.richman.save.GameSave
 import com.hzw.android.richman.utils.LogUiti
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.view.PlayerView
@@ -21,7 +25,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_game.*
 import java.util.concurrent.TimeUnit
 
-class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener {
+class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMapClickListener {
 
     private var optionPlayerIndex = 0
     private var playerViewList = mutableListOf<PlayerView>()
@@ -40,6 +44,7 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener {
 
         mBtnWalk.setOnClickListener(this)
         mBtnFinishOption.setOnClickListener(this)
+        mBaseMap.onMapClickListener = this
 
         inItGame()
     }
@@ -126,10 +131,17 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener {
                         restart = false
                     }
 
+                    if (GameData.INSTANCE.mapData[next] is CityBean) {
+                        mCityInfoView.setData(GameData.INSTANCE.mapData[next] as CityBean)
+                    }
+
                     if (t == count.toLong()) {
                         playerBean.walkIndex = next
                         mDisposable?.dispose()
                     }
+
+
+
 
                 }
 
@@ -163,7 +175,7 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener {
     }
 
     private fun optionComputer() {
-        LogUiti.Print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "正在操作")
+        LogUiti.print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "正在操作")
     }
 
     override fun onClick(view: View?) {
@@ -174,10 +186,10 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener {
             R.id.mBtnWalk -> {
                 optionStatus(walk = false, finish = true)
                 if (GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
-                    LogUiti.Print("玩家点了投掷")
+                    LogUiti.print("玩家点了投掷")
                 } else {
                     optionStatus(walk = false, finish = false)
-                    LogUiti.Print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "点了投掷")
+                    LogUiti.print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "点了投掷")
                 }
                 MapUtil.walk(this)
             }
@@ -186,15 +198,15 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener {
             R.id.mBtnFinishOption -> {
 
                 if (GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
-                    LogUiti.Print("玩家点了结束")
+                    LogUiti.print("玩家点了结束")
                 } else {
-                    LogUiti.Print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "点了结束")
+                    LogUiti.print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "点了结束")
                 }
 
                 optionPlayerIndex = whichPlayerWalk()
 
                 if (GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
-                    LogUiti.Print("轮到玩家")
+                    LogUiti.print("轮到玩家")
                     optionStatus(walk = true, finish = false)
                 } else {
                     optionStatus(walk = false, finish = false)
@@ -209,6 +221,14 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener {
     private fun optionStatus(walk: Boolean, finish: Boolean) {
         mBtnWalk.isEnabled = walk
         mBtnFinishOption.isEnabled = finish
+    }
+
+    override fun onMapClick(baseMapBean: BaseMapBean) {
+        when(baseMapBean) {
+            is CityBean -> {
+                mCityInfoView.setData(baseMapBean)
+            }
+        }
     }
 
 

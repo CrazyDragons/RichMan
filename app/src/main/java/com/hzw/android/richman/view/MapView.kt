@@ -5,13 +5,14 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.AreaBean
-import com.hzw.android.richman.bean.BaseMapBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.SpecialBean
 import com.hzw.android.richman.config.Value.X_COUNT
 import com.hzw.android.richman.config.Value.Y_COUNT
-import com.hzw.android.richman.init.Init
+import com.hzw.android.richman.game.GameInit
+import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.utils.ScreenUtil
 
 /**
@@ -28,7 +29,7 @@ class MapView @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     var mapViewList = mutableListOf<View>()
-
+    var onMapClickListener: OnMapClickListener? = null
 
     init {
 
@@ -36,7 +37,7 @@ class MapView @JvmOverloads constructor(
         /**
          * 满足 (x+y)*2 - 4 = 格子数
          */
-        val sumCount = Init.INSTANCE.map().size
+        val sumCount = GameInit.INSTANCE.map().size
 
         val itemWidth = ScreenUtil.screenWidth / X_COUNT * 2
         val itemHeight = ScreenUtil.screenHeight / Y_COUNT
@@ -46,19 +47,22 @@ class MapView @JvmOverloads constructor(
         for (i in 0 until sumCount) {
 
             var mapItem: View
-            when (Init.INSTANCE.map()[i].type) {
+            when (GameInit.INSTANCE.map()[i].type) {
                 BaseMapBean.MapType.CITY -> {
                     mapItem = CityView(context)
-                    mapItem.setData(Init.INSTANCE.map()[i] as CityBean)
+                    mapItem.setData(GameInit.INSTANCE.map()[i] as CityBean)
                 }
                 BaseMapBean.MapType.AREA -> {
                     mapItem = AreaView(context)
-                    mapItem.setData(Init.INSTANCE.map()[i] as AreaBean)
+                    mapItem.setData(GameInit.INSTANCE.map()[i] as AreaBean)
                 }
                 else -> {
                     mapItem = SpecialView(context)
-                    mapItem.setData(Init.INSTANCE.map()[i] as SpecialBean)
+                    mapItem.setData(GameInit.INSTANCE.map()[i] as SpecialBean)
                 }
+            }
+            mapItem.setOnClickListener {
+                onMapClickListener?.onMapClick(GameInit.INSTANCE.map()[i])
             }
 
             mapItem.id = View.generateViewId()

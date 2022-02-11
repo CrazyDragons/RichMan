@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.AddPlayerAdapter
+import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.bean.PlayerBean
-import com.hzw.android.richman.save.GameSave
+import com.hzw.android.richman.game.GameSave
 import kotlinx.android.synthetic.main.activity_ready.*
 
 
