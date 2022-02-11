@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.hzw.android.richman.R
+import com.hzw.android.richman.bean.PlayerBean
+import kotlinx.android.synthetic.main.view_player.view.*
 
 /**
  * class CityView
@@ -24,6 +26,10 @@ class PlayerView @JvmOverloads constructor(
 
     private fun initViews(context: Context) {
         inflate(context, R.layout.view_player, this)
+    }
+
+    fun setData(playerBean: PlayerBean) {
+        mTvName.text = playerBean.name
     }
 
 }

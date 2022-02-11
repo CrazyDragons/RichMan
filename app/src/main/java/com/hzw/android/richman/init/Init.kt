@@ -1,12 +1,9 @@
 package com.hzw.android.richman.init
 
-import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.BaseMapBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.SpecialBean
-import com.hzw.android.richman.date.Data
-import com.hzw.android.richman.save.Save
 
 /**
  * class InitMap
@@ -73,8 +70,6 @@ class Init private constructor() {
         mapList.add(SpecialBean(BaseMapBean.MapType.BIG_MONEY))
         mapList.add(SpecialBean(BaseMapBean.MapType.FREE_GENERALS))
 
-        Data.INSTANCE.mapList = mapList
-        Save.INSTANCE.saveMap(JSON.toJSONString(Data.INSTANCE.mapList))
 
         return mapList
     }

@@ -34,7 +34,8 @@ class ReadyActivity : BaseActivity() {
 
 
         mTvAddPlayer.setOnClickListener {
-            showInput()
+            adapter.addData(PlayerBean("玩家", true))
+//            showInput()
         }
 
         mTvAddComputer.setOnClickListener {
@@ -50,6 +51,7 @@ class ReadyActivity : BaseActivity() {
             }
             Save.INSTANCE.savePlayer(JSON.toJSONString(adapter.data))
             startActivity(Intent(this, GameActivity::class.java).putExtra(("newGame"), true))
+            finish()
         }
 
     }

@@ -99,6 +99,16 @@
                 android:textColor="@color/white"
                 android:text="投掷"/>
 
+            <TextView
+                android:id="@+id/mBtnFinishOption"
+                android:layout_width="45dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:gravity="center"
+                android:background="#FF0011"
+                android:textColor="@color/white"
+                android:text="结束"/>
+
 
         </LinearLayout>
 
