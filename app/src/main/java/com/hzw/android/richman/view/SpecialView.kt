@@ -3,7 +3,6 @@ package com.hzw.android.richman.view
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.SpecialBean
 import kotlinx.android.synthetic.main.view_special.view.*
@@ -30,8 +29,9 @@ class SpecialView @JvmOverloads constructor(
     }
 
     fun setData(specialBean: SpecialBean) {
+//        mTvName.visibility = if (specialBean.type == BaseMapBean.MapType.START) GONE else VISIBLE
         mTvName.text = specialBean.name
-        mIvSpecialBg.setBackgroundColor(ContextCompat.getColor(context, specialBean.color))
+        mIvSpecialBg.setImageResource(specialBean.bg)
     }
 
 

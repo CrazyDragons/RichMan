@@ -1,6 +1,6 @@
 package com.hzw.android.richman.bean;
 
-import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 
 import com.hzw.android.richman.R;
 import com.hzw.android.richman.base.BaseMapBean;
@@ -15,8 +15,8 @@ import com.hzw.android.richman.base.BaseMapBean;
  */
 public class SpecialBean extends BaseMapBean {
 
-    @ColorInt
-    int color;
+    @DrawableRes
+    int bg;
 
     public SpecialBean(MapType mapType) {
         this.type = mapType;
@@ -49,40 +49,40 @@ public class SpecialBean extends BaseMapBean {
         }
     }
 
-    public int getColor() {
+    public int getBg() {
 
         if (type == MapType.START) {
-            return R.color.start;
+            return R.drawable.bg_start;
         }
         if (type == MapType.ARMY) {
-            return R.color.army;
+            return R.drawable.bg_army;
         }
         if (type == MapType.GENERALS) {
-            return R.color.generals;
+            return R.drawable.bg_generals;
         }
         if (type == MapType.CHANCE) {
-            return R.color.change;
+            return R.drawable.bg_chance;
         }
         if (type == MapType.SHOP) {
-            return R.color.shop;
+            return R.drawable.bg_shop;
         }
         if (type == MapType.MONEY) {
-            return R.color.money;
+            return R.drawable.bg_money;
         }
         if (type == MapType.BIG_MONEY) {
-            return R.color.big_money;
+            return R.drawable.bg_big_money;
         }
         if (type == MapType.FREE_GENERALS) {
-            return R.color.free_generals;
+            return R.drawable.bg_free_generals;
         }
         if (type == MapType.PRISON) {
-            return R.color.prison;
+            return R.drawable.bg_prison;
         }
         return 0;
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public void setBg(int bg) {
+        this.bg = bg;
     }
 
 }
