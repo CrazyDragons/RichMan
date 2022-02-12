@@ -3,7 +3,7 @@ package com.hzw.android.richman.game
 import com.hzw.android.richman.base.BaseSave
 
 /**
- * class Save
+ * class GameSave
  * @author CrazyDragon
  * description
  * note

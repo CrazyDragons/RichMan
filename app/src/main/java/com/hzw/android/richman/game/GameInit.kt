@@ -8,7 +8,7 @@ import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.SpecialBean
 
 /**
- * class InitMap
+ * class GameInit
  * @author CrazyDragon
  * description
  * note

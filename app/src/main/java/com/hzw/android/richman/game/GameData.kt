@@ -14,8 +14,10 @@ import com.hzw.android.richman.bean.PlayerBean
  */
 class GameData private constructor() {
 
+    var optionPlayerIndex = 0
     var playerData = mutableListOf<PlayerBean>()
     var mapData = mutableListOf<BaseMapBean>()
+    var logData = mutableListOf<String>()
 
     companion object {
         val INSTANCE: GameData by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -38,6 +40,10 @@ class GameData private constructor() {
                 mapData.add(JSON.parseObject(jsonObject.toJSONString(), BaseMapBean::class.java))
             }
         }
+    }
+
+    fun currentPlayer():PlayerBean {
+        return playerData[optionPlayerIndex]
     }
 
 

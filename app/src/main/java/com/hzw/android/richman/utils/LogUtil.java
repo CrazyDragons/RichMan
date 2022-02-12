@@ -10,7 +10,7 @@ import android.util.Log;
  * note
  * create date 2022/2/9
  */
-public class LogUiti {
+public class LogUtil {
 
     final static String TAG = "日志";
 

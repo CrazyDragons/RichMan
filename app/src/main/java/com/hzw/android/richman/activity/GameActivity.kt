@@ -13,10 +13,11 @@ import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.game.GameData
+import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameSave
+import com.hzw.android.richman.listener.OnAddLogListener
 import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.listener.OnWalkListener
-import com.hzw.android.richman.utils.LogUiti
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.ToastUitl
 import com.hzw.android.richman.view.PlayerView
@@ -28,9 +29,12 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_game.*
 import java.util.concurrent.TimeUnit
 
-class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMapClickListener {
+class GameActivity : BaseActivity(),
+    OnWalkListener,
+    View.OnClickListener,
+    OnMapClickListener,
+    OnAddLogListener {
 
-    private var optionPlayerIndex = 0
     private var playerViewList = mutableListOf<PlayerView>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +57,9 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
         mBtnWalk.setOnClickListener(this)
         mBtnFinishOption.setOnClickListener(this)
         mBaseMap.onMapClickListener = this
+        GameLog.INSTANCE.onAddLogListener = this
         mRvPlayerInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        mRvLog.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
     }
 
 
@@ -61,11 +67,15 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
 
         GameData.INSTANCE.load()
 
-        val adapter = PlayerInfoAdapter()
-        adapter.setNewInstance(GameData.INSTANCE.playerData)
-        mRvPlayerInfo.adapter = adapter
+
+        val playerInfoAdapter = PlayerInfoAdapter()
+        playerInfoAdapter.setNewInstance(GameData.INSTANCE.playerData)
+        mRvPlayerInfo.adapter = playerInfoAdapter
+
+        mRvLog.adapter = GameLog.INSTANCE.logAdapter
 
         Handler(Looper.getMainLooper()).postDelayed({
+
 
             for (item in GameData.INSTANCE.playerData) {
 
@@ -77,9 +87,14 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
                 movePlayer(playerView, item, 0, this)
             }
 
-            if (!GameData.INSTANCE.playerData[0].isPlayer) {
-                mBtnWalk.performClick()
-            }
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (!GameData.INSTANCE.playerData[0].isPlayer) {
+                    mBtnWalk.performClick()
+                }else {
+                    setTurn()
+                }
+            }, 2000)
 
         }, 200)
 
@@ -92,9 +107,11 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
 
         if (isFinish) {
 
+            GameLog.INSTANCE.addWalkLog(count)
+
             movePlayer(
-                playerViewList[optionPlayerIndex],
-                GameData.INSTANCE.playerData[optionPlayerIndex],
+                playerViewList[GameData.INSTANCE.optionPlayerIndex],
+                GameData.INSTANCE.currentPlayer(),
                 count,
                 this
             )
@@ -103,19 +120,23 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
 
     override fun onWalkFinish(isNewGame: Boolean) {
 
-        whichPlayerWalk()
+        if (!isNewGame) {
 
-        setTurn()
-
-        optionStatus(walk = isNewGame, finish = !isNewGame)
-
-        if (!GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
+            optionStatus(walk = isNewGame, finish = !isNewGame && GameData.INSTANCE.currentPlayer().isPlayer)
 
             optionComputer()
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                mBtnFinishOption.performClick()
-            }, 200)
+            whichPlayerWalk()
+
+            setTurn()
+
+            if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+
+                Handler(Looper.getMainLooper()).postDelayed({
+
+                    mBtnFinishOption.performClick()
+                }, 2000)
+            }
         }
     }
 
@@ -146,7 +167,6 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
                             restart = true
                         }
                         next -= mBaseMap.mapViewList.size
-
                     }
 
                     playerView.translationX = mBaseMap.mapViewList[next].x + playerOffsetX
@@ -168,8 +188,6 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
                     } else {
                         optionStatus(walk = false, finish = false)
                     }
-
-
                 }
 
                 override fun onError(e: Throwable) {
@@ -185,9 +203,9 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
         for (i in 0 until GameData.INSTANCE.playerData.size) {
             if (GameData.INSTANCE.playerData[i].isTurn) {
                 return if (i < GameData.INSTANCE.playerData.size - 1) {
-                    optionPlayerIndex = i + 1
+                    GameData.INSTANCE.optionPlayerIndex = i + 1
                 } else {
-                    optionPlayerIndex = 0
+                    GameData.INSTANCE.optionPlayerIndex = 0
                 }
             }
         }
@@ -197,11 +215,11 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
         for (item in GameData.INSTANCE.playerData) {
             item.isTurn = false
         }
-        GameData.INSTANCE.playerData[optionPlayerIndex].isTurn = true
+        GameData.INSTANCE.currentPlayer().isTurn = true
     }
 
     private fun optionComputer() {
-        LogUiti.print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "正在操作")
+        GameLog.INSTANCE.addOptionLog()
     }
 
     override fun onClick(view: View?) {
@@ -210,26 +228,14 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
 
             //点击投掷
             R.id.mBtnWalk -> {
-                if (GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
-                    LogUiti.print("玩家点了投掷")
-                } else {
-                    LogUiti.print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "点了投掷")
-                }
                 MapUtil.walk(this)
             }
 
             //点击结束
             R.id.mBtnFinishOption -> {
-
-                if (GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
-                    LogUiti.print("玩家点了结束")
-                } else {
-                    LogUiti.print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "点了结束")
-                }
-
-
-                if (GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
-                    LogUiti.print("轮到玩家")
+                GameLog.INSTANCE.addTurnLog()
+                mCamera.smoothScrollTo(playerViewList[GameData.INSTANCE.optionPlayerIndex].x.toInt() - cameraOffsetX, 0)
+                if (GameData.INSTANCE.currentPlayer().isPlayer) {
                     optionStatus(walk = true, finish = false)
                 } else {
                     Handler(Looper.getMainLooper()).postDelayed({
@@ -251,6 +257,10 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
                 mCityInfoView.setData(baseMapBean)
             }
         }
+    }
+
+    override fun onAddLog() {
+        mRvLog.scrollToPosition(GameLog.INSTANCE.logAdapter.data.size - 1)
     }
 
 
