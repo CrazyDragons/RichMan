@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:background="@drawable/shape_rectangle_solid_green_r10"
+        android:background="@drawable/shape_rectangle_solid_green_r25"
         android:text="新游戏"
         android:textColor="@color/white"
         android:textSize="32sp" />
@@ -26,7 +26,7 @@
         android:layout_marginTop="20dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:background="@drawable/shape_rectangle_solid_green_r10"
+        android:background="@drawable/shape_rectangle_solid_green_r25"
         android:text="继续"
         android:textColor="@color/white"
         android:textSize="32sp" />
@@ -37,7 +37,7 @@
         android:layout_marginTop="20dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:background="@drawable/shape_rectangle_solid_green_r10"
+        android:background="@drawable/shape_rectangle_solid_green_r25"
         android:text="说明"
         android:textColor="@color/white"
         android:textSize="32sp" />
@@ -49,7 +49,7 @@
         android:layout_marginTop="20dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:background="@drawable/shape_rectangle_solid_green_r10"
+        android:background="@drawable/shape_rectangle_solid_green_r25"
         android:text="退出"
         android:textColor="@color/white"
         android:textSize="32sp" />

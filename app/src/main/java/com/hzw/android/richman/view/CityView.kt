@@ -36,38 +36,43 @@ class CityView @JvmOverloads constructor(
         mViewLevel.setLevel(cityBean.level, false)
         mTvOwner.text = cityBean.name
 
-        val colorA = ContextCompat.getColor(context, R.color.colorA)
-        val colorB = ContextCompat.getColor(context, R.color.colorB)
-        val colorC = ContextCompat.getColor(context, R.color.colorC)
-        val colorD = ContextCompat.getColor(context, R.color.colorD)
-        val colorE = ContextCompat.getColor(context, R.color.colorE)
-
-        when(cityBean.color) {
-            CityBean.Color.A -> {
-                mIvCityBg.setBackgroundColor(colorA)
-                mTvName.setTextColor(colorA)
-                mTvPrice.setBackgroundColor(colorA)
+        when (cityBean.color) {
+            CityBean.Color.RED -> {
+                mIvCityBg.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRed))
+                mTvName.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
+                mTvPrice.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRed))
             }
-            CityBean.Color.B -> {
-                mIvCityBg.setBackgroundColor(colorB)
-                mTvName.setTextColor(colorB)
-                mTvPrice.setBackgroundColor(colorB)
+            CityBean.Color.ORANGE -> {
+                mIvCityBg.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrange))
+                mTvName.setTextColor(ContextCompat.getColor(context, R.color.colorOrange))
+                mTvPrice.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrange))
             }
-            CityBean.Color.C -> {
-                mIvCityBg.setBackgroundColor(colorC)
-                mTvName.setTextColor(colorC)
-                mTvPrice.setBackgroundColor(colorC)
+            CityBean.Color.YELLOW -> {
+                mIvCityBg.setBackgroundColor(ContextCompat.getColor(context, R.color.colorYellow))
+                mTvName.setTextColor(ContextCompat.getColor(context, R.color.colorYellow))
+                mTvPrice.setBackgroundColor(ContextCompat.getColor(context, R.color.colorYellow))
             }
-            CityBean.Color.D -> {
-                mIvCityBg.setBackgroundColor(colorD)
-                mTvName.setTextColor(colorD)
-                mTvPrice.setBackgroundColor(colorD)
+            CityBean.Color.GREEN -> {
+                mIvCityBg.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGreen))
+                mTvName.setTextColor(ContextCompat.getColor(context, R.color.colorGreen))
+                mTvPrice.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGreen))
             }
-            CityBean.Color.E -> {
-                mIvCityBg.setBackgroundColor(colorE)
-                mTvName.setTextColor(colorE)
-                mTvPrice.setBackgroundColor(colorE)
-            }else -> {
+            CityBean.Color.QING -> {
+                mIvCityBg.setBackgroundColor(ContextCompat.getColor(context, R.color.colorQing))
+                mTvName.setTextColor(ContextCompat.getColor(context, R.color.colorQing))
+                mTvPrice.setBackgroundColor(ContextCompat.getColor(context, R.color.colorQing))
+            }
+            CityBean.Color.BLUE -> {
+                mIvCityBg.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBlue))
+                mTvName.setTextColor(ContextCompat.getColor(context, R.color.colorBlue))
+                mTvPrice.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBlue))
+            }
+            CityBean.Color.PURPLE -> {
+                mIvCityBg.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPurple))
+                mTvName.setTextColor(ContextCompat.getColor(context, R.color.colorPurple))
+                mTvPrice.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPurple))
+            }
+            else -> {
 
             }
 

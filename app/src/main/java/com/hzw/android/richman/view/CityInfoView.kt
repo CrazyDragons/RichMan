@@ -45,27 +45,27 @@ class CityInfoView @JvmOverloads constructor(
         mTvCityLevel_3.text = "大城：过路费 " + (cityBean.buyPrice * 4) + "\t驻兵 " + cityBean.buyPrice * 8
         mTvCitySale.text = "抵押价 " + (cityBean.buyPrice / 2).toString()
 
-        val colorA = ContextCompat.getColor(context, R.color.colorA)
-        val colorB = ContextCompat.getColor(context, R.color.colorB)
-        val colorC = ContextCompat.getColor(context, R.color.colorC)
-        val colorD = ContextCompat.getColor(context, R.color.colorD)
-        val colorE = ContextCompat.getColor(context, R.color.colorE)
-
         when (cityBean.color) {
-            CityBean.Color.A -> {
-                mClInfo.setBackgroundColor(colorA)
+            CityBean.Color.RED -> {
+                mClInfo.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRed))
             }
-            CityBean.Color.B -> {
-                mClInfo.setBackgroundColor(colorB)
+            CityBean.Color.ORANGE -> {
+                mClInfo.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrange))
             }
-            CityBean.Color.C -> {
-                mClInfo.setBackgroundColor(colorC)
+            CityBean.Color.YELLOW -> {
+                mClInfo.setBackgroundColor(ContextCompat.getColor(context, R.color.colorYellow))
             }
-            CityBean.Color.D -> {
-                mClInfo.setBackgroundColor(colorD)
+            CityBean.Color.GREEN -> {
+                mClInfo.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGreen))
             }
-            CityBean.Color.E -> {
-                mClInfo.setBackgroundColor(colorE)
+            CityBean.Color.QING -> {
+                mClInfo.setBackgroundColor(ContextCompat.getColor(context, R.color.colorQing))
+            }
+            CityBean.Color.BLUE -> {
+                mClInfo.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBlue))
+            }
+            CityBean.Color.PURPLE -> {
+                mClInfo.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPurple))
             }
             else -> {
 

@@ -75,7 +75,7 @@
         android:id="@+id/mTvGeneral"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/icon_general"
+        android:drawableStart="@drawable/icon_generals"
         android:maxLines="1"
         android:ellipsize="end"
         android:drawablePadding="5dp"
@@ -103,6 +103,6 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         app:layout_constraintTop_toBottomOf="@id/mTvCity"
-        android:background="@android:color/transparent" />
+        android:background="@color/walkInfoLine" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

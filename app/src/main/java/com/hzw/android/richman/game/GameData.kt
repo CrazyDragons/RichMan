@@ -5,6 +5,7 @@ import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
+import com.hzw.android.richman.bean.SpecialBean
 
 /**
  * class Date
@@ -43,7 +44,7 @@ class GameData private constructor() {
                     mapData.add(AreaBean(jsonObject))
                 }
                 else -> {
-                    mapData.add(JSON.parseObject(jsonObject.toJSONString(), BaseMapBean::class.java))
+                    mapData.add(JSON.parseObject(jsonObject.toJSONString(), SpecialBean::class.java))
                 }
             }
         }

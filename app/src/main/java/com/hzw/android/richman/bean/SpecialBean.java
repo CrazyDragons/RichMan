@@ -2,6 +2,7 @@ package com.hzw.android.richman.bean;
 
 import androidx.annotation.DrawableRes;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hzw.android.richman.R;
 import com.hzw.android.richman.base.BaseMapBean;
 
@@ -17,6 +18,15 @@ public class SpecialBean extends BaseMapBean {
 
     @DrawableRes
     int bg;
+
+    public SpecialBean() {
+    }
+
+    public SpecialBean(JSONObject jsonObject) {
+        this.name = jsonObject.getString("name");
+        this.type = MapType.valueOf(jsonObject.getString("type"));
+        this.bg = jsonObject.getIntValue("bg");
+    }
 
     public SpecialBean(MapType mapType) {
         this.type = mapType;

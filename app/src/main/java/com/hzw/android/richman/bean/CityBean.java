@@ -23,25 +23,33 @@ public class CityBean extends BaseMapBean {
 
     public enum Color {
         /**
-         * A
+         * 红
          */
-        A,
+        RED,
         /**
-         * B
+         * 橙
          */
-        B,
+        ORANGE,
         /**
-         * C
+         * 黄
          */
-        C,
+        YELLOW,
         /**
-         * D
+         * 绿
          */
-        D,
+        GREEN,
         /**
-         * E
+         * 青
          */
-        E,
+        QING,
+        /**
+         * 蓝
+         */
+        BLUE,
+        /**
+         * 紫
+         */
+        PURPLE
     }
 
     public CityBean() {

@@ -45,4 +45,9 @@ class GameLog {
         onAddLogListener.onAddLog()
     }
 
+    fun addSytemLog(msg: String) {
+        logAdapter.addData("系统："+msg)
+        onAddLogListener.onAddLog()
+    }
+
 }

@@ -17,11 +17,15 @@
     <color name="big_money">#E91E63</color>
     <color name="free_generals">#FF5722</color>
 
-    <color name="playersInfo">#FDB7E8F4</color>
+    <color name="playersInfo">#8BFFC107</color>
+    <color name="walkInfoLine">#CDDC39</color>
+    <color name="walkInfo">#D0FFC107</color>
 
-    <color name="colorA">#E91E63</color>
-    <color name="colorB">#4CAF50</color>
-    <color name="colorC">#F44336</color>
-    <color name="colorD">#673AB7</color>
-    <color name="colorE">#FF9800</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorOrange">#FF5722</color>
+    <color name="colorYellow">#FFEB3B</color>
+    <color name="colorGreen">#4CAF50</color>
+    <color name="colorQing">#009688</color>
+    <color name="colorBlue">#03A9F4</color>
+    <color name="colorPurple">#673AB7</color>
 </resources>

@@ -1,6 +1,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/green" android:state_enabled="true" />
-    <item android:drawable="@color/gray" android:state_enabled="false" />
+    <item android:drawable="@drawable/shape_rectangle_solid_green_r10" android:state_enabled="true" />
+    <item android:drawable="@drawable/shape_rectangle_solid_gray_r10" android:state_enabled="false" />
 
 </selector>

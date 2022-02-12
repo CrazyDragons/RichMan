@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hzw.android.richman.R
@@ -13,6 +15,7 @@ import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
+import com.hzw.android.richman.bean.SpecialBean
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameSave
@@ -21,9 +24,7 @@ import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.listener.OnWalkListener
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.ToastUitl
-import com.hzw.android.richman.view.AreaInfoView
-import com.hzw.android.richman.view.CityInfoView
-import com.hzw.android.richman.view.PlayerView
+import com.hzw.android.richman.view.*
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -59,6 +60,7 @@ class GameActivity : BaseActivity(),
     private fun initViews() {
         mBtnWalk.setOnClickListener(this)
         mBtnFinishOption.setOnClickListener(this)
+        mRootMap.setOnClickListener(this)
         mBaseMap.onMapClickListener = this
         GameLog.INSTANCE.onAddLogListener = this
         mRvPlayerInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -70,12 +72,15 @@ class GameActivity : BaseActivity(),
 
         GameData.INSTANCE.load()
 
-
         val playerInfoAdapter = PlayerInfoAdapter()
         playerInfoAdapter.setNewInstance(GameData.INSTANCE.playerData)
         mRvPlayerInfo.adapter = playerInfoAdapter
-
         mRvLog.adapter = GameLog.INSTANCE.logAdapter
+
+        optionStatus(walk = true, finish = false)
+
+        GameLog.INSTANCE.clear()
+        GameLog.INSTANCE.addSytemLog("欢迎来到大富翁")
 
         Handler(Looper.getMainLooper()).postDelayed({
 
@@ -228,6 +233,10 @@ class GameActivity : BaseActivity(),
 
         when (view?.id) {
 
+            R.id.mRootMap -> {
+                mFlInfo.visibility = GONE
+            }
+
             //点击投掷
             R.id.mBtnWalk -> {
                 MapUtil.walk(this)
@@ -258,6 +267,7 @@ class GameActivity : BaseActivity(),
     }
 
     private fun showMapInfo(baseMapBean: BaseMapBean) {
+        mFlInfo.visibility = VISIBLE
         mFlInfo.removeAllViews()
         when (baseMapBean) {
             is CityBean -> {
@@ -270,6 +280,12 @@ class GameActivity : BaseActivity(),
                 val mAreaInfoView = AreaInfoView(this@GameActivity)
                 mAreaInfoView.setData(baseMapBean)
                 mFlInfo.addView(mAreaInfoView)
+            }
+
+            is SpecialBean -> {
+                val mSpecialInfoView = SpecialInfoView(this@GameActivity)
+                mSpecialInfoView.setData(baseMapBean)
+                mFlInfo.addView(mSpecialInfoView)
             }
         }
     }
