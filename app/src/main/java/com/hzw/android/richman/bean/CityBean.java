@@ -44,6 +44,9 @@ public class CityBean extends BaseMapBean {
         E,
     }
 
+    public CityBean() {
+    }
+
     public CityBean(JSONObject jsonObject) {
         this.name = jsonObject.getString("name");
         this.buyPrice = jsonObject.getIntValue("buyPrice");

@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.PlayerBean
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.view_player.view.*
 
 /**
@@ -19,6 +20,8 @@ class PlayerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
+    var mDisposable: Disposable? = null
 
     init {
         initViews(context)

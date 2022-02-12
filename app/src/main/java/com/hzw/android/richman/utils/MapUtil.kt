@@ -32,9 +32,9 @@ object MapUtil {
 
                 override fun onNext(t: Long) {
                     val count = (Math.random() * MAX_WALK + 1).toInt()
-                    onWalkListener.onWalkFinish(count, false)
+                    onWalkListener.onWalkStart(count, false)
                     if (t == WALK_TURN) {
-                        onWalkListener.onWalkFinish(count, true)
+                        onWalkListener.onWalkStart(count, true)
                         mWalkDisposable?.dispose()
                     }
 

@@ -1,5 +1,7 @@
 package com.hzw.android.richman.bean;
 
+import java.util.ArrayList;
+
 /**
  * class PlayerBean
  *
@@ -12,6 +14,11 @@ public class PlayerBean {
 
     int id = 0;
     String name;
+    int money = 10000;
+    int army = 10000;
+    ArrayList<GeneralBean> generals = new ArrayList<>();
+    ArrayList<CityBean> citys = new ArrayList<>();
+    ArrayList<EquipmentBean> equipments = new ArrayList<>();
     int walkIndex = 0;
     boolean isTurn = false;
     boolean isPlayer = true;
@@ -66,5 +73,45 @@ public class PlayerBean {
 
     public void setPlayer(boolean player) {
         isPlayer = player;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public int getArmy() {
+        return army;
+    }
+
+    public void setArmy(int army) {
+        this.army = army;
+    }
+
+    public ArrayList<GeneralBean> getGenerals() {
+        return generals;
+    }
+
+    public void setGenerals(ArrayList<GeneralBean> generals) {
+        this.generals = generals;
+    }
+
+    public ArrayList<CityBean> getCitys() {
+        return citys;
+    }
+
+    public void setCitys(ArrayList<CityBean> citys) {
+        this.citys = citys;
+    }
+
+    public ArrayList<EquipmentBean> getEquipments() {
+        return equipments;
+    }
+
+    public void setEquipments(ArrayList<EquipmentBean> equipments) {
+        this.equipments = equipments;
     }
 }

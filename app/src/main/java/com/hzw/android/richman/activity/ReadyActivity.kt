@@ -12,6 +12,7 @@ import com.hzw.android.richman.adapter.AddPlayerAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.game.GameSave
+import com.hzw.android.richman.utils.ToastUitl
 import kotlinx.android.synthetic.main.activity_ready.*
 
 
@@ -44,6 +45,12 @@ class ReadyActivity : BaseActivity() {
         }
 
         mTvStart.setOnClickListener {
+
+            if (adapter.data.isEmpty()) {
+                ToastUitl.show("请至少添加一个玩家！")
+                return@setOnClickListener
+            }
+
             for (i in 0 until  adapter.data.size) {
                 adapter.data[i].id = i+1
                 if (!adapter.data[i].isPlayer) {

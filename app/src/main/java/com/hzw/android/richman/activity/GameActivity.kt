@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hzw.android.richman.R
+import com.hzw.android.richman.adapter.PlayerInfoAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.CityBean
@@ -16,6 +18,7 @@ import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.listener.OnWalkListener
 import com.hzw.android.richman.utils.LogUiti
 import com.hzw.android.richman.utils.MapUtil
+import com.hzw.android.richman.utils.ToastUitl
 import com.hzw.android.richman.view.PlayerView
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -29,7 +32,6 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
 
     private var optionPlayerIndex = 0
     private var playerViewList = mutableListOf<PlayerView>()
-    var mDisposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,17 +44,26 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
             GameSave.INSTANCE.loadMap()
         }
 
+        initViews()
+
+        inItGame()
+    }
+
+    private fun initViews() {
         mBtnWalk.setOnClickListener(this)
         mBtnFinishOption.setOnClickListener(this)
         mBaseMap.onMapClickListener = this
-
-        inItGame()
+        mRvPlayerInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
     }
 
 
     private fun inItGame() {
 
         GameData.INSTANCE.load()
+
+        val adapter = PlayerInfoAdapter()
+        adapter.setNewInstance(GameData.INSTANCE.playerData)
+        mRvPlayerInfo.adapter = adapter
 
         Handler(Looper.getMainLooper()).postDelayed({
 
@@ -63,7 +74,7 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
                 mRootMap.addView(playerView)
                 playerViewList.add(playerView)
 
-                movePlayer(playerView, item, 0)
+                movePlayer(playerView, item, 0, this)
             }
 
             if (!GameData.INSTANCE.playerData[0].isPlayer) {
@@ -71,34 +82,49 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
             }
 
         }, 200)
+
+
     }
 
-    override fun onWalkFinish(count: Int, isFinish: Boolean) {
+    override fun onWalkStart(count: Int, isFinish: Boolean) {
 
         mTvWalk.text = count.toString()
 
         if (isFinish) {
-            val playerBean = GameData.INSTANCE.playerData[optionPlayerIndex]
-            val playerView = playerViewList[optionPlayerIndex]
 
-
-            movePlayer(playerView, playerBean, count)
-
-            setTurn()
-
-
-            if (!playerBean.isPlayer) {
-
-                optionComputer()
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    mBtnFinishOption.performClick()
-                }, 200)
-            }
+            movePlayer(
+                playerViewList[optionPlayerIndex],
+                GameData.INSTANCE.playerData[optionPlayerIndex],
+                count,
+                this
+            )
         }
     }
 
-    private fun movePlayer(playerView: PlayerView, playerBean: PlayerBean, count: Int) {
+    override fun onWalkFinish(isNewGame: Boolean) {
+
+        whichPlayerWalk()
+
+        setTurn()
+
+        optionStatus(walk = isNewGame, finish = !isNewGame)
+
+        if (!GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
+
+            optionComputer()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                mBtnFinishOption.performClick()
+            }, 200)
+        }
+    }
+
+    private fun movePlayer(
+        playerView: PlayerView,
+        playerBean: PlayerBean,
+        count: Int,
+        onWalkListener: OnWalkListener
+    ) {
 
         playerBean.walkIndex += count
         var restart = false
@@ -108,7 +134,7 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Long?> {
                 override fun onSubscribe(d: Disposable) {
-                    mDisposable = d
+                    playerView.mDisposable = d
                 }
 
                 override fun onNext(t: Long) {
@@ -127,7 +153,7 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
                     playerView.translationY = mBaseMap.mapViewList[next].y + playerOffsetY
                     mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
                     if (restart) {
-                        Toast.makeText(this@GameActivity, "经过了起点", Toast.LENGTH_SHORT).show()
+                        ToastUitl.show("经过了起点")
                         restart = false
                     }
 
@@ -137,10 +163,11 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
 
                     if (t == count.toLong()) {
                         playerBean.walkIndex = next
-                        mDisposable?.dispose()
+                        playerView.mDisposable?.dispose()
+                        onWalkListener.onWalkFinish(count == 0)
+                    } else {
+                        optionStatus(walk = false, finish = false)
                     }
-
-
 
 
                 }
@@ -154,17 +181,16 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
 
     }
 
-    private fun whichPlayerWalk(): Int {
+    private fun whichPlayerWalk() {
         for (i in 0 until GameData.INSTANCE.playerData.size) {
             if (GameData.INSTANCE.playerData[i].isTurn) {
                 return if (i < GameData.INSTANCE.playerData.size - 1) {
-                    i + 1
+                    optionPlayerIndex = i + 1
                 } else {
-                    0
+                    optionPlayerIndex = 0
                 }
             }
         }
-        return 0
     }
 
     private fun setTurn() {
@@ -184,11 +210,9 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
 
             //点击投掷
             R.id.mBtnWalk -> {
-                optionStatus(walk = false, finish = true)
                 if (GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
                     LogUiti.print("玩家点了投掷")
                 } else {
-                    optionStatus(walk = false, finish = false)
                     LogUiti.print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "点了投掷")
                 }
                 MapUtil.walk(this)
@@ -203,13 +227,11 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
                     LogUiti.print(GameData.INSTANCE.playerData[optionPlayerIndex].name + "点了结束")
                 }
 
-                optionPlayerIndex = whichPlayerWalk()
 
                 if (GameData.INSTANCE.playerData[optionPlayerIndex].isPlayer) {
                     LogUiti.print("轮到玩家")
                     optionStatus(walk = true, finish = false)
                 } else {
-                    optionStatus(walk = false, finish = false)
                     Handler(Looper.getMainLooper()).postDelayed({
                         mBtnWalk.performClick()
                     }, 200)
@@ -224,7 +246,7 @@ class GameActivity : BaseActivity(), OnWalkListener, View.OnClickListener, OnMap
     }
 
     override fun onMapClick(baseMapBean: BaseMapBean) {
-        when(baseMapBean) {
+        when (baseMapBean) {
             is CityBean -> {
                 mCityInfoView.setData(baseMapBean)
             }
