@@ -1,7 +1,5 @@
 package com.hzw.android.richman.listener
 
-import com.hzw.android.richman.base.BaseMapBean
-
 /**
  * class OnMapClickListener
  * @author CrazyDragon
@@ -10,5 +8,5 @@ import com.hzw.android.richman.base.BaseMapBean
  * create date 2022/2/12
  */
 interface OnMapClickListener {
-    fun onMapClick(baseMapBean: BaseMapBean)
+    fun onMapClick(index: Int)
 }

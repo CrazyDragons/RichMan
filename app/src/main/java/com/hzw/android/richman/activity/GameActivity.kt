@@ -10,6 +10,7 @@ import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.PlayerInfoAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.base.BaseMapBean
+import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.game.GameData
@@ -20,6 +21,8 @@ import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.listener.OnWalkListener
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.ToastUitl
+import com.hzw.android.richman.view.AreaInfoView
+import com.hzw.android.richman.view.CityInfoView
 import com.hzw.android.richman.view.PlayerView
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -177,9 +180,8 @@ class GameActivity : BaseActivity(),
                         restart = false
                     }
 
-                    if (GameData.INSTANCE.mapData[next] is CityBean) {
-                        mCityInfoView.setData(GameData.INSTANCE.mapData[next] as CityBean)
-                    }
+
+                    showMapInfo(GameData.INSTANCE.mapData[next])
 
                     if (t == count.toLong()) {
                         playerBean.walkIndex = next
@@ -251,10 +253,23 @@ class GameActivity : BaseActivity(),
         mBtnFinishOption.isEnabled = finish
     }
 
-    override fun onMapClick(baseMapBean: BaseMapBean) {
+    override fun onMapClick(index: Int) {
+        showMapInfo(GameData.INSTANCE.mapData[index])
+    }
+
+    private fun showMapInfo(baseMapBean: BaseMapBean) {
+        mFlInfo.removeAllViews()
         when (baseMapBean) {
             is CityBean -> {
+                val mCityInfoView = CityInfoView(this@GameActivity)
                 mCityInfoView.setData(baseMapBean)
+                mFlInfo.addView(mCityInfoView)
+            }
+
+            is AreaBean -> {
+                val mAreaInfoView = AreaInfoView(this@GameActivity)
+                mAreaInfoView.setData(baseMapBean)
+                mFlInfo.addView(mAreaInfoView)
             }
         }
     }

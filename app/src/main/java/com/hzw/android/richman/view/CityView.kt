@@ -33,6 +33,8 @@ class CityView @JvmOverloads constructor(
         mTvName.text = cityBean.name
         mTvPrice.text = cityBean.buyPrice.toString()
         mIvCityCover.setBackgroundResource(cityBean.cover)
+        mViewLevel.setLevel(cityBean.level, false)
+        mTvOwner.text = cityBean.name
 
         val colorA = ContextCompat.getColor(context, R.color.colorA)
         val colorB = ContextCompat.getColor(context, R.color.colorB)

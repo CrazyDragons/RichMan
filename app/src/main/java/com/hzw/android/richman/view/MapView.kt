@@ -39,7 +39,7 @@ class MapView @JvmOverloads constructor(
          */
         val sumCount = GameInit.INSTANCE.map().size
 
-        val itemWidth = ScreenUtil.screenWidth / X_COUNT * 2
+        val itemWidth = ScreenUtil.screenWidth / Y_COUNT / 2
         val itemHeight = ScreenUtil.screenHeight / Y_COUNT
 
         val constraintSet = ConstraintSet()
@@ -62,7 +62,7 @@ class MapView @JvmOverloads constructor(
                 }
             }
             mapItem.setOnClickListener {
-                onMapClickListener?.onMapClick(GameInit.INSTANCE.map()[i])
+                onMapClickListener?.onMapClick(i)
             }
 
             mapItem.id = View.generateViewId()

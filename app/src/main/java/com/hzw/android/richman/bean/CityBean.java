@@ -16,7 +16,7 @@ import com.hzw.android.richman.base.BaseMapBean;
 public class CityBean extends BaseMapBean {
 
     int buyPrice;
-    int level = 0;
+    int level = 4;
     int cover;
     GeneralBean general;
     Color color;

@@ -5,7 +5,10 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.AreaBean
+import kotlinx.android.synthetic.main.view_area.view.*
+import kotlinx.android.synthetic.main.view_area.view.mTvOwner
 import kotlinx.android.synthetic.main.view_city.view.*
+import kotlinx.android.synthetic.main.view_city.view.mTvName
 
 /**
  * class CityView
@@ -30,6 +33,8 @@ class AreaView @JvmOverloads constructor(
 
     fun setData(areaBean: AreaBean) {
         mTvName.text = areaBean.name
+        mTvBuyArmy.text = areaBean.army.toString()
+        mTvOwner.text = areaBean.name
     }
 
 

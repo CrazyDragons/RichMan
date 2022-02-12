@@ -2,6 +2,7 @@ package com.hzw.android.richman.game
 
 import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.base.BaseMapBean
+import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 
@@ -34,10 +35,16 @@ class GameData private constructor() {
         val jsonArray = JSON.parseArray(GameSave.INSTANCE.loadMap())
         for (i in 0 until jsonArray.size) {
             val jsonObject = jsonArray.getJSONObject(i)
-            if (BaseMapBean.MapType.valueOf(jsonObject.getString("type")) == BaseMapBean.MapType.CITY) {
-                mapData.add(CityBean(jsonObject))
-            }else {
-                mapData.add(JSON.parseObject(jsonObject.toJSONString(), BaseMapBean::class.java))
+            when {
+                BaseMapBean.MapType.valueOf(jsonObject.getString("type")) == BaseMapBean.MapType.CITY -> {
+                    mapData.add(CityBean(jsonObject))
+                }
+                BaseMapBean.MapType.valueOf(jsonObject.getString("type")) == BaseMapBean.MapType.AREA -> {
+                    mapData.add(AreaBean(jsonObject))
+                }
+                else -> {
+                    mapData.add(JSON.parseObject(jsonObject.toJSONString(), BaseMapBean::class.java))
+                }
             }
         }
     }

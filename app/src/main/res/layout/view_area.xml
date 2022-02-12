@@ -1,24 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shape_item_map"
-    android:padding="1px"
+    android:padding="1dp"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <ImageView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/area"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="1dp"
+        android:background="@color/white">
 
+        <TextView
+            android:id="@+id/mTvBuyArmy"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:textColor="@color/area"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/icon_defense"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/mLine"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black"/>
 
     <TextView
         android:id="@+id/mTvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textStyle="bold"
         android:textColor="@color/white"
-        android:text="名称"/>
+        android:background="@color/area"
+        android:layout_height="wrap_content" />
 
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/mIvAreaBg"
+        android:layout_weight="1"
+        android:background="@color/area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:id="@+id/mIvAreaCover"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_area"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/mTvOwner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:padding="2dp"
+            android:background="@drawable/shape_oval_solid_white"
+            android:textColor="@color/black"
+            android:textSize="8sp"
+            android:gravity="center"
+            android:maxLength="1"
+            android:layout_gravity="end|bottom"/>
+
+    </FrameLayout>
+
+</LinearLayout>

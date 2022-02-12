@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shape_item_map"
-    android:padding="1dp"
     android:gravity="center"
-    android:orientation="vertical">
-
-
+    android:orientation="vertical"
+    android:padding="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="horizontal"
-        android:padding="1dp"
-        android:background="@color/white">
+        android:padding="1dp">
 
-       <LinearLayout
-           android:layout_weight="4"
-           android:layout_width="0dp"
-           android:layout_height="wrap_content">
-
-
-
-
-       </LinearLayout>
+        <com.hzw.android.richman.view.LevelView
+            android:id="@+id/mViewLevel"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_weight="4" />
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
-            android:background="@color/area"/>
+            android:background="@drawable/icon_defense"
+            android:scaleType="centerCrop" />
 
     </LinearLayout>
 
@@ -38,45 +32,59 @@
         android:id="@+id/mLine"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/black"/>
+        android:background="@color/black" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="1dp"
         android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="1dp">
 
         <TextView
             android:id="@+id/mTvName"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:textSize="12sp"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/mTvPrice"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textSize="12sp"
             android:textColor="@color/white"
-            android:layout_height="wrap_content" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/mIvCityBg"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <ImageView
             android:id="@+id/mIvCityCover"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/mTvOwner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:background="@drawable/shape_oval_solid_white"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLength="1"
+            android:padding="2dp"
+            android:textColor="@color/black"
+            android:textSize="8sp" />
 
     </FrameLayout>
 

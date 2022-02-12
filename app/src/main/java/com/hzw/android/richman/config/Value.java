@@ -18,7 +18,7 @@ public class Value {
     public static final long WALK_TURN = 20;
     public static final long WALK_TURN_TIME = 20;
 
-    public static final int X_COUNT = 20;
+    public static final int X_COUNT = 27;
     public static final int Y_COUNT = 5;
 
 }

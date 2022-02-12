@@ -5,14 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="300dp"
     android:layout_height="200dp"
-    android:background="@color/red"
+    android:background="@color/area"
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/mIvCityCover"
+        android:id="@+id/mIvAreaCover"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@color/gray"
+        android:src="@drawable/bg_area"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,26 +25,24 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/mIvCityCover"
-        app:layout_constraintTop_toTopOf="@id/mIvCityCover">
+        app:layout_constraintStart_toEndOf="@id/mIvAreaCover"
+        app:layout_constraintTop_toTopOf="@id/mIvAreaCover">
 
         <TextView
-            android:id="@+id/mTvCityName"
+            android:id="@+id/mTvAreaName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="城池"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
-        <com.hzw.android.richman.view.LevelView
-            android:id="@+id/mTvCityLevel"
+        <Space
+            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"/>
 
         <ImageView
-            android:id="@+id/mIvCityGeneral"
+            android:id="@+id/mIvAreaGeneral"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:scaleType="centerCrop"
@@ -64,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@id/mLlInfo">
 
         <TextView
-            android:id="@+id/mTvCityLevelCost"
+            android:id="@+id/mTvAreaArmyCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -72,15 +70,7 @@
             android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/mTvCityArmyCost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:text="1000"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/mTvCityLevel_0"
+            android:id="@+id/mTvAreaLevel_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -89,7 +79,7 @@
             android:textSize="11sp" />
 
         <TextView
-            android:id="@+id/mTvCityLevel_1"
+            android:id="@+id/mTvAreaLevel_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -98,7 +88,7 @@
             android:textSize="11sp" />
 
         <TextView
-            android:id="@+id/mTvCityLevel_2"
+            android:id="@+id/mTvAreaLevel_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -107,7 +97,16 @@
             android:textSize="11sp" />
 
         <TextView
-            android:id="@+id/mTvCityLevel_3"
+            android:id="@+id/mTvAreaLevel_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:text="1000"
+            android:textColor="@color/white"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/mTvAreaLevel_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1000"
@@ -123,10 +122,10 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/mIvCityCover" />
+        app:layout_constraintStart_toStartOf="@id/mIvAreaCover" />
 
     <TextView
-        android:id="@+id/mTvCitySale"
+        android:id="@+id/mTvAreaSale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1000"
@@ -135,14 +134,14 @@
         app:layout_constraintStart_toStartOf="@id/mLlInfo" />
 
     <TextView
-        android:id="@+id/mTvCityDesc"
+        android:id="@+id/mTvAreaDesc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="持有全部同色城池过路费翻倍"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@id/mIvCityCover"
-        app:layout_constraintStart_toStartOf="@id/mIvCityCover"
-        app:layout_constraintTop_toBottomOf="@id/mIvCityCover" />
+        app:layout_constraintEnd_toEndOf="@id/mIvAreaCover"
+        app:layout_constraintStart_toStartOf="@id/mIvAreaCover"
+        app:layout_constraintTop_toBottomOf="@id/mIvAreaCover" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
