@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.view_special.view.*
 /**
  * class CityView
  * @author CrazyDragon
- * description
+ * description 特殊场景视图
  * note
  * create date 2022/2/9
  */
@@ -29,9 +29,7 @@ class SpecialView @JvmOverloads constructor(
     }
 
     fun setData(specialBean: SpecialBean) {
-//        mTvName.visibility = if (specialBean.type == BaseMapBean.MapType.START) GONE else VISIBLE
-        mTvName.text = specialBean.name
-        mIvSpecialBg.setImageResource(specialBean.bg)
+        mIvSpecialBg.setImageResource(specialBean.background)
     }
 
 

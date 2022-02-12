@@ -1,113 +1,71 @@
-package com.hzw.android.richman.bean;
+package com.hzw.android.richman.bean
 
-import androidx.annotation.DrawableRes;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hzw.android.richman.base.BaseMapBean;
+import androidx.annotation.DrawableRes
+import com.alibaba.fastjson.JSONObject
+import com.hzw.android.richman.base.BaseMapBean
 
 /**
  * class CityBean
  *
  * @author CrazyDragon
- * description
+ * description 城池实体类
  * note
  * create date 2022/2/9
  */
-public class CityBean extends BaseMapBean {
+class CityBean : BaseMapBean {
 
-    int buyPrice;
-    int level = 4;
-    int cover;
-    GeneralBean general;
-    Color color;
+    //购入价
+    var buyPrice = 0
 
-    public enum Color {
-        /**
-         * 红
-         */
+    //城池级别
+    var level = 0
+
+    //城池级别
+    var cover = 0
+
+    //武将
+    var general: GeneralBean? = null
+
+    //城池颜色
+    var color: Color? = null
+
+    enum class Color {
+        //红
         RED,
-        /**
-         * 橙
-         */
+
+        //橙
         ORANGE,
-        /**
-         * 黄
-         */
+
+        //黄
         YELLOW,
-        /**
-         * 绿
-         */
+
+        //绿
         GREEN,
-        /**
-         * 青
-         */
+
+        //青
         QING,
-        /**
-         * 蓝
-         */
+
+        //蓝
         BLUE,
-        /**
-         * 紫
-         */
+
+        //紫
         PURPLE
     }
 
-    public CityBean() {
+
+    constructor(jsonObject: JSONObject) {
+        name = jsonObject.getString("name")
+        buyPrice = jsonObject.getIntValue("buyPrice")
+        type = MapType.valueOf(jsonObject.getString("type"))
+        color = Color.valueOf(jsonObject.getString("color"))
+        cover = jsonObject.getIntValue("cover")
     }
 
-    public CityBean(JSONObject jsonObject) {
-        this.name = jsonObject.getString("name");
-        this.buyPrice = jsonObject.getIntValue("buyPrice");
-        this.type = MapType.valueOf(jsonObject.getString("type"));
-        this.color = Color.valueOf(jsonObject.getString("color"));
-        this.cover = jsonObject.getIntValue("cover");
-    }
-
-    public CityBean(String name, @DrawableRes int cover, int buyPrice, Color color) {
-        this.name = name;
-        this.cover = cover;
-        this.buyPrice = buyPrice;
-        this.type = MapType.CITY;
-        this.color = color;
-    }
-
-    public int getBuyPrice() {
-        return buyPrice;
-    }
-
-    public void setBuyPrice(int buyPrice) {
-        this.buyPrice = buyPrice;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public GeneralBean getGeneral() {
-        return general;
-    }
-
-    public void setGeneral(GeneralBean general) {
-        this.general = general;
-    }
-
-    public int getCover() {
-        return cover;
-    }
-
-    public void setCover(int cover) {
-        this.cover = cover;
+    constructor(name: String?, @DrawableRes cover: Int, buyPrice: Int, color: Color?) {
+        this.name = name
+        this.cover = cover
+        this.buyPrice = buyPrice
+        type = MapType.CITY
+        this.color = color
     }
 }

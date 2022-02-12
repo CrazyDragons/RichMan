@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">真三国无双</string>
+    <string name="player">玩家</string>
+    <string name="computer">玩家</string>
+    <string name="no_player">请至少添加一个玩家</string>
+    <string name="input_nick">输入昵称</string>
+    <string name="join">加入</string>
+    <string name="start">起点</string>
+    <string name="prison">监狱</string>
+    <string name="army">征兵处</string>
+    <string name="generals">职业介绍所</string>
+    <string name="bank">银行</string>
+    <string name="shop">商店</string>
+    <string name="chance">机会</string>
+    <string name="big_bank">金银岛</string>
+    <string name="free_generals">茅庐</string>
+    <string name="zero">0</string>
+    <string name="end">结束</string>
+    <string name="walk">投掷</string>
+    <string name="new_game">新游戏</string>
+    <string name="continues">继续</string>
+    <string name="instruction">说明</string>
+    <string name="exit">退出</string>
+    <string name="add_player">添加玩家</string>
+    <string name="add_computer">添加电脑</string>
+    <string name="start_game">开始</string>
+    <string name="delete">删除</string>
+    <string name="all_color_tips">持有全部同色城池过路费翻倍</string>
+
+    <string name="owner">拥有者 %s</string>
+    <string name="level_cost">城墙建设费用 %d</string>
+    <string name="defense_cost">守城损兵 %d</string>
+
+    <string name="city_level_0">空城：过路费 %1$d 驻兵 %2$d</string>
+    <string name="city_level_1">小城：过路费 %1$d 驻兵 %2$d</string>
+    <string name="city_level_2">中城：过路费 %1$d 驻兵 %2$d</string>
+    <string name="city_level_3">大城：过路费 %1$d 驻兵 %2$d</string>
+
+    <string name="area_level_1">一区：过路费 %1$d 驻兵 %2$d</string>
+    <string name="area_level_2">二区：过路费 %1$d 驻兵 %2$d</string>
+    <string name="area_level_3">三区：过路费 %1$d 驻兵 %2$d</string>
+    <string name="area_level_4">四区：过路费 %1$d 驻兵 %2$d</string>
+    <string name="area_level_5">五区：过路费 %1$d 驻兵 %2$d</string>
 </resources>

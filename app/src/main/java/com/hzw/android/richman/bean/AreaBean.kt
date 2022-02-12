@@ -1,39 +1,30 @@
-package com.hzw.android.richman.bean;
+package com.hzw.android.richman.bean
 
-import com.alibaba.fastjson.JSONObject;
-import com.hzw.android.richman.base.BaseMapBean;
+import com.alibaba.fastjson.JSONObject
+import com.hzw.android.richman.base.BaseMapBean
+import com.hzw.android.richman.config.Value.AREA_ARMY
 
 /**
  * class AreaBean
  *
  * @author CrazyDragon
- * description
+ * description 战区实体类
  * note
  * create date 2022/2/9
  */
-public class AreaBean extends BaseMapBean {
+class AreaBean : BaseMapBean {
 
-    int army = 2000;
+    //兵力
+    var army = AREA_ARMY
 
-    public AreaBean() {
+    constructor(jsonObject: JSONObject) {
+        name = jsonObject.getString("name")
+        army = jsonObject.getIntValue("army")
+        type = MapType.valueOf(jsonObject.getString("type"))
     }
 
-    public AreaBean(JSONObject jsonObject) {
-        this.name = jsonObject.getString("name");
-        this.army = jsonObject.getIntValue("army");
-        this.type = MapType.valueOf(jsonObject.getString("type"));
-    }
-
-    public AreaBean(String name) {
-        this.name = name;
-        this.type = MapType.AREA;
-    }
-
-    public int getArmy() {
-        return army;
-    }
-
-    public void setArmy(int army) {
-        this.army = army;
+    constructor(name: String?) {
+        this.name = name
+        type = MapType.AREA
     }
 }

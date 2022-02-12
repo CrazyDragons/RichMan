@@ -9,7 +9,7 @@ import android.view.Display
  * class ScreenUtils
  *
  * @author CrazyDragon
- * description
+ * description 屏幕工具
  * note
  * create date 2022/2/8
  */

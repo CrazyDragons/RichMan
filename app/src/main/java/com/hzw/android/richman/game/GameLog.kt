@@ -6,7 +6,7 @@ import com.hzw.android.richman.listener.OnAddLogListener
 /**
  * class GameLog
  * @author CrazyDragon
- * description
+ * description 游戏日志
  * note
  * create date 2022/2/12
  */
@@ -41,12 +41,12 @@ class GameLog {
     }
 
     fun addTurnLog() {
-        logAdapter.addData("系统：轮到"+GameData.INSTANCE.currentPlayer().name)
+        logAdapter.addData("系统：轮到" + GameData.INSTANCE.currentPlayer().name)
         onAddLogListener.onAddLog()
     }
 
     fun addSytemLog(msg: String) {
-        logAdapter.addData("系统："+msg)
+        logAdapter.addData("系统：$msg")
         onAddLogListener.onAddLog()
     }
 

@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="false"
     android:orientation="horizontal"
     tools:context=".activity.GameActivity">
 
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_game"
-        android:layout_weight="3">
+        android:layout_weight="3"
+        android:background="@drawable/bg_game">
 
         <HorizontalScrollView
             android:id="@+id/mCamera"
@@ -60,7 +61,8 @@
             android:layout_weight="3"
             android:background="@color/playersInfo"
             android:gravity="center"
-            android:padding="2dp" />
+            android:padding="2dp"
+            tools:ignore="NestedWeights" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mRvLog"
@@ -83,7 +85,7 @@
                 android:id="@+id/mTvWalk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/zero"
                 android:textColor="@color/white"
                 android:textSize="32sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +103,7 @@
                 android:layout_height="30dp"
                 android:background="@drawable/selector_btn"
                 android:gravity="center"
-                android:text="投掷"
+                android:text="@string/walk"
                 android:textColor="@color/white" />
 
             <TextView
@@ -111,7 +113,7 @@
                 android:layout_marginStart="20dp"
                 android:background="@drawable/selector_btn"
                 android:gravity="center"
-                android:text="结束"
+                android:text="@string/end"
                 android:textColor="@color/white" />
 
 

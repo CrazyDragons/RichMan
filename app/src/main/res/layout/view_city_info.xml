@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/mClInfo"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mClInfo"
     android:layout_width="300dp"
     android:layout_height="200dp"
-    android:background="@color/red"
     android:padding="10dp">
 
     <ImageView
         android:id="@+id/mIvCityCover"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@color/gray"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:id="@+id/mLlInfo"
@@ -32,7 +31,6 @@
             android:id="@+id/mTvCityName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="城池"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
@@ -47,9 +45,10 @@
             android:id="@+id/mIvCityGeneral"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:scaleType="centerCrop"
             android:layout_marginStart="5dp"
-            android:src="@drawable/icon_defense_white" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_defense_white"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
@@ -68,7 +67,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
-            android:text="1000"
             android:textColor="@color/white" />
 
         <TextView
@@ -76,7 +74,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
-            android:text="1000"
             android:textColor="@color/white" />
 
         <TextView
@@ -84,7 +81,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
-            android:text="1000"
             android:textColor="@color/white"
             android:textSize="11sp" />
 
@@ -93,7 +89,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
-            android:text="1000"
             android:textColor="@color/white"
             android:textSize="11sp" />
 
@@ -102,7 +97,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
-            android:text="1000"
             android:textColor="@color/white"
             android:textSize="11sp" />
 
@@ -110,7 +104,6 @@
             android:id="@+id/mTvCityLevel_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1000"
             android:textColor="@color/white"
             android:textSize="11sp" />
 
@@ -129,7 +122,6 @@
         android:id="@+id/mTvCitySale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1000"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/mLlInfo" />
@@ -139,7 +131,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="持有全部同色城池过路费翻倍"
+        android:text="@string/all_color_tips"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@id/mIvCityCover"
         app:layout_constraintStart_toStartOf="@id/mIvCityCover"

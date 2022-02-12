@@ -18,7 +18,7 @@ import com.hzw.android.richman.utils.ScreenUtil
 /**
  * class MapView
  * @author CrazyDragon
- * description
+ * description 地图视图
  * note
  * create date 2022/2/9
  */
@@ -34,9 +34,7 @@ class MapView @JvmOverloads constructor(
     init {
 
 
-        /**
-         * 满足 (x+y)*2 - 4 = 格子数
-         */
+        // 满足 (x+y)*2 - 4 = 格子数
         val sumCount = GameInit.INSTANCE.map().size
 
         val itemWidth = ScreenUtil.screenWidth / Y_COUNT / 2

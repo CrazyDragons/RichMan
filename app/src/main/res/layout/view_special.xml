@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="1px"
     android:background="@drawable/shape_item_map"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="1px">
 
-   <TextView
-       android:id="@+id/mTvName"
-       android:layout_width="match_parent"
-       android:layout_height="25dp"
-       android:gravity="center"
-       android:background="@color/generals"
-       android:visibility="gone"
-       android:textColor="@color/white"
-       android:layout_gravity="center"/>
+    <TextView
+        android:id="@+id/mTvName"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:background="@color/generals"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:visibility="gone" />
 
-   <ImageView
-       android:id="@+id/mIvSpecialBg"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:scaleType="centerCrop"/>
+    <ImageView
+        android:id="@+id/mIvSpecialBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
 
 </LinearLayout>

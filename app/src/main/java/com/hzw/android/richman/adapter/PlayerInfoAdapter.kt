@@ -1,75 +1,57 @@
-package com.hzw.android.richman.adapter;
+package com.hzw.android.richman.adapter
 
-import androidx.annotation.NonNull;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.viewholder.BaseViewHolder;
-import com.hzw.android.richman.R;
-import com.hzw.android.richman.bean.CityBean;
-import com.hzw.android.richman.bean.PlayerBean;
-import com.hzw.android.richman.game.GameData;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.hzw.android.richman.R
+import com.hzw.android.richman.bean.CityBean
+import com.hzw.android.richman.bean.PlayerBean
+import com.hzw.android.richman.game.GameData.Companion.INSTANCE
+import java.math.BigDecimal
 
 /**
  * class PlayerInfoAdapter
  *
  * @author CrazyDragon
- * description
+ * description 玩家信息适配器
  * note
  * create date 2022/2/12
  */
-public class PlayerInfoAdapter extends BaseQuickAdapter<PlayerBean, BaseViewHolder> {
+class PlayerInfoAdapter : BaseQuickAdapter<PlayerBean, BaseViewHolder>(R.layout.item_player_info) {
 
-    public PlayerInfoAdapter() {
-        super(R.layout.item_player_info);
+    override fun convert(holder: BaseViewHolder, item: PlayerBean) {
+        holder.setText(R.id.mTvName, item.name)
+            .setText(R.id.mTvGDP, getGDP(item).toString() + "%")
+            .setText(R.id.mTvMoney, item.money.toString())
+            .setText(R.id.mTvArmy, item.army.toString())
+            .setText(R.id.mTvCity, item.city.size.toString())
+            .setText(R.id.mTvGeneral, item.generals.size.toString())
+            .setText(R.id.mTvEquipments, item.equipments.size.toString())
     }
 
-    @Override
-    protected void convert(@NonNull BaseViewHolder baseViewHolder, PlayerBean playerBean) {
-        baseViewHolder.setText(R.id.mTvName, playerBean.getName())
-                .setText(R.id.mTvGDP, getGDP(playerBean) + "%")
-                .setText(R.id.mTvMoney, playerBean.getMoney() + "")
-                .setText(R.id.mTvArmy, playerBean.getArmy() + "")
-                .setText(R.id.mTvCity, playerBean.getCitys().size() + "")
-                .setText(R.id.mTvGeneral, playerBean.getGenerals().size() + "")
-                .setText(R.id.mTvEquipments, playerBean.getEquipments().size() + "");
+    private fun getSingleGDP(playerBean: PlayerBean): Double {
+        return playerBean.money + playerBean.army * 2 +
+                getCityMoney(playerBean.city) + playerBean.generals.size * 2000 + playerBean.equipments.size * 2000
     }
 
-    private double getSingleGDP(PlayerBean playerBean) {
-        return playerBean.getMoney() +
-                playerBean.getArmy() * 2 +
-                getCityMoney(playerBean.getCitys()) +
-                playerBean.getGenerals().size() * 2000 +
-                playerBean.getEquipments().size() * 2000;
-    }
-
-    private int getGDP(PlayerBean playerBean) {
-        double x;
-        double sum = 0;
-
-        for (int i = 0; i < GameData.Companion.getINSTANCE().getPlayerData().size(); i++) {
-            sum += getSingleGDP(GameData.Companion.getINSTANCE().getPlayerData().get(i));
+    private fun getGDP(playerBean: PlayerBean): Int {
+        val x: Double
+        var sum = 0.0
+        for (i in INSTANCE.playerData.indices) {
+            sum += getSingleGDP(INSTANCE.playerData[i])
         }
-
-        x = getSingleGDP(playerBean) / sum;
-
-        return (int) (getDouble2(x)*100);
-
+        x = getSingleGDP(playerBean) / sum
+        return (getDouble2(x) * 100).toInt()
     }
 
-    private double getCityMoney(ArrayList<CityBean> arrayList) {
-        double money = 0;
-
-        for (int i = 0; i < arrayList.size(); i++) {
-            money += arrayList.get(i).getBuyPrice() + (arrayList.get(i).getBuyPrice() / 2d) * arrayList.get(i).getLevel();
+    private fun getCityMoney(arrayList: MutableList<CityBean>): Double {
+        var money = 0.0
+        for (i in arrayList.indices) {
+            money += arrayList[i].buyPrice + arrayList[i].buyPrice / 2.0 * arrayList[i].level
         }
-
-        return money;
+        return money
     }
 
-    private double getDouble2(double value) {
-        return new BigDecimal(value).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+    private fun getDouble2(value: Double): Double {
+        return BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
     }
 }

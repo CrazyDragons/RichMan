@@ -1,6 +1,6 @@
-package com.hzw.android.richman.bean;
+package com.hzw.android.richman.bean
 
-import java.util.ArrayList;
+import java.util.*
 
 /**
  * class PlayerBean
@@ -10,108 +10,34 @@ import java.util.ArrayList;
  * note
  * create date 2022/2/10
  */
-public class PlayerBean {
+class PlayerBean(//昵称
+    var name: String?,//是否是玩家
+    var isPlayer: Boolean
+) {
 
-    int id = 0;
-    String name;
-    int money = 10000;
-    int army = 10000;
-    ArrayList<GeneralBean> generals = new ArrayList<>();
-    ArrayList<CityBean> citys = new ArrayList<>();
-    ArrayList<EquipmentBean> equipments = new ArrayList<>();
-    int walkIndex = 0;
-    boolean isTurn = false;
-    boolean isPlayer = true;
+    //id
+    var id = 0
 
-    public PlayerBean() {
-    }
+    //金钱
+    var money = 10000
 
-    public PlayerBean(String name) {
-        this.name = name;
-    }
+    //兵力
+    var army = 10000
 
-    public PlayerBean(String name, boolean isPlayer) {
-        this.name = name;
-        this.isPlayer = isPlayer;
-    }
+    //武将
+    var generals = ArrayList<GeneralBean>()
 
-    public int getId() {
-        return id;
-    }
+    //城池
+    var city = ArrayList<CityBean>()
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    //道具
+    var equipments = ArrayList<EquipmentBean>()
 
-    public String getName() {
-        return name;
-    }
+    //地图位置
+    var walkIndex = 0
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    //是否是当前回合
+    var isTurn = false
 
-    public int getWalkIndex() {
-        return walkIndex;
-    }
 
-    public void setWalkIndex(int walkIndex) {
-        this.walkIndex = walkIndex;
-    }
-
-    public boolean isTurn() {
-        return isTurn;
-    }
-
-    public void setTurn(boolean turn) {
-        isTurn = turn;
-    }
-
-    public boolean isPlayer() {
-        return isPlayer;
-    }
-
-    public void setPlayer(boolean player) {
-        isPlayer = player;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
-    }
-
-    public int getArmy() {
-        return army;
-    }
-
-    public void setArmy(int army) {
-        this.army = army;
-    }
-
-    public ArrayList<GeneralBean> getGenerals() {
-        return generals;
-    }
-
-    public void setGenerals(ArrayList<GeneralBean> generals) {
-        this.generals = generals;
-    }
-
-    public ArrayList<CityBean> getCitys() {
-        return citys;
-    }
-
-    public void setCitys(ArrayList<CityBean> citys) {
-        this.citys = citys;
-    }
-
-    public ArrayList<EquipmentBean> getEquipments() {
-        return equipments;
-    }
-
-    public void setEquipments(ArrayList<EquipmentBean> equipments) {
-        this.equipments = equipments;
-    }
 }

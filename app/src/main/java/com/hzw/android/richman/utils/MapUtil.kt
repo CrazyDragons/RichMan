@@ -1,6 +1,6 @@
 package com.hzw.android.richman.utils
 
-import com.hzw.android.richman.config.Value.*
+import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.listener.OnWalkListener
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -22,7 +22,7 @@ object MapUtil {
     var mWalkDisposable: Disposable? = null
 
     fun walk(onWalkListener: OnWalkListener) {
-        Observable.interval(0, WALK_TURN_TIME, TimeUnit.MILLISECONDS)
+        Observable.interval(0, Value.WALK_TURN_TIME, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Long?> {
@@ -31,9 +31,9 @@ object MapUtil {
                 }
 
                 override fun onNext(t: Long) {
-                    val count = (Math.random() * MAX_WALK + 1).toInt()
+                    val count = (Math.random() * Value.MAX_WALK + 1).toInt()
                     onWalkListener.onWalkStart(count, false)
-                    if (t == WALK_TURN) {
+                    if (t == Value.WALK_TURN) {
                         onWalkListener.onWalkStart(count, true)
                         mWalkDisposable?.dispose()
                     }

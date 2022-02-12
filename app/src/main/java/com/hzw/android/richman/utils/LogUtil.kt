@@ -1,24 +1,24 @@
-package com.hzw.android.richman.utils;
+package com.hzw.android.richman.utils
 
-import android.util.Log;
+import android.util.Log
 
 /**
- * class LogUiti
+ * class LogUtil
  *
  * @author CrazyDragon
- * description
+ * description 日志工具
  * note
  * create date 2022/2/9
  */
-public class LogUtil {
+object LogUtil {
 
-    final static String TAG = "日志";
+    private const val TAG = "日志"
 
-    public static void print(String msg) {
-        Log.e(TAG, msg);
+    fun print(msg: String) {
+        Log.e(TAG, msg)
     }
 
-    public static void print(int msg) {
-        Log.e(TAG, String.valueOf(msg));
+    fun print(msg: Int) {
+        Log.e(TAG, msg.toString())
     }
-} 
+}

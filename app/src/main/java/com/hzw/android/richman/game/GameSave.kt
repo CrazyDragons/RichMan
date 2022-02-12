@@ -5,7 +5,7 @@ import com.hzw.android.richman.base.BaseSave
 /**
  * class GameSave
  * @author CrazyDragon
- * description
+ * description 游戏存档
  * note
  * create date 2022/2/10
  */
@@ -26,15 +26,15 @@ class GameSave : BaseSave() {
     }
 
     fun loadMap(): String {
-        return getStringData(MAP, "")
+        return getStringData(MAP)
     }
 
-    fun savePlayer(json : String) {
+    fun savePlayer(json: String) {
         putStringData(PLAYER, json)
     }
 
     fun loadPlayer(): String {
-        return getStringData(PLAYER, "")
+        return getStringData(PLAYER)
     }
 
     fun clean() {

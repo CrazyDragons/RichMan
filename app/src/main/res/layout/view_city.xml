@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shape_item_map"
@@ -24,7 +25,8 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:background="@drawable/icon_defense"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
@@ -71,7 +73,8 @@
             android:id="@+id/mIvCityCover"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/mTvOwner"
@@ -84,7 +87,8 @@
             android:maxLength="1"
             android:padding="2dp"
             android:textColor="@color/black"
-            android:textSize="8sp" />
+            android:textSize="8sp"
+            tools:ignore="SmallSp" />
 
     </FrameLayout>
 

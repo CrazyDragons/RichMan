@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.view_special_info.view.*
 /**
  * class SpecialInfoView
  * @author CrazyDragon
- * description
+ * description 特殊场景面板
  * note
  * create date 2022/2/12
  */
@@ -29,6 +29,6 @@ class SpecialInfoView @JvmOverloads constructor(
     }
 
     fun setData(specialBean: SpecialBean) {
-        mClInfo.setBackgroundResource(specialBean.bg)
+        mClInfo.setBackgroundResource(specialBean.background)
     }
 }

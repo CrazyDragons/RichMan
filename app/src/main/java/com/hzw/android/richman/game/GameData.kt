@@ -10,15 +10,22 @@ import com.hzw.android.richman.bean.SpecialBean
 /**
  * class Date
  * @author CrazyDragon
- * description
+ * description 游戏数据
  * note
  * create date 2022/2/10
  */
 class GameData private constructor() {
 
+    //操作角色地图位置
     var optionPlayerIndex = 0
+
+    //角色数据
     var playerData = mutableListOf<PlayerBean>()
+
+    //地图数据
     var mapData = mutableListOf<BaseMapBean>()
+
+    //日志数据
     var logData = mutableListOf<String>()
 
     companion object {
@@ -36,21 +43,24 @@ class GameData private constructor() {
         val jsonArray = JSON.parseArray(GameSave.INSTANCE.loadMap())
         for (i in 0 until jsonArray.size) {
             val jsonObject = jsonArray.getJSONObject(i)
-            when {
-                BaseMapBean.MapType.valueOf(jsonObject.getString("type")) == BaseMapBean.MapType.CITY -> {
+            when (BaseMapBean.MapType.valueOf(jsonObject.getString("type"))) {
+
+                BaseMapBean.MapType.CITY -> {
                     mapData.add(CityBean(jsonObject))
                 }
-                BaseMapBean.MapType.valueOf(jsonObject.getString("type")) == BaseMapBean.MapType.AREA -> {
+
+                BaseMapBean.MapType.AREA -> {
                     mapData.add(AreaBean(jsonObject))
                 }
+
                 else -> {
-                    mapData.add(JSON.parseObject(jsonObject.toJSONString(), SpecialBean::class.java))
+                    mapData.add(SpecialBean(jsonObject))
                 }
             }
         }
     }
 
-    fun currentPlayer():PlayerBean {
+    fun currentPlayer(): PlayerBean {
         return playerData[optionPlayerIndex]
     }
 

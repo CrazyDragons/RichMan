@@ -1,12 +1,11 @@
-package com.hzw.android.richman.bean;
+package com.hzw.android.richman.bean
 
 /**
  * class EquipmentBean
  *
  * @author CrazyDragon
- * description
+ * description 道具实体类
  * note
  * create date 2022/2/12
  */
-public class EquipmentBean {
-} 
+class EquipmentBean 

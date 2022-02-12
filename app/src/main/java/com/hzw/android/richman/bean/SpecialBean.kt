@@ -1,98 +1,67 @@
-package com.hzw.android.richman.bean;
+package com.hzw.android.richman.bean
 
-import androidx.annotation.DrawableRes;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hzw.android.richman.R;
-import com.hzw.android.richman.base.BaseMapBean;
+import androidx.annotation.DrawableRes
+import com.alibaba.fastjson.JSONObject
+import com.hzw.android.richman.MyApplication
+import com.hzw.android.richman.R
+import com.hzw.android.richman.base.BaseMapBean
 
 /**
  * class MapBean
  *
  * @author CrazyDragon
- * description
+ * description 特殊地图实体类
  * note
  * create date 2022/2/9
  */
-public class SpecialBean extends BaseMapBean {
+class SpecialBean : BaseMapBean {
 
     @DrawableRes
-    int bg;
+    var background = 0
 
-    public SpecialBean() {
+    constructor(jsonObject: JSONObject) {
+        name = jsonObject.getString("name")
+        type = MapType.valueOf(jsonObject.getString("type"))
+        background = jsonObject.getIntValue("background")
     }
 
-    public SpecialBean(JSONObject jsonObject) {
-        this.name = jsonObject.getString("name");
-        this.type = MapType.valueOf(jsonObject.getString("type"));
-        this.bg = jsonObject.getIntValue("bg");
-    }
-
-    public SpecialBean(MapType mapType) {
-        this.type = mapType;
+    constructor(mapType: MapType) {
+        type = mapType
         if (mapType == MapType.START) {
-            name =  "起点";
+            name = MyApplication.getContext().resources.getString(R.string.start)
+            background = R.drawable.bg_start
         }
         if (mapType == MapType.ARMY) {
-            name =  "征兵处";
+            name = MyApplication.getContext().resources.getString(R.string.army)
+            background = R.drawable.bg_army
         }
         if (mapType == MapType.GENERALS) {
-            name =  "职业介绍所";
+            name = MyApplication.getContext().resources.getString(R.string.generals)
+            background = R.drawable.bg_generals
         }
         if (mapType == MapType.CHANCE) {
-            name =  "机会";
+            name = MyApplication.getContext().resources.getString(R.string.chance)
+            background = R.drawable.bg_chance
         }
         if (mapType == MapType.SHOP) {
-            name =  "商店";
+            name = MyApplication.getContext().resources.getString(R.string.shop)
+            background = R.drawable.bg_shop
         }
-        if (mapType == MapType.MONEY) {
-            name =  "银行";
+        if (mapType == MapType.BANK) {
+            name = MyApplication.getContext().resources.getString(R.string.bank)
+            background = R.drawable.bg_bank
         }
         if (mapType == MapType.BIG_MONEY) {
-            name =  "金银岛";
+            name = MyApplication.getContext().resources.getString(R.string.big_bank)
+            background = R.drawable.bg_big_money
         }
         if (mapType == MapType.FREE_GENERALS) {
-            name =  "茅庐";
+            name = MyApplication.getContext().resources.getString(R.string.free_generals)
+            background = R.drawable.bg_free_generals
         }
         if (mapType == MapType.PRISON) {
-            name =  "监狱";
+            name = MyApplication.getContext().resources.getString(R.string.prison)
+            background = R.drawable.bg_prison
         }
     }
-
-    public int getBg() {
-
-        if (type == MapType.START) {
-            return R.drawable.bg_start;
-        }
-        if (type == MapType.ARMY) {
-            return R.drawable.bg_army;
-        }
-        if (type == MapType.GENERALS) {
-            return R.drawable.bg_generals;
-        }
-        if (type == MapType.CHANCE) {
-            return R.drawable.bg_chance;
-        }
-        if (type == MapType.SHOP) {
-            return R.drawable.bg_shop;
-        }
-        if (type == MapType.MONEY) {
-            return R.drawable.bg_money;
-        }
-        if (type == MapType.BIG_MONEY) {
-            return R.drawable.bg_big_money;
-        }
-        if (type == MapType.FREE_GENERALS) {
-            return R.drawable.bg_free_generals;
-        }
-        if (type == MapType.PRISON) {
-            return R.drawable.bg_prison;
-        }
-        return 0;
-    }
-
-    public void setBg(int bg) {
-        this.bg = bg;
-    }
-
 }

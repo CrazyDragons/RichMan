@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.view_city.view.mTvName
 /**
  * class CityView
  * @author CrazyDragon
- * description
+ * description 城池视图
  * note
  * create date 2022/2/9
  */

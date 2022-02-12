@@ -6,17 +6,17 @@
 
     <TextView
         android:id="@+id/mTvName"
-        android:layout_weight="1"
-        android:gravity="center"
         android:layout_width="0dp"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mTvDelete"
-        android:gravity="center"
-        android:text="删除"
         android:layout_width="100dp"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/delete" />
 
 
 </LinearLayout>

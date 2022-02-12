@@ -1,66 +1,56 @@
-package com.hzw.android.richman.base;
+package com.hzw.android.richman.base
 
 /**
  * class BaseMapBean
  *
  * @author CrazyDragon
- * description
+ * description 基础地图类
  * note
  * create date 2022/2/9
  */
-public class BaseMapBean {
-
-
-    public enum MapType {
-        /**
-         * 起点
-         */
+open class BaseMapBean {
+    enum class MapType {
+        //起点
         START,
-        /**
-         * 城池
-         */
+
+        //城池
         CITY,
-        /**
-         * 古战场
-         */
+
+        //战区
         AREA,
-        /**
-         * 征兵处
-         */
+
+        //兵力
         ARMY,
-        /**
-         * 职业介绍所
-         */
+
+        //职业介绍所
         GENERALS,
-        /**
-         * 机会
-         */
+
+        //机会
         CHANCE,
-        /**
-         * 商店
-         */
+
+        //商店
         SHOP,
-        /**
-         * 钱
-         */
-        MONEY,
-        /**
-         * 金银岛
-         */
+
+        //银行
+        BANK,
+
+        //金银岛
         BIG_MONEY,
-        /**
-         * 茅庐
-         */
+
+        //茅庐
         FREE_GENERALS,
-        /**
-         * 监狱
-         */
+
+        //监狱
         PRISON
     }
 
-    public MapType type = MapType.START;
+    /**
+     * 地图类型
+     */
+    var type: MapType? = null
 
-    public String name = "地图";
-
-
+    /**
+     * 地图名
+     */
+    var name: String? = null
 }

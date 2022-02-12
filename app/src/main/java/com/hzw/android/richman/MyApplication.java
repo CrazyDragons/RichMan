@@ -1,5 +1,6 @@
 package com.hzw.android.richman;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 
@@ -7,12 +8,13 @@ import android.content.Context;
  * class Application
  *
  * @author CrazyDragon
- * description
+ * description 主程序
  * note
  * create date 2022/2/10
  */
 public class MyApplication extends Application {
 
+    @SuppressLint("StaticFieldLeak")
     private static Context context;
 
     @Override

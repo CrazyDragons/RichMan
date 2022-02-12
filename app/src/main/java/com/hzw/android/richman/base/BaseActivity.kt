@@ -11,7 +11,7 @@ import com.hzw.android.richman.utils.ScreenUtil
 /**
  * class BaseActivity
  * @author CrazyDragon
- * description
+ * description 基类Activity
  * note
  * create date 2022/2/10
  */
@@ -35,6 +35,6 @@ open class BaseActivity : AppCompatActivity() {
                     or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         playerOffsetX = ScreenUtil.dp2px(this, Value.PLAYER_OFFSET_X)
         playerOffsetY = ScreenUtil.dp2px(this, Value.PLAYER_OFFSET_Y)
-        cameraOffsetX = (ScreenUtil.screenWidth * Value.CAMERA_OFFSET).toInt()
+        cameraOffsetX = (ScreenUtil.screenWidth * Value.CAMERA_OFFSET_X).toInt()
     }
 }

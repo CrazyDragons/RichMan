@@ -23,7 +23,7 @@ import com.hzw.android.richman.listener.OnAddLogListener
 import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.listener.OnWalkListener
 import com.hzw.android.richman.utils.MapUtil
-import com.hzw.android.richman.utils.ToastUitl
+import com.hzw.android.richman.utils.ToastUtil
 import com.hzw.android.richman.view.*
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -33,6 +33,14 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_game.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * class GameActivity
+ *
+ * @author CrazyDragon
+ * description 游戏主界面
+ * note
+ * create date 2022/2/9
+ */
 class GameActivity : BaseActivity(),
     OnWalkListener,
     View.OnClickListener,
@@ -99,7 +107,7 @@ class GameActivity : BaseActivity(),
             Handler(Looper.getMainLooper()).postDelayed({
                 if (!GameData.INSTANCE.playerData[0].isPlayer) {
                     mBtnWalk.performClick()
-                }else {
+                } else {
                     setTurn()
                 }
             }, 2000)
@@ -130,7 +138,10 @@ class GameActivity : BaseActivity(),
 
         if (!isNewGame) {
 
-            optionStatus(walk = isNewGame, finish = !isNewGame && GameData.INSTANCE.currentPlayer().isPlayer)
+            optionStatus(
+                walk = isNewGame,
+                finish = !isNewGame && GameData.INSTANCE.currentPlayer().isPlayer
+            )
 
             optionComputer()
 
@@ -181,7 +192,7 @@ class GameActivity : BaseActivity(),
                     playerView.translationY = mBaseMap.mapViewList[next].y + playerOffsetY
                     mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
                     if (restart) {
-                        ToastUitl.show("经过了起点")
+                        ToastUtil.show("经过了起点")
                         restart = false
                     }
 
@@ -245,7 +256,10 @@ class GameActivity : BaseActivity(),
             //点击结束
             R.id.mBtnFinishOption -> {
                 GameLog.INSTANCE.addTurnLog()
-                mCamera.smoothScrollTo(playerViewList[GameData.INSTANCE.optionPlayerIndex].x.toInt() - cameraOffsetX, 0)
+                mCamera.smoothScrollTo(
+                    playerViewList[GameData.INSTANCE.optionPlayerIndex].x.toInt() - cameraOffsetX,
+                    0
+                )
                 if (GameData.INSTANCE.currentPlayer().isPlayer) {
                     optionStatus(walk = true, finish = false)
                 } else {

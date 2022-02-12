@@ -12,10 +12,17 @@ import com.hzw.android.richman.adapter.AddPlayerAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.game.GameSave
-import com.hzw.android.richman.utils.ToastUitl
+import com.hzw.android.richman.utils.ToastUtil
 import kotlinx.android.synthetic.main.activity_ready.*
 
-
+/**
+ * class GameActivity
+ *
+ * @author CrazyDragon
+ * description 游戏准备界面
+ * note
+ * create date 2022/2/9
+ */
 class ReadyActivity : BaseActivity() {
 
     private var adapter = AddPlayerAdapter()
@@ -36,25 +43,25 @@ class ReadyActivity : BaseActivity() {
 
 
         mTvAddPlayer.setOnClickListener {
-            adapter.addData(PlayerBean("玩家", true))
+            adapter.addData(PlayerBean(resources.getString(R.string.player), true))
 //            showInput()
         }
 
         mTvAddComputer.setOnClickListener {
-            adapter.addData(PlayerBean("电脑", false))
+            adapter.addData(PlayerBean(resources.getString(R.string.computer), false))
         }
 
         mTvStart.setOnClickListener {
 
             if (adapter.data.isEmpty()) {
-                ToastUitl.show("请至少添加一个玩家！")
+                ToastUtil.show(R.string.no_player)
                 return@setOnClickListener
             }
 
-            for (i in 0 until  adapter.data.size) {
-                adapter.data[i].id = i+1
+            for (i in 0 until adapter.data.size) {
+                adapter.data[i].id = i + 1
                 if (!adapter.data[i].isPlayer) {
-                    adapter.data[i].name = adapter.data[i].name + (i+1).toString()
+                    adapter.data[i].name = adapter.data[i].name + (i + 1).toString()
                 }
             }
             GameSave.INSTANCE.savePlayer(JSON.toJSONString(adapter.data))
@@ -66,8 +73,8 @@ class ReadyActivity : BaseActivity() {
 
     private fun showInput() {
         val editText = EditText(this)
-        val builder = AlertDialog.Builder(this).setTitle("输入昵称").setView(editText)
-            .setPositiveButton("加入") { _, _ ->
+        val builder = AlertDialog.Builder(this).setTitle(resources.getString(R.string.input_nick)).setView(editText)
+            .setPositiveButton(resources.getString(R.string.join)) { _, _ ->
                 adapter.addData(PlayerBean(editText.text.toString(), true))
 
             }

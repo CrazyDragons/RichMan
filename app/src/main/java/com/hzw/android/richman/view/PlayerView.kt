@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.view_player.view.*
 /**
  * class CityView
  * @author CrazyDragon
- * description
+ * description 角色视图
  * note
  * create date 2022/2/9
  */
