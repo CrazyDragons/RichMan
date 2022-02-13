@@ -1,6 +1,8 @@
 package com.hzw.android.richman.utils
 
 import com.hzw.android.richman.config.Value
+import com.hzw.android.richman.game.GameData
+import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.listener.OnWalkListener
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -46,5 +48,26 @@ object MapUtil {
                 override fun onComplete() {
                 }
             })
+    }
+
+    private fun whichPlayerWalk() {
+        for (i in 0 until GameData.INSTANCE.playerData.size) {
+            if (GameData.INSTANCE.playerData[i].isTurn) {
+                return if (i < GameData.INSTANCE.playerData.size - 1) {
+                    GameData.INSTANCE.optionPlayerIndex = i + 1
+                } else {
+                    GameData.INSTANCE.optionPlayerIndex = 0
+                }
+            }
+        }
+    }
+
+    fun setNextTurn() {
+        whichPlayerWalk()
+        for (item in GameData.INSTANCE.playerData) {
+            item.isTurn = false
+        }
+        GameData.INSTANCE.currentPlayer().isTurn = true
+        GameLog.INSTANCE.addTurnLog()
     }
 }

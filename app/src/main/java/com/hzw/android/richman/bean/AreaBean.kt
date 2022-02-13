@@ -17,6 +17,9 @@ class AreaBean : BaseMapBean {
     //兵力
     var army = AREA_ARMY
 
+    //拥有者
+    var onwer: PlayerBean? = null
+
     constructor(jsonObject: JSONObject) {
         name = jsonObject.getString("name")
         army = jsonObject.getIntValue("army")

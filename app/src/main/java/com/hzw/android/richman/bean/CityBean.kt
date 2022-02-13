@@ -20,7 +20,7 @@ class CityBean : BaseMapBean {
     //城池级别
     var level = 0
 
-    //城池级别
+    //城池封面
     var cover = 0
 
     //武将

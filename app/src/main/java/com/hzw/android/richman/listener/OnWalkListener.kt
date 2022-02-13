@@ -17,7 +17,6 @@ interface OnWalkListener {
 
     /**
      * 走动完成
-     * @param isNewGame 是否是新游戏
      */
-    fun onWalkFinish(isNewGame:Boolean)
+    fun onWalkFinish()
 }

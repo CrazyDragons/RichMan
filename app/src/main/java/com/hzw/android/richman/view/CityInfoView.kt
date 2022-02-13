@@ -66,7 +66,7 @@ class CityInfoView @JvmOverloads constructor(
                 cityBean.buyPrice * Value.LEVEL_CITY_ARMY_3
             )
         mTvCitySale.text =
-            String.format("抵押价 %d", (cityBean.buyPrice * Value.SALE_X).toInt())
+            String.format(resources.getString(R.string.sale_cost), (cityBean.buyPrice * Value.SALE_X).toInt())
 
         when (cityBean.color) {
             CityBean.Color.RED -> {

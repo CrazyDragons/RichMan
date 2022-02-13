@@ -17,6 +17,7 @@ import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.bean.SpecialBean
+import com.hzw.android.richman.dialog.MapInfoDialog
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
@@ -24,8 +25,8 @@ import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.OnAddLogListener
 import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.listener.OnWalkListener
-import com.hzw.android.richman.utils.LogUtil
 import com.hzw.android.richman.utils.MapUtil
+import com.hzw.android.richman.utils.MapUtil.setNextTurn
 import com.hzw.android.richman.utils.ToastUtil
 import com.hzw.android.richman.view.*
 import io.reactivex.Observable
@@ -137,25 +138,22 @@ class GameActivity : BaseActivity(),
         }
     }
 
-    override fun onWalkFinish(isNewGame: Boolean) {
+    override fun onWalkFinish() {
 
-        if (!isNewGame) {
+        optionStatus(
+            walk = false,
+            finish = GameData.INSTANCE.currentPlayer().isPlayer
+        )
 
-            optionStatus(
-                walk = isNewGame,
-                finish = !isNewGame && GameData.INSTANCE.currentPlayer().isPlayer
-            )
+        optionComputer()
+        if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+            Handler(Looper.getMainLooper()).postDelayed({
 
-            optionComputer()
-            if (!GameData.INSTANCE.currentPlayer().isPlayer) {
-                Handler(Looper.getMainLooper()).postDelayed({
-
-                    mBtnFinishOption.performClick()
-                }, 2000)
-            }else {
-                GameOption.option()
-                refreshViews()
-            }
+                mBtnFinishOption.performClick()
+            }, 2000)
+        } else {
+            GameOption.option()
+            refreshViews()
         }
     }
 
@@ -165,6 +163,13 @@ class GameActivity : BaseActivity(),
         count: Int,
         onWalkListener: OnWalkListener
     ) {
+
+        if (count == 0) {
+            playerView.translationX = mBaseMap.mapViewList[0].x + playerOffsetX
+            playerView.translationY = mBaseMap.mapViewList[0].y + playerOffsetY
+            mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
+            return
+        }
 
         playerBean.walkIndex += count
         var restart = false
@@ -196,13 +201,12 @@ class GameActivity : BaseActivity(),
                         restart = false
                     }
 
-
                     showMapInfo(GameData.INSTANCE.mapData[next])
 
                     if (t == count.toLong()) {
                         playerBean.walkIndex = next
                         playerView.mDisposable?.dispose()
-                        onWalkListener.onWalkFinish(count == 0)
+                        onWalkListener.onWalkFinish()
                     } else {
                         optionStatus(walk = false, finish = false)
                     }
@@ -217,27 +221,6 @@ class GameActivity : BaseActivity(),
 
     }
 
-    private fun whichPlayerWalk() {
-        for (i in 0 until GameData.INSTANCE.playerData.size) {
-            if (GameData.INSTANCE.playerData[i].isTurn) {
-                return if (i < GameData.INSTANCE.playerData.size - 1) {
-                    GameData.INSTANCE.optionPlayerIndex = i + 1
-                } else {
-                    GameData.INSTANCE.optionPlayerIndex = 0
-                }
-            }
-        }
-    }
-
-    private fun setNextTurn() {
-        whichPlayerWalk()
-        for (item in GameData.INSTANCE.playerData) {
-            item.isTurn = false
-        }
-        GameData.INSTANCE.currentPlayer().isTurn = true
-        GameLog.INSTANCE.addTurnLog()
-    }
-
     private fun optionComputer() {
         GameLog.INSTANCE.addOptionLog()
     }
@@ -247,8 +230,7 @@ class GameActivity : BaseActivity(),
         when (view?.id) {
 
             R.id.mRootMap -> {
-                mFlInfo.visibility = GONE
-                LogUtil.print("当前操作的玩家叫" + GameData.INSTANCE.currentPlayer().name)
+                mFlInfo.visibility = if (mFlInfo.visibility == VISIBLE) GONE else VISIBLE
             }
 
             //点击投掷
@@ -280,11 +262,11 @@ class GameActivity : BaseActivity(),
     }
 
     override fun onMapClick(index: Int) {
-        showMapInfo(GameData.INSTANCE.mapData[index])
+        showMapInfoDialog(GameData.INSTANCE.mapData[index])
     }
 
     private fun showMapInfo(baseMapBean: BaseMapBean) {
-        mFlInfo.visibility = VISIBLE
+        mFlInfo.visibility = View.VISIBLE
         mFlInfo.removeAllViews()
         when (baseMapBean) {
             is CityBean -> {
@@ -307,6 +289,31 @@ class GameActivity : BaseActivity(),
         }
     }
 
+    private fun showMapInfoDialog(baseMapBean: BaseMapBean) {
+        var view = View(this)
+        when (baseMapBean) {
+            is CityBean -> {
+                val mCityInfoView = CityInfoView(this@GameActivity)
+                mCityInfoView.setData(baseMapBean)
+                view = mCityInfoView
+            }
+
+            is AreaBean -> {
+                val mAreaInfoView = AreaInfoView(this@GameActivity)
+                mAreaInfoView.setData(baseMapBean)
+                view = mAreaInfoView
+            }
+
+            is SpecialBean -> {
+                val mSpecialInfoView = SpecialInfoView(this@GameActivity)
+                mSpecialInfoView.setData(baseMapBean)
+                view = mSpecialInfoView
+            }
+        }
+
+        MapInfoDialog(this, view).show()
+    }
+
     override fun onAddLog() {
         mRvLog.scrollToPosition(GameLog.INSTANCE.logAdapter.data.size - 1)
     }
@@ -317,7 +324,8 @@ class GameActivity : BaseActivity(),
         when (GameData.INSTANCE.currentMap()) {
             is CityBean -> {
                 val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                val cityView = mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as CityView
+                val cityView =
+                    mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as CityView
                 val cityInfoView = CityInfoView(this)
                 cityView.setData(cityBean)
                 cityInfoView.setData(cityBean)

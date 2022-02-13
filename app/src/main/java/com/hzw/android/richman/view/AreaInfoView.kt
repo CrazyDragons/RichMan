@@ -6,7 +6,6 @@ import android.widget.FrameLayout
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.config.Value
-import com.hzw.android.richman.game.GameData
 import kotlinx.android.synthetic.main.view_area_info.view.*
 
 /**
@@ -32,9 +31,10 @@ class AreaInfoView @JvmOverloads constructor(
 
     fun setData(areaBean: AreaBean) {
         mTvAreaName.text = areaBean.name
+        mTvOwner.visibility = if (areaBean.onwer == null) GONE else VISIBLE
         mTvOwner.text = String.format(
             resources.getString(R.string.owner),
-            GameData.INSTANCE.currentPlayer().name
+            areaBean.onwer?.name
         )
         mTvAreaArmyCost.text =
             String.format(
@@ -69,6 +69,6 @@ class AreaInfoView @JvmOverloads constructor(
                 areaBean.army * Value.LEVEL_AREA_ARMY_5
             )
         mTvAreaSale.text =
-            String.format("抵押价 %d", (areaBean.army * Value.SALE_X).toInt())
+            String.format(resources.getString(R.string.sale_cost), (areaBean.army * Value.SALE_X).toInt())
     }
 }

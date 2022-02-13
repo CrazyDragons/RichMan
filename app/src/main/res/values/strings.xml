@@ -30,6 +30,7 @@
     <string name="owner">拥有者 %s</string>
     <string name="level_cost">城墙建设费用 %d</string>
     <string name="defense_cost">守城损兵 %d</string>
+    <string name="sale_cost">抵押价 %d</string>
 
     <string name="city_level_0">空城：过路费 %1$d 驻兵 %2$d</string>
     <string name="city_level_1">小城：过路费 %1$d 驻兵 %2$d</string>

@@ -7,6 +7,7 @@ import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.game.GameData.Companion.INSTANCE
 import java.math.BigDecimal
+import kotlin.math.pow
 
 /**
  * class PlayerInfoAdapter
@@ -28,11 +29,6 @@ class PlayerInfoAdapter : BaseQuickAdapter<PlayerBean, BaseViewHolder>(R.layout.
             .setText(R.id.mTvEquipments, item.equipments.size.toString())
     }
 
-    private fun getSingleGDP(playerBean: PlayerBean): Double {
-        return playerBean.money + playerBean.army * 2 +
-                getCityMoney(playerBean.city) + playerBean.generals.size * 2000 + playerBean.equipments.size * 2000
-    }
-
     private fun getGDP(playerBean: PlayerBean): Int {
         val x: Double
         var sum = 0.0
@@ -43,10 +39,15 @@ class PlayerInfoAdapter : BaseQuickAdapter<PlayerBean, BaseViewHolder>(R.layout.
         return (getDouble2(x) * 100).toInt()
     }
 
+    private fun getSingleGDP(playerBean: PlayerBean): Double {
+        return playerBean.money + playerBean.army * 2 +
+                getCityMoney(playerBean.city) + playerBean.generals.size * 2000 + playerBean.equipments.size * 2000
+    }
+
     private fun getCityMoney(arrayList: MutableList<CityBean>): Double {
         var money = 0.0
         for (i in arrayList.indices) {
-            money += arrayList[i].buyPrice + arrayList[i].buyPrice / 2.0 * arrayList[i].level
+            money += arrayList[i].buyPrice * 2.0.pow(arrayList[i].level.toDouble())
         }
         return money
     }
