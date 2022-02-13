@@ -54,7 +54,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.mTvExit -> {
-                GameSave.INSTANCE.clean()
+                GameSave.clean()
                 finish()
             }
         }

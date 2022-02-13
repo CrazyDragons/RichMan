@@ -60,11 +60,12 @@ class ReadyActivity : BaseActivity() {
 
             for (i in 0 until adapter.data.size) {
                 adapter.data[i].id = i + 1
-                if (!adapter.data[i].isPlayer) {
-                    adapter.data[i].name = adapter.data[i].name + (i + 1).toString()
-                }
+                adapter.data[i].name = (i + 1).toString() + adapter.data[i].name
+//                if (!adapter.data[i].isPlayer) {
+//                    adapter.data[i].name = adapter.data[i].name + (i + 1).toString()
+//                }
             }
-            GameSave.INSTANCE.savePlayer(JSON.toJSONString(adapter.data))
+            GameSave.savePlayer(JSON.toJSONString(adapter.data))
             startActivity(Intent(this, GameActivity::class.java).putExtra(("newGame"), true))
             finish()
         }

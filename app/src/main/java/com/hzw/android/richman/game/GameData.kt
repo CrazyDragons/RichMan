@@ -16,7 +16,7 @@ import com.hzw.android.richman.bean.SpecialBean
  */
 class GameData private constructor() {
 
-    //操作角色地图位置
+    //操作角色轮询位置
     var optionPlayerIndex = 0
 
     //角色数据
@@ -35,12 +35,12 @@ class GameData private constructor() {
     }
 
     fun load() {
-        playerData = JSON.parseArray(GameSave.INSTANCE.loadPlayer(), PlayerBean::class.java)
+        playerData = JSON.parseArray(GameSave.loadPlayer(), PlayerBean::class.java)
         parseMap()
     }
 
     private fun parseMap() {
-        val jsonArray = JSON.parseArray(GameSave.INSTANCE.loadMap())
+        val jsonArray = JSON.parseArray(GameSave.loadMap())
         for (i in 0 until jsonArray.size) {
             val jsonObject = jsonArray.getJSONObject(i)
             when (BaseMapBean.MapType.valueOf(jsonObject.getString("type"))) {
@@ -64,5 +64,7 @@ class GameData private constructor() {
         return playerData[optionPlayerIndex]
     }
 
-
+    fun currentMap(): BaseMapBean {
+        return mapData[currentPlayer().walkIndex]
+    }
 }

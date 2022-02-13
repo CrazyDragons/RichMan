@@ -16,15 +16,19 @@ import com.hzw.android.richman.bean.SpecialBean
  */
 class GameInit private constructor() {
 
+    var mapList = mutableListOf<BaseMapBean>()
+
     companion object {
         val INSTANCE: GameInit by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             GameInit()
         }
     }
 
-    fun map(): MutableList<BaseMapBean> {
-        val mapList = mutableListOf<BaseMapBean>()
+    init {
+        initMap()
+    }
 
+    private fun initMap() {
         mapList.add(SpecialBean(BaseMapBean.MapType.START))
         mapList.add(CityBean("安徽", R.drawable.bg_anhui, 1500, CityBean.Color.RED))
         mapList.add(CityBean("澳门", R.drawable.bg_aomen, 1000, CityBean.Color.RED))
@@ -86,8 +90,6 @@ class GameInit private constructor() {
         mapList.add(CityBean("云南", R.drawable.bg_yunnan, 1000, CityBean.Color.PURPLE))
         mapList.add(CityBean("浙江", R.drawable.bg_zhejiang, 1000, CityBean.Color.PURPLE))
 
-        GameSave.INSTANCE.saveMap(JSON.toJSONString(mapList))
-
-        return mapList
+        GameSave.saveMap(JSON.toJSONString(mapList))
     }
 }

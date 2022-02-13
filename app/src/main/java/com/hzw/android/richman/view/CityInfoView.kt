@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.config.Value
-import com.hzw.android.richman.game.GameData
 import kotlinx.android.synthetic.main.view_city_info.view.*
 
 /**
@@ -37,8 +36,9 @@ class CityInfoView @JvmOverloads constructor(
         mTvCityName.text = cityBean.name
         mIvCityCover.setBackgroundResource(cityBean.cover)
         mTvCityLevel.setLevel(cityBean.level, true)
+        mTvOwner.visibility = if (cityBean.owner == null) GONE else VISIBLE
         mTvOwner.text =
-            String.format(resources.getString(R.string.owner), GameData.INSTANCE.currentPlayer().name)
+            String.format(resources.getString(R.string.owner), cityBean.owner?.name)
         mTvCityLevelCost.text =
             String.format(resources.getString(R.string.level_cost), (cityBean.buyPrice * Value.LEVEL_CITY_COST_X).toInt())
         mTvCityArmyCost.text =

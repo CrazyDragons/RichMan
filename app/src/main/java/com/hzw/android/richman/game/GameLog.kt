@@ -1,6 +1,7 @@
 package com.hzw.android.richman.game
 
 import com.hzw.android.richman.adapter.LogAdapter
+import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.listener.OnAddLogListener
 
 /**
@@ -45,8 +46,13 @@ class GameLog {
         onAddLogListener.onAddLog()
     }
 
-    fun addSytemLog(msg: String) {
+    fun addSystemLog(msg: String) {
         logAdapter.addData("系统：$msg")
+        onAddLogListener.onAddLog()
+    }
+
+    fun addBuyCityLog(cityBean: CityBean) {
+        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：购买了" + cityBean.name)
         onAddLogListener.onAddLog()
     }
 

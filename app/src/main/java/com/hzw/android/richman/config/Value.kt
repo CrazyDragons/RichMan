@@ -99,4 +99,13 @@ object Value {
 
     //五区驻兵系数
     const val LEVEL_AREA_ARMY_5 = 16
+
+    //默认初始金钱
+    const val DEFAULT_MONEY = 10000
+
+    //默认初始兵力
+    const val DEFAULT_ARMY = 10000
+
+    //默认初始武将
+    const val DEFAULT_GENERALS = 5
 }

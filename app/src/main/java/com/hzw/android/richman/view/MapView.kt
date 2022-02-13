@@ -33,9 +33,7 @@ class MapView @JvmOverloads constructor(
 
     init {
 
-
-        // 满足 (x+y)*2 - 4 = 格子数
-        val sumCount = GameInit.INSTANCE.map().size
+        val sumCount = GameInit.INSTANCE.mapList.size
 
         val itemWidth = ScreenUtil.screenWidth / Y_COUNT / 2
         val itemHeight = ScreenUtil.screenHeight / Y_COUNT
@@ -45,18 +43,18 @@ class MapView @JvmOverloads constructor(
         for (i in 0 until sumCount) {
 
             var mapItem: View
-            when (GameInit.INSTANCE.map()[i].type) {
+            when (GameInit.INSTANCE.mapList[i].type) {
                 BaseMapBean.MapType.CITY -> {
                     mapItem = CityView(context)
-                    mapItem.setData(GameInit.INSTANCE.map()[i] as CityBean)
+                    mapItem.setData(GameInit.INSTANCE.mapList[i] as CityBean)
                 }
                 BaseMapBean.MapType.AREA -> {
                     mapItem = AreaView(context)
-                    mapItem.setData(GameInit.INSTANCE.map()[i] as AreaBean)
+                    mapItem.setData(GameInit.INSTANCE.mapList[i] as AreaBean)
                 }
                 else -> {
                     mapItem = SpecialView(context)
-                    mapItem.setData(GameInit.INSTANCE.map()[i] as SpecialBean)
+                    mapItem.setData(GameInit.INSTANCE.mapList[i] as SpecialBean)
                 }
             }
             mapItem.setOnClickListener {

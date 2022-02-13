@@ -9,17 +9,10 @@ import com.hzw.android.richman.base.BaseSave
  * note
  * create date 2022/2/10
  */
-class GameSave : BaseSave() {
+object GameSave : BaseSave() {
 
-    companion object {
-
-        val INSTANCE: GameSave by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-            GameSave()
-        }
-
-        private const val MAP = "map"
-        private const val PLAYER = "player"
-    }
+    private const val MAP = "map"
+    private const val PLAYER = "player"
 
     fun saveMap(json: String) {
         putStringData(MAP, json)

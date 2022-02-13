@@ -1,5 +1,6 @@
 package com.hzw.android.richman.bean
 
+import com.hzw.android.richman.config.Value
 import java.util.*
 
 /**
@@ -19,10 +20,10 @@ class PlayerBean(//昵称
     var id = 0
 
     //金钱
-    var money = 10000
+    var money = Value.DEFAULT_MONEY
 
     //兵力
-    var army = 10000
+    var army = Value.DEFAULT_ARMY
 
     //武将
     var generals = ArrayList<GeneralBean>()

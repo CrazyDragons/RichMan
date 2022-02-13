@@ -26,6 +26,9 @@ class CityBean : BaseMapBean {
     //武将
     var general: GeneralBean? = null
 
+    //拥有者
+    var owner:PlayerBean? = null
+
     //城池颜色
     var color: Color? = null
 

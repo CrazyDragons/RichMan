@@ -34,7 +34,8 @@ class CityView @JvmOverloads constructor(
         mTvPrice.text = cityBean.buyPrice.toString()
         mIvCityCover.setBackgroundResource(cityBean.cover)
         mViewLevel.setLevel(cityBean.level, false)
-        mTvOwner.text = cityBean.name
+        mTvOwner.visibility = if (cityBean.owner == null) GONE else VISIBLE
+        mTvOwner.text = cityBean.owner?.name
 
         when (cityBean.color) {
             CityBean.Color.RED -> {

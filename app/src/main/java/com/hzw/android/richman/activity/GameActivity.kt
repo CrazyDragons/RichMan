@@ -1,5 +1,6 @@
 package com.hzw.android.richman.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,10 +19,12 @@ import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.bean.SpecialBean
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
+import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.OnAddLogListener
 import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.listener.OnWalkListener
+import com.hzw.android.richman.utils.LogUtil
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.ToastUtil
 import com.hzw.android.richman.view.*
@@ -57,7 +60,7 @@ class GameActivity : BaseActivity(),
         if (isNewGame) {
             //新游戏
         } else {
-            GameSave.INSTANCE.loadMap()
+            GameSave.loadMap()
         }
 
         initViews()
@@ -88,7 +91,7 @@ class GameActivity : BaseActivity(),
         optionStatus(walk = true, finish = false)
 
         GameLog.INSTANCE.clear()
-        GameLog.INSTANCE.addSytemLog("欢迎来到大富翁")
+        GameLog.INSTANCE.addSystemLog("欢迎来到大富翁")
 
         Handler(Looper.getMainLooper()).postDelayed({
 
@@ -108,7 +111,7 @@ class GameActivity : BaseActivity(),
                 if (!GameData.INSTANCE.playerData[0].isPlayer) {
                     mBtnWalk.performClick()
                 } else {
-                    setTurn()
+                    setNextTurn()
                 }
             }, 2000)
 
@@ -144,17 +147,14 @@ class GameActivity : BaseActivity(),
             )
 
             optionComputer()
-
-            whichPlayerWalk()
-
-            setTurn()
-
             if (!GameData.INSTANCE.currentPlayer().isPlayer) {
-
                 Handler(Looper.getMainLooper()).postDelayed({
 
                     mBtnFinishOption.performClick()
                 }, 2000)
+            }else {
+                GameOption.option()
+                refreshViews()
             }
         }
     }
@@ -229,11 +229,13 @@ class GameActivity : BaseActivity(),
         }
     }
 
-    private fun setTurn() {
+    private fun setNextTurn() {
+        whichPlayerWalk()
         for (item in GameData.INSTANCE.playerData) {
             item.isTurn = false
         }
         GameData.INSTANCE.currentPlayer().isTurn = true
+        GameLog.INSTANCE.addTurnLog()
     }
 
     private fun optionComputer() {
@@ -246,6 +248,7 @@ class GameActivity : BaseActivity(),
 
             R.id.mRootMap -> {
                 mFlInfo.visibility = GONE
+                LogUtil.print("当前操作的玩家叫" + GameData.INSTANCE.currentPlayer().name)
             }
 
             //点击投掷
@@ -255,7 +258,7 @@ class GameActivity : BaseActivity(),
 
             //点击结束
             R.id.mBtnFinishOption -> {
-                GameLog.INSTANCE.addTurnLog()
+                setNextTurn()
                 mCamera.smoothScrollTo(
                     playerViewList[GameData.INSTANCE.optionPlayerIndex].x.toInt() - cameraOffsetX,
                     0
@@ -265,7 +268,7 @@ class GameActivity : BaseActivity(),
                 } else {
                     Handler(Looper.getMainLooper()).postDelayed({
                         mBtnWalk.performClick()
-                    }, 200)
+                    }, 1000)
                 }
             }
         }
@@ -306,6 +309,24 @@ class GameActivity : BaseActivity(),
 
     override fun onAddLog() {
         mRvLog.scrollToPosition(GameLog.INSTANCE.logAdapter.data.size - 1)
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun refreshViews() {
+        when (GameData.INSTANCE.currentMap()) {
+            is CityBean -> {
+                val cityBean = GameData.INSTANCE.currentMap() as CityBean
+                val cityView = mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as CityView
+                val cityInfoView = CityInfoView(this)
+                cityView.setData(cityBean)
+                cityInfoView.setData(cityBean)
+                mFlInfo.removeAllViews()
+                mFlInfo.addView(cityInfoView)
+                mRvPlayerInfo.adapter?.notifyDataSetChanged()
+                GameLog.INSTANCE.addSystemLog("更新了数据")
+            }
+        }
     }
 
 
