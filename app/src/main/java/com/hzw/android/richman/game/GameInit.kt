@@ -3,9 +3,7 @@ package com.hzw.android.richman.game
 import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.R
 import com.hzw.android.richman.base.BaseMapBean
-import com.hzw.android.richman.bean.AreaBean
-import com.hzw.android.richman.bean.CityBean
-import com.hzw.android.richman.bean.SpecialBean
+import com.hzw.android.richman.bean.*
 
 /**
  * class GameInit
@@ -17,6 +15,8 @@ import com.hzw.android.richman.bean.SpecialBean
 class GameInit private constructor() {
 
     var mapList = mutableListOf<BaseMapBean>()
+    var generals = mutableListOf<GeneralBean>()
+    var equipments = mutableListOf<EquipmentBean>()
 
     companion object {
         val INSTANCE: GameInit by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -26,6 +26,8 @@ class GameInit private constructor() {
 
     init {
         initMap()
+        initGenerals()
+        initEquipments()
     }
 
     private fun initMap() {
@@ -91,5 +93,20 @@ class GameInit private constructor() {
         mapList.add(CityBean("浙江", R.drawable.bg_zhejiang, 1000, CityBean.Color.PURPLE))
 
         GameSave.saveMap(JSON.toJSONString(mapList))
+    }
+
+    private fun initGenerals() {
+
+        for (i in 1 .. 50) {
+            generals.add(GeneralBean(i.toString()+"将", R.drawable.icon_test, 1 + (Math.random()*80).toInt()/20, (Math.random()*100).toInt(), (Math.random()*100).toInt()))
+        }
+
+    }
+
+    private fun initEquipments() {
+        equipments.add(EquipmentBean(EquipmentBean.NAME.A, "111"))
+        equipments.add(EquipmentBean(EquipmentBean.NAME.B, "222"))
+        equipments.add(EquipmentBean(EquipmentBean.NAME.C, "333"))
+        equipments.add(EquipmentBean(EquipmentBean.NAME.D, "444"))
     }
 }

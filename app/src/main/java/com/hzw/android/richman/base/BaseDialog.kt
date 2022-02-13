@@ -48,23 +48,23 @@ open class BaseDialog(context: Context) : Dialog(context, R.style.dialog_style) 
         window!!.attributes = lp
     }
 
-    private fun setWidth(width: Int) {
+    fun setWidth(width: Int) {
         val lp = window!!.attributes
         lp.width = width
         window!!.attributes = lp
     }
 
-    private fun setFullWidth() {
-        setWidth(screenWidth)
+    fun setFullWidth(x: Double) {
+        setWidth((screenWidth / x).toInt())
     }
 
-    private fun setFullHeight() {
-        setHeight(screenHeight)
+    fun setFullHeight(x: Double) {
+        setHeight((screenHeight / x).toInt())
     }
 
-    fun setFull() {
-        setFullWidth()
-        setFullHeight()
+    fun setFull(w: Double, h: Double) {
+        setFullWidth(w)
+        setFullHeight(h)
     }
 
     init {

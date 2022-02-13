@@ -2,10 +2,7 @@ package com.hzw.android.richman.game
 
 import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.base.BaseMapBean
-import com.hzw.android.richman.bean.AreaBean
-import com.hzw.android.richman.bean.CityBean
-import com.hzw.android.richman.bean.PlayerBean
-import com.hzw.android.richman.bean.SpecialBean
+import com.hzw.android.richman.bean.*
 
 /**
  * class Date
@@ -28,6 +25,12 @@ class GameData private constructor() {
     //日志数据
     var logData = mutableListOf<String>()
 
+    //武将数据
+    var generalsData = mutableListOf<GeneralBean>()
+
+    //道具数据
+    var equipmentData = mutableListOf<EquipmentBean>()
+
     companion object {
         val INSTANCE: GameData by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             GameData()
@@ -37,6 +40,22 @@ class GameData private constructor() {
     fun load() {
         playerData = JSON.parseArray(GameSave.loadPlayer(), PlayerBean::class.java)
         parseMap()
+        generalsData = GameInit.INSTANCE.generals
+
+        for (item in playerData) {
+            for (i in 0 .. 15) {
+                item.generals.add(generalsData[i])
+                generalsData.removeAt(i)
+            }
+        }
+
+       equipmentData = GameInit.INSTANCE.equipments
+        for (item in playerData) {
+            for (i in 0 .. 0) {
+                item.equipments.add(equipmentData[i])
+                equipmentData.removeAt(i)
+            }
+        }
     }
 
     private fun parseMap() {

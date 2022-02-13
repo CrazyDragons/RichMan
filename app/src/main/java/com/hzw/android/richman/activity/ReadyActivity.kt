@@ -11,6 +11,7 @@ import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.AddPlayerAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.bean.PlayerBean
+import com.hzw.android.richman.config.Constants
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.utils.ToastUtil
 import kotlinx.android.synthetic.main.activity_ready.*
@@ -66,7 +67,7 @@ class ReadyActivity : BaseActivity() {
 //                }
             }
             GameSave.savePlayer(JSON.toJSONString(adapter.data))
-            startActivity(Intent(this, GameActivity::class.java).putExtra(("newGame"), true))
+            startActivity(Intent(this, GameActivity::class.java).putExtra((Constants.NEW_GAME), true))
             finish()
         }
 

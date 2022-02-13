@@ -20,6 +20,7 @@
     <color name="playersInfo">#8BFFC107</color>
     <color name="walkInfoLine">#CDDC39</color>
     <color name="walkInfo">#D0FFC107</color>
+    <color name="playersDetailsInfo">#FFC107</color>
 
     <color name="colorRed">#FF0000</color>
     <color name="colorOrange">#FF5722</color>

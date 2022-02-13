@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemClickListener
+import com.chad.library.adapter.base.listener.OnItemLongClickListener
 import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.PlayerInfoAdapter
 import com.hzw.android.richman.base.BaseActivity
@@ -20,6 +21,7 @@ import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.bean.SpecialBean
 import com.hzw.android.richman.dialog.MapInfoDialog
+import com.hzw.android.richman.dialog.PlayerInfoDialog
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
@@ -53,7 +55,7 @@ class GameActivity : BaseActivity(),
     OnWalkListener,
     View.OnClickListener,
     OnMapClickListener,
-    OnAddLogListener, OnItemClickListener,OnOptionListener {
+    OnAddLogListener, OnItemClickListener,OnOptionListener, OnItemLongClickListener {
 
     private var playerViewList = mutableListOf<PlayerView>()
 
@@ -92,6 +94,7 @@ class GameActivity : BaseActivity(),
         val playerInfoAdapter = PlayerInfoAdapter()
         playerInfoAdapter.setNewInstance(GameData.INSTANCE.playerData)
         playerInfoAdapter.setOnItemClickListener(this)
+        playerInfoAdapter.setOnItemLongClickListener(this)
         mRvPlayerInfo.adapter = playerInfoAdapter
         mRvLog.adapter = GameLog.INSTANCE.logAdapter
 
@@ -344,7 +347,20 @@ class GameActivity : BaseActivity(),
         mCamera.smoothScrollTo(playerViewList[position].x.toInt() - cameraOffsetX, 0)
     }
 
+    override fun onItemLongClick(
+        adapter: BaseQuickAdapter<*, *>,
+        view: View,
+        position: Int
+    ): Boolean {
+        val playerInfoView = PlayerInfoView(this)
+        playerInfoView.setData(GameData.INSTANCE.playerData[position])
+        PlayerInfoDialog(this, playerInfoView).show()
+        return true
+    }
+
     override fun onOptionFinish() {
         refreshViews()
     }
+
+
 }

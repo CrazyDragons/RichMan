@@ -1,7 +1,11 @@
 package com.hzw.android.richman.bean
 
+import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value
+import com.hzw.android.richman.game.GameData
+import java.math.BigDecimal
 import java.util.*
+import kotlin.math.pow
 
 /**
  * class PlayerBean
@@ -29,7 +33,7 @@ class PlayerBean(//昵称
     var generals = ArrayList<GeneralBean>()
 
     //城池
-    var city = ArrayList<CityBean>()
+    var city = ArrayList<BaseCityBean>()
 
     //道具
     var equipments = ArrayList<EquipmentBean>()
@@ -51,6 +55,37 @@ class PlayerBean(//昵称
         ATTACK,
         //监狱状态
         PRISON
+    }
+
+    private fun getSingleGDP(playerBean: PlayerBean):Double {
+        return  playerBean.money + playerBean.army * 2 +
+                getCityMoney(playerBean.city) + playerBean.generals.size * 2000 + playerBean.equipments.size * 2000
+    }
+
+    private fun getCityMoney(arrayList: MutableList<BaseCityBean>): Double {
+        var money = 0.0
+        for (i in arrayList.indices) {
+
+            if (arrayList[i] is CityBean) {
+                money += arrayList[i].buyPrice * 2.0.pow((arrayList[i] as CityBean).level.toDouble())
+            }
+
+        }
+        return money
+    }
+
+    fun GDP(): String {
+        val x: Double
+        var sum = 0.0
+        for (i in GameData.INSTANCE.playerData) {
+            sum += getSingleGDP(i)
+        }
+        x = getSingleGDP(this) / sum
+        return (getDouble2(x) * 100).toInt().toString()+"%"
+    }
+
+    private fun getDouble2(value: Double): Double {
+        return BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
     }
 
 

@@ -1,7 +1,7 @@
 package com.hzw.android.richman.bean
 
 import com.alibaba.fastjson.JSONObject
-import com.hzw.android.richman.base.BaseMapBean
+import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value.AREA_ARMY
 
 /**
@@ -12,13 +12,10 @@ import com.hzw.android.richman.config.Value.AREA_ARMY
  * note
  * create date 2022/2/9
  */
-class AreaBean : BaseMapBean {
+class AreaBean : BaseCityBean {
 
     //兵力
     var army = AREA_ARMY
-
-    //拥有者
-    var onwer: PlayerBean? = null
 
     constructor(jsonObject: JSONObject) {
         name = jsonObject.getString("name")

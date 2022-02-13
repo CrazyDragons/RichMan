@@ -2,7 +2,7 @@ package com.hzw.android.richman.bean
 
 import androidx.annotation.DrawableRes
 import com.alibaba.fastjson.JSONObject
-import com.hzw.android.richman.base.BaseMapBean
+import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value
 
 /**
@@ -13,22 +13,10 @@ import com.hzw.android.richman.config.Value
  * note
  * create date 2022/2/9
  */
-class CityBean : BaseMapBean {
-
-    //购入价
-    var buyPrice = 0
+class CityBean : BaseCityBean {
 
     //城池级别
     var level = 0
-
-    //城池封面
-    var cover = 0
-
-    //武将
-    var general: GeneralBean? = null
-
-    //拥有者
-    var owner:PlayerBean? = null
 
     //城池颜色
     var color: Color? = null

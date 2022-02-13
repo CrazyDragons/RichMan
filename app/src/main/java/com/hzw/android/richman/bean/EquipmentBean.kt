@@ -8,4 +8,20 @@ package com.hzw.android.richman.bean
  * note
  * create date 2022/2/12
  */
-class EquipmentBean 
+class EquipmentBean {
+
+    var name = NAME.A
+
+    var desc = ""
+
+    constructor(name: NAME, desc: String) {
+        this.name = name
+        this.desc = desc
+    }
+
+    enum class NAME {
+        A,B,C,D
+    }
+
+
+}
