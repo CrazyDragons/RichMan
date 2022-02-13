@@ -41,11 +41,6 @@ class GameLog {
         onAddLogListener.onAddLog()
     }
 
-    fun addTurnLog() {
-        logAdapter.addData("系统：轮到" + GameData.INSTANCE.currentPlayer().name)
-        onAddLogListener.onAddLog()
-    }
-
     fun addSystemLog(msg: String) {
         logAdapter.addData("系统：$msg")
         onAddLogListener.onAddLog()
@@ -53,6 +48,16 @@ class GameLog {
 
     fun addBuyCityLog(cityBean: CityBean) {
         logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：购买了" + cityBean.name)
+        onAddLogListener.onAddLog()
+    }
+
+    fun addLevelCityLog(cityBean: CityBean) {
+        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：升级了" + cityBean.name)
+        onAddLogListener.onAddLog()
+    }
+
+    fun addCostCityLog(cityBean: CityBean) {
+        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：交过路费 " + cityBean.name)
         onAddLogListener.onAddLog()
     }
 

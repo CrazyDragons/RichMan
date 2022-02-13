@@ -6,8 +6,8 @@ import android.view.Gravity
 import android.view.View
 import android.view.Window
 import com.hzw.android.richman.R
-import com.hzw.android.richman.utils.ScreenUtil.Companion.screenHeight
-import com.hzw.android.richman.utils.ScreenUtil.Companion.screenWidth
+import com.hzw.android.richman.utils.ScreenUtil.screenHeight
+import com.hzw.android.richman.utils.ScreenUtil.screenWidth
 
 /**
  * class BaseDialog

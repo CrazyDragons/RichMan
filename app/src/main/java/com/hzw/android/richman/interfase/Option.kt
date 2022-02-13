@@ -11,4 +11,6 @@ import com.hzw.android.richman.bean.CityBean
  */
 interface Option {
     fun buyCity(cityBean: CityBean)
+    fun levelCity(cityBean: CityBean)
+    fun costCity(cityBean: CityBean)
 }

@@ -17,7 +17,7 @@ import com.hzw.android.richman.bean.SpecialBean
 class GameData private constructor() {
 
     //操作角色轮询位置
-    var optionPlayerIndex = 0
+    var optionPlayerTurnIndex = 0
 
     //角色数据
     var playerData = mutableListOf<PlayerBean>()
@@ -61,7 +61,7 @@ class GameData private constructor() {
     }
 
     fun currentPlayer(): PlayerBean {
-        return playerData[optionPlayerIndex]
+        return playerData[optionPlayerTurnIndex]
     }
 
     fun currentMap(): BaseMapBean {

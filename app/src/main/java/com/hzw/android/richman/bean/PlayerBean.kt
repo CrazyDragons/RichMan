@@ -37,8 +37,21 @@ class PlayerBean(//昵称
     //地图位置
     var walkIndex = 0
 
-    //是否是当前回合
-    var isTurn = false
+    //状态
+    var status = STATUS.READY
+
+    enum class STATUS {
+        //准备状态
+        READY,
+        //操作状态
+        OPTION_FALSE,
+        //操作状态
+        OPTION_TRUE,
+        //攻击状态
+        ATTACK,
+        //监狱状态
+        PRISON
+    }
 
 
 }

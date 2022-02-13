@@ -38,10 +38,11 @@
 
         </HorizontalScrollView>
 
-        <FrameLayout
-            android:id="@+id/mFlInfo"
+        <LinearLayout
+            android:id="@+id/mLlOption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_gravity="center" />
 
 

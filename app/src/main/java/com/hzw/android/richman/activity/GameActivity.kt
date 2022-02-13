@@ -9,6 +9,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.PlayerInfoAdapter
 import com.hzw.android.richman.base.BaseActivity
@@ -24,9 +26,11 @@ import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.OnAddLogListener
 import com.hzw.android.richman.listener.OnMapClickListener
+import com.hzw.android.richman.listener.OnOptionListener
 import com.hzw.android.richman.listener.OnWalkListener
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.MapUtil.setNextTurn
+import com.hzw.android.richman.utils.MapUtil.showTurnTips
 import com.hzw.android.richman.utils.ToastUtil
 import com.hzw.android.richman.view.*
 import io.reactivex.Observable
@@ -49,7 +53,7 @@ class GameActivity : BaseActivity(),
     OnWalkListener,
     View.OnClickListener,
     OnMapClickListener,
-    OnAddLogListener {
+    OnAddLogListener, OnItemClickListener,OnOptionListener {
 
     private var playerViewList = mutableListOf<PlayerView>()
 
@@ -75,6 +79,7 @@ class GameActivity : BaseActivity(),
         mRootMap.setOnClickListener(this)
         mBaseMap.onMapClickListener = this
         GameLog.INSTANCE.onAddLogListener = this
+        GameOption.onOptionListener = this
         mRvPlayerInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         mRvLog.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
     }
@@ -86,6 +91,7 @@ class GameActivity : BaseActivity(),
 
         val playerInfoAdapter = PlayerInfoAdapter()
         playerInfoAdapter.setNewInstance(GameData.INSTANCE.playerData)
+        playerInfoAdapter.setOnItemClickListener(this)
         mRvPlayerInfo.adapter = playerInfoAdapter
         mRvLog.adapter = GameLog.INSTANCE.logAdapter
 
@@ -107,6 +113,7 @@ class GameActivity : BaseActivity(),
                 movePlayer(playerView, item, 0, this)
             }
 
+            showTurnTips(this)
 
             Handler(Looper.getMainLooper()).postDelayed({
                 if (!GameData.INSTANCE.playerData[0].isPlayer) {
@@ -130,7 +137,7 @@ class GameActivity : BaseActivity(),
             GameLog.INSTANCE.addWalkLog(count)
 
             movePlayer(
-                playerViewList[GameData.INSTANCE.optionPlayerIndex],
+                playerViewList[GameData.INSTANCE.optionPlayerTurnIndex],
                 GameData.INSTANCE.currentPlayer(),
                 count,
                 this
@@ -142,18 +149,18 @@ class GameActivity : BaseActivity(),
 
         optionStatus(
             walk = false,
-            finish = GameData.INSTANCE.currentPlayer().isPlayer
+            finish = GameData.INSTANCE.currentPlayer().isPlayer && GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.OPTION_FALSE
         )
 
         optionComputer()
+
+        refreshViews()
+
         if (!GameData.INSTANCE.currentPlayer().isPlayer) {
             Handler(Looper.getMainLooper()).postDelayed({
 
                 mBtnFinishOption.performClick()
             }, 2000)
-        } else {
-            GameOption.option()
-            refreshViews()
         }
     }
 
@@ -201,7 +208,6 @@ class GameActivity : BaseActivity(),
                         restart = false
                     }
 
-                    showMapInfo(GameData.INSTANCE.mapData[next])
 
                     if (t == count.toLong()) {
                         playerBean.walkIndex = next
@@ -230,7 +236,7 @@ class GameActivity : BaseActivity(),
         when (view?.id) {
 
             R.id.mRootMap -> {
-                mFlInfo.visibility = if (mFlInfo.visibility == VISIBLE) GONE else VISIBLE
+                mLlOption.visibility = if (mLlOption.visibility == VISIBLE) GONE else VISIBLE
             }
 
             //点击投掷
@@ -240,13 +246,15 @@ class GameActivity : BaseActivity(),
 
             //点击结束
             R.id.mBtnFinishOption -> {
+                mLlOption.removeAllViews()
                 setNextTurn()
                 mCamera.smoothScrollTo(
-                    playerViewList[GameData.INSTANCE.optionPlayerIndex].x.toInt() - cameraOffsetX,
+                    playerViewList[GameData.INSTANCE.optionPlayerTurnIndex].x.toInt() - cameraOffsetX,
                     0
                 )
                 if (GameData.INSTANCE.currentPlayer().isPlayer) {
                     optionStatus(walk = true, finish = false)
+                    showTurnTips(this)
                 } else {
                     Handler(Looper.getMainLooper()).postDelayed({
                         mBtnWalk.performClick()
@@ -265,31 +273,8 @@ class GameActivity : BaseActivity(),
         showMapInfoDialog(GameData.INSTANCE.mapData[index])
     }
 
-    private fun showMapInfo(baseMapBean: BaseMapBean) {
-        mFlInfo.visibility = View.VISIBLE
-        mFlInfo.removeAllViews()
-        when (baseMapBean) {
-            is CityBean -> {
-                val mCityInfoView = CityInfoView(this@GameActivity)
-                mCityInfoView.setData(baseMapBean)
-                mFlInfo.addView(mCityInfoView)
-            }
-
-            is AreaBean -> {
-                val mAreaInfoView = AreaInfoView(this@GameActivity)
-                mAreaInfoView.setData(baseMapBean)
-                mFlInfo.addView(mAreaInfoView)
-            }
-
-            is SpecialBean -> {
-                val mSpecialInfoView = SpecialInfoView(this@GameActivity)
-                mSpecialInfoView.setData(baseMapBean)
-                mFlInfo.addView(mSpecialInfoView)
-            }
-        }
-    }
-
     private fun showMapInfoDialog(baseMapBean: BaseMapBean) {
+        mLlOption.visibility = GONE
         var view = View(this)
         when (baseMapBean) {
             is CityBean -> {
@@ -321,6 +306,8 @@ class GameActivity : BaseActivity(),
 
     @SuppressLint("NotifyDataSetChanged")
     private fun refreshViews() {
+        mLlOption.visibility = VISIBLE
+        mLlOption.removeAllViews()
         when (GameData.INSTANCE.currentMap()) {
             is CityBean -> {
                 val cityBean = GameData.INSTANCE.currentMap() as CityBean
@@ -329,13 +316,35 @@ class GameActivity : BaseActivity(),
                 val cityInfoView = CityInfoView(this)
                 cityView.setData(cityBean)
                 cityInfoView.setData(cityBean)
-                mFlInfo.removeAllViews()
-                mFlInfo.addView(cityInfoView)
+                val optionView = OptionView(this)
+                mLlOption.addView(cityInfoView)
+                mLlOption.addView(optionView)
                 mRvPlayerInfo.adapter?.notifyDataSetChanged()
-                GameLog.INSTANCE.addSystemLog("更新了数据")
+                optionStatus(false, GameData.INSTANCE.currentPlayer().status != PlayerBean.STATUS.ATTACK)
+            }
+
+            is AreaBean -> {
+                val areaInfoView = AreaInfoView(this)
+                val areaBean = GameData.INSTANCE.currentMap() as AreaBean
+                areaInfoView.setData(areaBean)
+                mLlOption.addView(areaInfoView)
+            }
+
+            is SpecialBean -> {
+                val specialInfoView = SpecialInfoView(this)
+                val specialBean = GameData.INSTANCE.currentMap() as SpecialBean
+                specialInfoView.setData(specialBean)
+                mLlOption.addView(specialInfoView)
             }
         }
+        GameLog.INSTANCE.addSystemLog("更新了数据")
     }
 
+    override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
+        mCamera.smoothScrollTo(playerViewList[position].x.toInt() - cameraOffsetX, 0)
+    }
 
+    override fun onOptionFinish() {
+        refreshViews()
+    }
 }

@@ -3,6 +3,7 @@ package com.hzw.android.richman.bean
 import androidx.annotation.DrawableRes
 import com.alibaba.fastjson.JSONObject
 import com.hzw.android.richman.base.BaseMapBean
+import com.hzw.android.richman.config.Value
 
 /**
  * class CityBean
@@ -70,5 +71,15 @@ class CityBean : BaseMapBean {
         this.buyPrice = buyPrice
         type = MapType.CITY
         this.color = color
+    }
+
+    fun getCostMoney():Int {
+        return when(level) {
+            0 -> (buyPrice * Value.LEVEL_CITY_MONEY_0).toInt()
+            1 -> (buyPrice * Value.LEVEL_CITY_MONEY_1).toInt()
+            2 -> (buyPrice * Value.LEVEL_CITY_MONEY_2).toInt()
+            3 -> (buyPrice * Value.LEVEL_CITY_MONEY_3).toInt()
+            else -> 0
+        }
     }
 }

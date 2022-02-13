@@ -1,8 +1,10 @@
 package com.hzw.android.richman.utils
 
+import androidx.appcompat.app.AlertDialog
+import com.hzw.android.richman.activity.GameActivity
+import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.game.GameData
-import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.listener.OnWalkListener
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -36,7 +38,7 @@ object MapUtil {
                     val count = (Math.random() * Value.MAX_WALK + 1).toInt()
                     onWalkListener.onWalkStart(count, false)
                     if (t == Value.WALK_TURN) {
-                        onWalkListener.onWalkStart(count, true)
+                        onWalkListener.onWalkStart(1, true)
                         mWalkDisposable?.dispose()
                     }
 
@@ -52,11 +54,11 @@ object MapUtil {
 
     private fun whichPlayerWalk() {
         for (i in 0 until GameData.INSTANCE.playerData.size) {
-            if (GameData.INSTANCE.playerData[i].isTurn) {
+            if (GameData.INSTANCE.playerData[i].status == PlayerBean.STATUS.OPTION_FALSE || GameData.INSTANCE.playerData[i].status == PlayerBean.STATUS.OPTION_TRUE) {
                 return if (i < GameData.INSTANCE.playerData.size - 1) {
-                    GameData.INSTANCE.optionPlayerIndex = i + 1
+                    GameData.INSTANCE.optionPlayerTurnIndex = i + 1
                 } else {
-                    GameData.INSTANCE.optionPlayerIndex = 0
+                    GameData.INSTANCE.optionPlayerTurnIndex = 0
                 }
             }
         }
@@ -65,9 +67,15 @@ object MapUtil {
     fun setNextTurn() {
         whichPlayerWalk()
         for (item in GameData.INSTANCE.playerData) {
-            item.isTurn = false
+            item.status = PlayerBean.STATUS.READY
         }
-        GameData.INSTANCE.currentPlayer().isTurn = true
-        GameLog.INSTANCE.addTurnLog()
+        GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.OPTION_FALSE
+    }
+
+    fun showTurnTips(activity: GameActivity) {
+        AlertDialog.Builder(activity)
+            .setMessage("轮到 "+GameData.INSTANCE.currentPlayer().name)
+            .setPositiveButton("我知道了", null)
+            .show()
     }
 }
