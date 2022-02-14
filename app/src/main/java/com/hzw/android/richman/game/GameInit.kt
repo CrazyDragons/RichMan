@@ -15,7 +15,7 @@ import com.hzw.android.richman.bean.*
 class GameInit private constructor() {
 
     var mapList = mutableListOf<BaseMapBean>()
-    var generals = mutableListOf<GeneralBean>()
+    var generals = mutableListOf<GeneralsBean>()
     var equipments = mutableListOf<EquipmentBean>()
 
     companion object {
@@ -32,9 +32,9 @@ class GameInit private constructor() {
 
     private fun initMap() {
         mapList.add(SpecialBean(BaseMapBean.MapType.START))
+        mapList.add(CityBean("安徽", R.drawable.bg_anhui, 1500, CityBean.Color.RED))
         mapList.add(AreaBean("东部战区"))
         mapList.add(AreaBean("西部战区"))
-        mapList.add(CityBean("安徽", R.drawable.bg_anhui, 1500, CityBean.Color.RED))
         mapList.add(CityBean("澳门", R.drawable.bg_aomen, 1000, CityBean.Color.RED))
         mapList.add(SpecialBean(BaseMapBean.MapType.BIG_MONEY))
         mapList.add(CityBean("北京", R.drawable.bg_beijing, 1000, CityBean.Color.RED))
@@ -98,7 +98,7 @@ class GameInit private constructor() {
     private fun initGenerals() {
 
         for (i in 1 .. 50) {
-            generals.add(GeneralBean(i.toString()+"将", R.drawable.icon_test, 1 + (Math.random()*80).toInt()/20, (Math.random()*100).toInt(), (Math.random()*100).toInt()))
+            generals.add(GeneralsBean(i.toString()+"将", R.drawable.icon_test, 1 + (Math.random()*80).toInt()/20, (Math.random()*100).toInt(), (Math.random()*100).toInt()))
         }
 
     }

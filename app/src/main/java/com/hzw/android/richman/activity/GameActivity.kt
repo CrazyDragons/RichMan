@@ -353,7 +353,6 @@ class GameActivity : BaseActivity(),
                 mLlOption.addView(specialInfoView)
             }
         }
-        GameLog.INSTANCE.addSystemLog("更新了数据")
     }
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {

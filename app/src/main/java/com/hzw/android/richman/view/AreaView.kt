@@ -31,7 +31,7 @@ class AreaView @JvmOverloads constructor(
     fun setData(areaBean: AreaBean) {
         mTvName.text = areaBean.name
         mTvBuyArmy.text = areaBean.army.toString()
-        mIvDefense.visibility = if (areaBean.general == null) GONE else VISIBLE
+        mIvDefense.visibility = if (areaBean.generals == null) GONE else VISIBLE
         mTvOwner.visibility = if (areaBean.owner == null) GONE else VISIBLE
         mTvOwner.text = areaBean.owner?.name
     }

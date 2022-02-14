@@ -10,7 +10,7 @@ import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.bean.SpecialBean
-import com.hzw.android.richman.dialog.DefenseDialog
+import com.hzw.android.richman.dialog.OptionGeneralsDialog
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.listener.OnAlterDialogListener
@@ -153,7 +153,17 @@ class OptionView @JvmOverloads constructor(
 
             R.id.mBtnDefense -> {
                 val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
-                DefenseDialog(context, baseCityBean).show()
+                OptionGeneralsDialog(context, OptionGeneralsDialog.TYPE.DEFENSE, baseCityBean).show()
+            }
+
+            R.id.mBtnPk -> {
+                val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
+                OptionGeneralsDialog(context, OptionGeneralsDialog.TYPE.PK, baseCityBean).show()
+            }
+
+            R.id.mBtnAttack -> {
+                val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
+                OptionGeneralsDialog(context, OptionGeneralsDialog.TYPE.ATTACK, baseCityBean).show()
             }
 
             R.id.mBtnCost -> {
@@ -162,12 +172,12 @@ class OptionView @JvmOverloads constructor(
                 when (GameData.INSTANCE.currentMap()) {
                     is CityBean -> {
                         val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                        msg = "是否交费 " + cityBean.needCost() + " ?"
+                        msg = "是否交费 " + cityBean.needCostMoney() + " ?"
                     }
 
                     is AreaBean -> {
                         val areaBean = GameData.INSTANCE.currentMap() as AreaBean
-                        msg = "是否交费 " + areaBean.owner?.allAreaCost() + " ?"
+                        msg = "是否交费 " + areaBean.owner?.allAreaCostMoney() + " ?"
                     }
                 }
 

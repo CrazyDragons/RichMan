@@ -58,12 +58,22 @@ class CityBean : BaseCityBean {
         this.color = color
     }
 
-    fun needCost():Int {
+    fun needCostMoney():Int {
         return when(level) {
             0 -> (buyPrice * Value.LEVEL_CITY_MONEY_0).toInt()
             1 -> (buyPrice * Value.LEVEL_CITY_MONEY_1)
             2 -> (buyPrice * Value.LEVEL_CITY_MONEY_2)
             3 -> (buyPrice * Value.LEVEL_CITY_MONEY_3)
+            else -> 0
+        }
+    }
+
+    fun needCostArmy():Int {
+        return when(level) {
+            0 -> (buyPrice * Value.LEVEL_CITY_ARMY_0).toInt()
+            1 -> (buyPrice * Value.LEVEL_CITY_ARMY_1)
+            2 -> (buyPrice * Value.LEVEL_CITY_ARMY_2)
+            3 -> (buyPrice * Value.LEVEL_CITY_ARMY_3)
             else -> 0
         }
     }

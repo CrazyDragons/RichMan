@@ -21,12 +21,12 @@ class BaseCityAdapter : BaseQuickAdapter<BaseCityBean, BaseViewHolder>(R.layout.
 
         holder.setText(R.id.mTvName, item.name)
             .setText(R.id.mTvCost,
-                if (item is CityBean) item.needCost().toString() else item.owner?.allAreaCost()
+                if (item is CityBean) item.needCostMoney().toString() else item.owner?.allAreaCostMoney()
                     .toString()
             )
             .setText(
                 R.id.mTvDefense,
-                if (item.general == null) "0" else item.general?.defense.toString()
+                if (item.generals == null) "0" else item.generals?.defense.toString()
             )
         holder.getView<LevelView>(R.id.mTvCityLevel)
             .setLevel(if (item is CityBean) item.level else item.owner!!.allArea(), false)

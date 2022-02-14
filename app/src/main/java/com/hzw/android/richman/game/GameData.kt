@@ -26,7 +26,7 @@ class GameData private constructor() {
     var logData = mutableListOf<String>()
 
     //武将数据
-    var generalsData = mutableListOf<GeneralBean>()
+    var generalsData = mutableListOf<GeneralsBean>()
 
     //道具数据
     var equipmentData = mutableListOf<EquipmentBean>()
@@ -43,7 +43,8 @@ class GameData private constructor() {
         generalsData = GameInit.INSTANCE.generals
 
         for (item in playerData) {
-            for (i in 10 downTo 0) {
+            for (i in 2 downTo 0) {
+                generalsData[i].owner = item
                 item.generals.add(generalsData[i])
                 generalsData.removeAt(i)
             }
@@ -51,7 +52,8 @@ class GameData private constructor() {
 
         equipmentData = GameInit.INSTANCE.equipments
         for (item in playerData) {
-            for (i in 3 downTo 0) {
+            for (i in 1 downTo 0) {
+                equipmentData[i].owner = item
                 item.equipments.add(equipmentData[i])
                 equipmentData.removeAt(i)
             }

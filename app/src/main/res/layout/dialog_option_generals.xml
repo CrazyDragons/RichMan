@@ -4,15 +4,15 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:orientation="vertical"
-    android:background="@drawable/shape_rectangle_solid_yellow_r10">
+    android:background="@drawable/shape_rectangle_solid_orange_r10">
 
     <TextView
-        android:id="@+id/mTvEmptyGeneral"
+        android:id="@+id/mTvTips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:layout_marginBottom="10dp"
-        android:background="@color/gray"
+        android:background="@drawable/shape_rectangle_solid_gray_r10"
         android:gravity="center"
         android:text="空城"/>
 

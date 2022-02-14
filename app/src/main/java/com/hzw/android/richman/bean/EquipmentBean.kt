@@ -18,6 +18,8 @@ class EquipmentBean(var type: TYPE) {
 
     var desc = ""
 
+    var owner:PlayerBean? = null
+
     init {
         when(type) {
             TYPE.A -> {

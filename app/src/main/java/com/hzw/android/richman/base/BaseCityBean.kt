@@ -1,6 +1,6 @@
 package com.hzw.android.richman.base
 
-import com.hzw.android.richman.bean.GeneralBean
+import com.hzw.android.richman.bean.GeneralsBean
 import com.hzw.android.richman.bean.PlayerBean
 
 /**
@@ -22,7 +22,7 @@ open class BaseCityBean : BaseMapBean() {
     var cover = 0
 
     //武将
-    var general: GeneralBean? = null
+    var generals: GeneralsBean? = null
 
     //拥有者
     var owner: PlayerBean? = null

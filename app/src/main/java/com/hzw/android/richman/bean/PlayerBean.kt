@@ -30,7 +30,7 @@ class PlayerBean(//昵称
     var army = Value.DEFAULT_ARMY
 
     //武将
-    var generals = ArrayList<GeneralBean>()
+    var generals = ArrayList<GeneralsBean>()
 
     //城池
     var city = ArrayList<BaseCityBean>()
@@ -78,22 +78,35 @@ class PlayerBean(//昵称
         return money
     }
 
-    fun allGenerals(): MutableList<GeneralBean> {
-        val list = mutableListOf<GeneralBean>()
+    fun allGenerals(): MutableList<GeneralsBean> {
+        val list = mutableListOf<GeneralsBean>()
         for (item in city) {
-            if (item.general != null) {
-                list.add(item.general!!)
+            if (item.generals != null) {
+                list.add(item.generals!!)
             }
         }
         list.addAll(generals)
         return list
     }
 
-    fun allAreaCost(): Int {
-        return Value.AREA_ARMY * 2.0.pow(allArea() -1.toDouble()).toInt()
+    fun allAreaCostMoney(): Int {
+        return Value.AREA_ARMY * 2.0.pow(allArea() - 1.toDouble()).toInt()
     }
 
-    fun allArea():Int {
+    fun allAreaCostArmy(): Int {
+        return when (allArea()) {
+            1 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_1)
+            2 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_2)
+            3 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_3)
+            4 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_4)
+            5 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_5)
+            else -> {
+                0
+            }
+        }
+    }
+
+    fun allArea(): Int {
         var x = 0
         for (item in city) {
             if (item is AreaBean) {

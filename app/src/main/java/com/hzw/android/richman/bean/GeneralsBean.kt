@@ -10,7 +10,7 @@ import com.hzw.android.richman.base.BaseCityBean
  * note
  * create date 2022/2/12
  */
-class GeneralBean {
+class GeneralsBean {
 
     var name = ""
 
