@@ -1,6 +1,9 @@
 package com.hzw.android.richman.game
 
+import com.hzw.android.richman.base.BaseCityBean
+import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
+import com.hzw.android.richman.bean.GeneralBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.interfase.Option
@@ -23,18 +26,27 @@ object GameOption : Option {
             is CityBean -> {
                 val cityBean = GameData.INSTANCE.currentMap() as CityBean
                 if (cityBean.owner == null) {
-                    buyCity(cityBean)
+                    buyBaseCity(cityBean)
                 }
             }
         }
     }
 
-    override fun buyCity(cityBean: CityBean) {
+    override fun buyBaseCity(baseCityBean: BaseCityBean) {
         val playerBean = GameData.INSTANCE.currentPlayer()
-        playerBean.money -= cityBean.buyPrice
-        cityBean.owner = playerBean
-        playerBean.city.add(cityBean)
-        GameLog.INSTANCE.addBuyCityLog(cityBean)
+        when(baseCityBean) {
+            is  CityBean -> {
+                playerBean.money -= baseCityBean.buyPrice
+                baseCityBean.level = 3
+            }
+
+            is AreaBean -> {
+                playerBean.army -= baseCityBean.army
+            }
+        }
+        baseCityBean.owner = playerBean
+        playerBean.city.add(baseCityBean)
+        GameLog.INSTANCE.addBuyCityLog(baseCityBean)
         playerBean.status = PlayerBean.STATUS.OPTION_TRUE
         onOptionListener?.onOptionFinish()
     }
@@ -48,11 +60,36 @@ object GameOption : Option {
         onOptionListener?.onOptionFinish()
     }
 
-    override fun costCity(cityBean: CityBean) {
+    override fun defense(baseCityBean: BaseCityBean, generalBean: GeneralBean?) {
         val playerBean = GameData.INSTANCE.currentPlayer()
-        playerBean.money -= cityBean.getCostMoney()
-        cityBean.owner!!.money += cityBean.getCostMoney()
-        GameLog.INSTANCE.addCostCityLog(cityBean)
+        if (baseCityBean.general != null) {
+            baseCityBean.general?.city = null
+            playerBean.generals.add(baseCityBean.general!!)
+        }
+        if (generalBean != null) {
+            playerBean.generals.remove(generalBean)
+        }
+        baseCityBean.general = generalBean
+        generalBean?.city = baseCityBean
+        onOptionListener?.onOptionFinish()
+    }
+
+    override fun costBaseCity(baseCityBean: BaseCityBean) {
+        val playerBean = GameData.INSTANCE.currentPlayer()
+
+        when(baseCityBean) {
+            is CityBean -> {
+                playerBean.money -= baseCityBean.needCost()
+                baseCityBean.owner!!.money += baseCityBean.needCost()
+            }
+
+            is AreaBean -> {
+                playerBean.money -= baseCityBean.owner!!.allAreaCost()
+                baseCityBean.owner!!.money += baseCityBean.owner!!.allAreaCost()
+            }
+        }
+
+
         playerBean.status = PlayerBean.STATUS.OPTION_TRUE
         onOptionListener?.onOptionFinish()
     }

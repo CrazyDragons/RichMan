@@ -1,5 +1,7 @@
 package com.hzw.android.richman.bean
 
+import com.hzw.android.richman.base.BaseCityBean
+
 /**
  * class GeneralBean
  *
@@ -14,9 +16,13 @@ class GeneralBean {
 
     var owner: PlayerBean? = null
 
+    var city: BaseCityBean? = null
+
     var cover = 0
 
     var life = 0
+
+    var action = 0
 
     var attack = 0
 
@@ -28,6 +34,7 @@ class GeneralBean {
         this.name = name
         this.cover = cover
         this.life = life
+        this.action = life
         this.attack = attack
         this.defense = defense
     }

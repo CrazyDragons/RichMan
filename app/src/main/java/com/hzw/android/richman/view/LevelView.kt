@@ -30,18 +30,31 @@ class LevelView @JvmOverloads constructor(
 
     fun setLevel(level: Int, isBig: Boolean) {
         removeAllViews()
-        for (i in 1..level) {
+        if (level >= 0) {
+            for (i in 1..level) {
+                val star = ImageView(context)
+                val params = LayoutParams(
+                    ScreenUtil.dp2px(context, if (isBig) 20 else 10),
+                    ScreenUtil.dp2px(context, if (isBig) 20 else 10)
+                )
+                params.marginEnd = ScreenUtil.dp2px(context, if (isBig) 4 else 2)
+                star.layoutParams = params
+                star.scaleType = ImageView.ScaleType.CENTER_CROP
+                star.setBackgroundResource(if (isBig) R.drawable.icon_star_white else R.drawable.icon_star)
+                addView(star)
+            }
+        } else {
             val star = ImageView(context)
             val params = LayoutParams(
-                ScreenUtil.dp2px(context, if (isBig) 20 else 10),
-                ScreenUtil.dp2px(context, if (isBig) 20 else 10)
+                ScreenUtil.dp2px(context, 10),
+                ScreenUtil.dp2px(context, 10)
             )
-            params.marginEnd = ScreenUtil.dp2px(context, if (isBig) 4 else 2)
             star.layoutParams = params
             star.scaleType = ImageView.ScaleType.CENTER_CROP
-            star.setBackgroundResource(if (isBig) R.drawable.icon_star_white else R.drawable.icon_star)
+            star.setBackgroundResource(R.drawable.icon_area_star)
             addView(star)
         }
+
     }
 
 

@@ -15,9 +15,6 @@ import com.hzw.android.richman.config.Value
  */
 class CityBean : BaseCityBean {
 
-    //城池级别
-    var level = 0
-
     //城池颜色
     var color: Color? = null
 
@@ -61,12 +58,12 @@ class CityBean : BaseCityBean {
         this.color = color
     }
 
-    fun getCostMoney():Int {
+    fun needCost():Int {
         return when(level) {
             0 -> (buyPrice * Value.LEVEL_CITY_MONEY_0).toInt()
-            1 -> (buyPrice * Value.LEVEL_CITY_MONEY_1).toInt()
-            2 -> (buyPrice * Value.LEVEL_CITY_MONEY_2).toInt()
-            3 -> (buyPrice * Value.LEVEL_CITY_MONEY_3).toInt()
+            1 -> (buyPrice * Value.LEVEL_CITY_MONEY_1)
+            2 -> (buyPrice * Value.LEVEL_CITY_MONEY_2)
+            3 -> (buyPrice * Value.LEVEL_CITY_MONEY_3)
             else -> 0
         }
     }

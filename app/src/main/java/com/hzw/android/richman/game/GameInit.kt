@@ -32,12 +32,13 @@ class GameInit private constructor() {
 
     private fun initMap() {
         mapList.add(SpecialBean(BaseMapBean.MapType.START))
+        mapList.add(AreaBean("东部战区"))
+        mapList.add(AreaBean("西部战区"))
         mapList.add(CityBean("安徽", R.drawable.bg_anhui, 1500, CityBean.Color.RED))
         mapList.add(CityBean("澳门", R.drawable.bg_aomen, 1000, CityBean.Color.RED))
         mapList.add(SpecialBean(BaseMapBean.MapType.BIG_MONEY))
         mapList.add(CityBean("北京", R.drawable.bg_beijing, 1000, CityBean.Color.RED))
         mapList.add(SpecialBean(BaseMapBean.MapType.FREE_GENERALS))
-        mapList.add(AreaBean("东部战区"))
         mapList.add(CityBean("重庆", R.drawable.bg_chongqing, 2000, CityBean.Color.RED))
         mapList.add(CityBean("福建", R.drawable.bg_fujian, 1000, CityBean.Color.RED))
         mapList.add(SpecialBean(BaseMapBean.MapType.SHOP))
@@ -49,7 +50,6 @@ class GameInit private constructor() {
         mapList.add(CityBean("贵州", R.drawable.bg_guizhou, 1500, CityBean.Color.ORANGE))
         mapList.add(CityBean("海南", R.drawable.bg_hainan, 1000, CityBean.Color.ORANGE))
         mapList.add(SpecialBean(BaseMapBean.MapType.GENERALS))
-        mapList.add(AreaBean("西部战区"))
         mapList.add(CityBean("河北", R.drawable.bg_hebei, 1000, CityBean.Color.YELLOW))
         mapList.add(SpecialBean(BaseMapBean.MapType.GENERALS))
         mapList.add(CityBean("黑龙", R.drawable.bg_heilongjiang, 1000, CityBean.Color.YELLOW))
@@ -104,9 +104,9 @@ class GameInit private constructor() {
     }
 
     private fun initEquipments() {
-        equipments.add(EquipmentBean(EquipmentBean.NAME.A, "111"))
-        equipments.add(EquipmentBean(EquipmentBean.NAME.B, "222"))
-        equipments.add(EquipmentBean(EquipmentBean.NAME.C, "333"))
-        equipments.add(EquipmentBean(EquipmentBean.NAME.D, "444"))
+        equipments.add(EquipmentBean(EquipmentBean.TYPE.A))
+        equipments.add(EquipmentBean(EquipmentBean.TYPE.B))
+        equipments.add(EquipmentBean(EquipmentBean.TYPE.C))
+        equipments.add(EquipmentBean(EquipmentBean.TYPE.D))
     }
 }

@@ -16,7 +16,7 @@ class EquipmentsAdapter : BaseQuickAdapter<EquipmentBean, BaseViewHolder>(R.layo
 
     override fun convert(holder: BaseViewHolder, item: EquipmentBean) {
 
-        holder.setText(R.id.mTvName, item.name.toString())
+        holder.setText(R.id.mTvName, item.name)
             .setText(R.id.mTvDesc, item.desc)
 
     }

@@ -2,9 +2,10 @@ package com.hzw.android.richman.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.FrameLayout
+import androidx.cardview.widget.CardView
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.SpecialBean
+import com.hzw.android.richman.utils.ScreenUtil
 import kotlinx.android.synthetic.main.view_special_info.view.*
 
 /**
@@ -18,7 +19,7 @@ class SpecialInfoView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : CardView(context, attrs, defStyleAttr) {
 
     init {
         initViews(context)
@@ -26,6 +27,7 @@ class SpecialInfoView @JvmOverloads constructor(
 
     private fun initViews(context: Context) {
         inflate(context, R.layout.view_special_info, this)
+        radius = ScreenUtil.dp2px(context, 10).toFloat()
     }
 
     fun setData(specialBean: SpecialBean) {

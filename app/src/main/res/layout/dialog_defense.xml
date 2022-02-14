@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:background="@drawable/shape_rectangle_solid_yellow_r10">
+
+    <TextView
+        android:id="@+id/mTvEmptyGeneral"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginBottom="10dp"
+        android:background="@color/gray"
+        android:gravity="center"
+        android:text="空城"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mRvGenerals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -47,19 +47,23 @@ class PlayerBean(//昵称
     enum class STATUS {
         //准备状态
         READY,
+
         //操作状态
         OPTION_FALSE,
+
         //操作状态
         OPTION_TRUE,
+
         //攻击状态
         ATTACK,
+
         //监狱状态
         PRISON
     }
 
-    private fun getSingleGDP(playerBean: PlayerBean):Double {
-        return  playerBean.money + playerBean.army * 2 +
-                getCityMoney(playerBean.city) + playerBean.generals.size * 2000 + playerBean.equipments.size * 2000
+    private fun getSingleGDP(playerBean: PlayerBean): Double {
+        return playerBean.money + playerBean.army * 2 +
+                getCityMoney(playerBean.city) + playerBean.allGenerals().size * 2000 + playerBean.equipments.size * 2000
     }
 
     private fun getCityMoney(arrayList: MutableList<BaseCityBean>): Double {
@@ -74,6 +78,31 @@ class PlayerBean(//昵称
         return money
     }
 
+    fun allGenerals(): MutableList<GeneralBean> {
+        val list = mutableListOf<GeneralBean>()
+        for (item in city) {
+            if (item.general != null) {
+                list.add(item.general!!)
+            }
+        }
+        list.addAll(generals)
+        return list
+    }
+
+    fun allAreaCost(): Int {
+        return Value.AREA_ARMY * 2.0.pow(allArea() -1.toDouble()).toInt()
+    }
+
+    fun allArea():Int {
+        var x = 0
+        for (item in city) {
+            if (item is AreaBean) {
+                x += 1
+            }
+        }
+        return x
+    }
+
     fun GDP(): String {
         val x: Double
         var sum = 0.0
@@ -81,7 +110,7 @@ class PlayerBean(//昵称
             sum += getSingleGDP(i)
         }
         x = getSingleGDP(this) / sum
-        return (getDouble2(x) * 100).toInt().toString()+"%"
+        return (getDouble2(x) * 100).toInt().toString() + "%"
     }
 
     private fun getDouble2(value: Double): Double {

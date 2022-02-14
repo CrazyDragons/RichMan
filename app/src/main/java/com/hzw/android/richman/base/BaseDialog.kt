@@ -27,12 +27,8 @@ open class BaseDialog(context: Context) : Dialog(context, R.style.dialog_style) 
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setCanceledOnTouchOutside(true)
         setGravity(Gravity.CENTER)
-        initViews(context)
     }
 
-    protected fun initViews(context: Context?) {
-        // 初始化控件之类的
-    }
 
     fun setGravity(gravity: Int) {
         this.window!!.setGravity(gravity)

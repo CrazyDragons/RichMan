@@ -3,11 +3,12 @@ package com.hzw.android.richman.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.FrameLayout
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.config.Value
+import com.hzw.android.richman.utils.ScreenUtil
 import kotlinx.android.synthetic.main.view_city_info.view.*
 
 /**
@@ -21,7 +22,7 @@ class CityInfoView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : CardView(context, attrs, defStyleAttr) {
 
     init {
         initViews(context)
@@ -29,6 +30,7 @@ class CityInfoView @JvmOverloads constructor(
 
     private fun initViews(context: Context) {
         inflate(context, R.layout.view_city_info, this)
+        radius = ScreenUtil.dp2px(context, 10).toFloat()
     }
 
     fun setData(cityBean: CityBean) {
@@ -37,6 +39,7 @@ class CityInfoView @JvmOverloads constructor(
         mIvCityCover.setBackgroundResource(cityBean.cover)
         mTvCityLevel.setLevel(cityBean.level, true)
         mTvOwner.visibility = if (cityBean.owner == null) GONE else VISIBLE
+        mIvCityGeneral.visibility = if (cityBean.general == null) GONE else VISIBLE
         mTvOwner.text =
             String.format(resources.getString(R.string.owner), cityBean.owner?.name)
         mTvCityLevelCost.text =

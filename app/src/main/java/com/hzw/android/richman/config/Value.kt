@@ -74,16 +74,16 @@ object Value {
     const val LEVEL_AREA_MONEY_1 = 0.5
 
     //二区过路费系数
-    const val LEVEL_AREA_MONEY_2 = 2
+    const val LEVEL_AREA_MONEY_2 = 1
 
     //三区过路费系数
-    const val LEVEL_AREA_MONEY_3 = 4
+    const val LEVEL_AREA_MONEY_3 = 2
 
     ///四区过路费系数
-    const val LEVEL_AREA_MONEY_4 = 8
+    const val LEVEL_AREA_MONEY_4 = 4
 
     //五区过路费系数
-    const val LEVEL_AREA_MONEY_5 = 16
+    const val LEVEL_AREA_MONEY_5 = 8
 
     ///一区驻兵系数
     const val LEVEL_AREA_ARMY_1 = 1
@@ -92,13 +92,13 @@ object Value {
     const val LEVEL_AREA_ARMY_2 = 2
 
     //三区驻兵系数
-    const val LEVEL_AREA_ARMY_3 = 4
+    const val LEVEL_AREA_ARMY_3 = 3
 
     //四区驻兵系数
-    const val LEVEL_AREA_ARMY_4 = 8
+    const val LEVEL_AREA_ARMY_4 = 5
 
     //五区驻兵系数
-    const val LEVEL_AREA_ARMY_5 = 16
+    const val LEVEL_AREA_ARMY_5 = 10
 
     //默认初始金钱
     const val DEFAULT_MONEY = 10000

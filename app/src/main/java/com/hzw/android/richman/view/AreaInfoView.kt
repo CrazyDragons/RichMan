@@ -2,10 +2,11 @@ package com.hzw.android.richman.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.FrameLayout
+import androidx.cardview.widget.CardView
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.config.Value
+import com.hzw.android.richman.utils.ScreenUtil
 import kotlinx.android.synthetic.main.view_area_info.view.*
 
 /**
@@ -19,7 +20,7 @@ class AreaInfoView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : CardView(context, attrs, defStyleAttr) {
 
     init {
         initViews(context)
@@ -27,11 +28,13 @@ class AreaInfoView @JvmOverloads constructor(
 
     private fun initViews(context: Context) {
         inflate(context, R.layout.view_area_info, this)
+        radius = ScreenUtil.dp2px(context, 10).toFloat()
     }
 
     fun setData(areaBean: AreaBean) {
         mTvAreaName.text = areaBean.name
         mTvOwner.visibility = if (areaBean.owner == null) GONE else VISIBLE
+        mIvAreaGeneral.visibility = if (areaBean.general == null) GONE else VISIBLE
         mTvOwner.text = String.format(
             resources.getString(R.string.owner),
             areaBean.owner?.name
@@ -65,7 +68,7 @@ class AreaInfoView @JvmOverloads constructor(
             )
         mTvAreaLevel_5.text =
             String.format(
-                resources.getString(R.string.area_level_4) , areaBean.army * Value.LEVEL_AREA_MONEY_5,
+                resources.getString(R.string.area_level_5) , areaBean.army * Value.LEVEL_AREA_MONEY_5,
                 areaBean.army * Value.LEVEL_AREA_ARMY_5
             )
         mTvAreaSale.text =

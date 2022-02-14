@@ -2,50 +2,86 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mBtnBuy"
-        android:layout_weight="1"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_rectangle_solid_green_r10"
         android:text="购买"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mBtnLevel"
-        android:layout_weight="1"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_rectangle_solid_green_r10"
         android:text="升级"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mBtnDefense"
-        android:layout_weight="1"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_rectangle_solid_green_r10"
         android:text="驻守"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mBtnCost"
-        android:layout_weight="1"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_rectangle_solid_green_r10"
         android:text="交费"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mBtnPk"
-        android:layout_weight="1"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_rectangle_solid_green_r10"
         android:text="单挑"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/white"
+        android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mBtnAttack"
-        android:layout_weight="1"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_rectangle_solid_green_r10"
         android:text="攻城"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 
 </LinearLayout>

@@ -17,9 +17,9 @@ class GeneralsAdapter : BaseQuickAdapter<GeneralBean, BaseViewHolder>(R.layout.i
 
     override fun convert(holder: BaseViewHolder, item: GeneralBean) {
         holder.setText(R.id.mTvName, item.name)
-            .setText(R.id.mTvLife, item.life.toString())
+            .setText(R.id.mTvLife, item.action.toString()+"("+item.life+")")
             .setText(R.id.mTvAttack, item.attack.toString())
-            .setText(R.id.mTvDefense, item.defense.toString())
+            .setText(R.id.mTvDefense, item.defense.toString()).setVisible(R.id.mIvDefense, item.city != null)
 
         holder.getView<ImageView>(R.id.mIvCover).setImageResource(item.cover)
     }

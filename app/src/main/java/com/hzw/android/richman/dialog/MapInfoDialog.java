@@ -22,7 +22,6 @@ public class MapInfoDialog extends BaseDialog {
     public MapInfoDialog(@NonNull Context context, View view) {
         super(context);
         setContentView(view);
-//        setFull();
         setWindowAnimations(R.style.scale_alpha_animation);
         setGravity(Gravity.CENTER);
     }

@@ -22,8 +22,10 @@
             android:layout_weight="4" />
 
         <ImageView
+            android:id="@+id/mIvDefense"
             android:layout_width="10dp"
             android:layout_height="10dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/icon_defense"
             android:scaleType="centerCrop"
             tools:ignore="ContentDescription" />

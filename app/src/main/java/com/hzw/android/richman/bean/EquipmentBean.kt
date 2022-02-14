@@ -8,20 +8,35 @@ package com.hzw.android.richman.bean
  * note
  * create date 2022/2/12
  */
-class EquipmentBean {
+class EquipmentBean(var type: TYPE) {
 
-    var name = NAME.A
-
-    var desc = ""
-
-    constructor(name: NAME, desc: String) {
-        this.name = name
-        this.desc = desc
-    }
-
-    enum class NAME {
+    enum class TYPE {
         A,B,C,D
     }
 
+    var name = ""
+
+    var desc = ""
+
+    init {
+        when(type) {
+            TYPE.A -> {
+                name = "道具1"
+                desc = "道具1的说明 巴拉巴拉小魔仙"
+            }
+            TYPE.B -> {
+                name = "道具2"
+                desc = "道具1的说明 巴拉巴拉小魔仙"
+            }
+            TYPE.C -> {
+                name = "道具3"
+                desc = "道具1的说明 巴拉巴拉小魔仙"
+            }
+            TYPE.D -> {
+                name = "道具4"
+                desc = "道具1的说明 巴拉巴拉小魔仙"
+            }
+        }
+    }
 
 }

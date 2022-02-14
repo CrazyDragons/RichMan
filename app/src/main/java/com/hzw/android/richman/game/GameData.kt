@@ -43,15 +43,15 @@ class GameData private constructor() {
         generalsData = GameInit.INSTANCE.generals
 
         for (item in playerData) {
-            for (i in 0 .. 15) {
+            for (i in 10 downTo 0) {
                 item.generals.add(generalsData[i])
                 generalsData.removeAt(i)
             }
         }
 
-       equipmentData = GameInit.INSTANCE.equipments
+        equipmentData = GameInit.INSTANCE.equipments
         for (item in playerData) {
-            for (i in 0 .. 0) {
+            for (i in 3 downTo 0) {
                 item.equipments.add(equipmentData[i])
                 equipmentData.removeAt(i)
             }

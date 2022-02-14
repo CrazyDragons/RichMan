@@ -1,6 +1,8 @@
 package com.hzw.android.richman.interfase
 
+import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.bean.CityBean
+import com.hzw.android.richman.bean.GeneralBean
 
 /**
  * class Option
@@ -10,7 +12,8 @@ import com.hzw.android.richman.bean.CityBean
  * create date 2022/2/13
  */
 interface Option {
-    fun buyCity(cityBean: CityBean)
+    fun buyBaseCity(baseCityBean: BaseCityBean)
     fun levelCity(cityBean: CityBean)
-    fun costCity(cityBean: CityBean)
+    fun costBaseCity(baseCityBean: BaseCityBean)
+    fun defense(baseCityBean: BaseCityBean, generalBean: GeneralBean?)
 }

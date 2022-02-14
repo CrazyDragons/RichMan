@@ -5,10 +5,12 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.hzw.android.richman.R
+import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.bean.SpecialBean
+import com.hzw.android.richman.dialog.DefenseDialog
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.listener.OnAlterDialogListener
@@ -42,17 +44,28 @@ class OptionView @JvmOverloads constructor(
         mBtnAttack.setOnClickListener(this)
 
         when (GameData.INSTANCE.currentMap()) {
-            is CityBean -> {
-                val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                if (cityBean.owner == null) {
+
+            is BaseCityBean -> {
+
+                val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
+                if (baseCityBean.owner == null) {
                     buttonStatus(true, false, false, false, false, false)
-                }else {
-                    if (cityBean.owner?.id == GameData.INSTANCE.currentPlayer().id) {
-                        buttonStatus(false, cityBean.level < 3 && GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.OPTION_FALSE, true, false, false, false)
-                    }else {
+                } else {
+                    if (baseCityBean.owner?.id == GameData.INSTANCE.currentPlayer().id) {
+                        val level =
+                            (GameData.INSTANCE.currentMap() is CityBean) && (GameData.INSTANCE.currentMap() as CityBean).level < 3 && GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.OPTION_FALSE
+                        buttonStatus(
+                            false,
+                            level,
+                            true,
+                            false,
+                            false,
+                            false
+                        )
+                    } else {
                         if (GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.OPTION_TRUE) {
-                            buttonStatus(false, false, false, false , false, false)
-                        }else{
+                            buttonStatus(false, false, false, false, false, false)
+                        } else {
                             GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.ATTACK
                             buttonStatus(false, false, false, true, true, true)
                         }
@@ -61,10 +74,6 @@ class OptionView @JvmOverloads constructor(
                 }
             }
 
-            is AreaBean -> {
-                val areaBean = GameData.INSTANCE.currentMap() as AreaBean
-                mBtnLevel.visibility = GONE
-            }
 
             is SpecialBean -> {
                 val specialBean = GameData.INSTANCE.currentMap() as SpecialBean
@@ -72,7 +81,14 @@ class OptionView @JvmOverloads constructor(
         }
     }
 
-    private fun buttonStatus(buy: Boolean, level: Boolean, defense: Boolean, cost: Boolean, pk: Boolean, attack: Boolean) {
+    private fun buttonStatus(
+        buy: Boolean,
+        level: Boolean,
+        defense: Boolean,
+        cost: Boolean,
+        pk: Boolean,
+        attack: Boolean
+    ) {
         mBtnBuy.visibility = if (buy) VISIBLE else GONE
         mBtnLevel.visibility = if (level) VISIBLE else GONE
         mBtnDefense.visibility = if (defense) VISIBLE else GONE
@@ -81,7 +97,7 @@ class OptionView @JvmOverloads constructor(
         mBtnAttack.visibility = if (attack) VISIBLE else GONE
     }
 
-    private fun showNormalDialog(msg:String, onAlterDialogListener: OnAlterDialogListener) {
+    private fun showNormalDialog(msg: String, onAlterDialogListener: OnAlterDialogListener) {
         val builder = androidx.appcompat.app.AlertDialog.Builder(context)
             .setMessage(msg)
             .setPositiveButton("是") { _, _ ->
@@ -92,46 +108,77 @@ class OptionView @JvmOverloads constructor(
     }
 
     override fun onClick(view: View?) {
-        when(view?.id) {
+        when (view?.id) {
             R.id.mBtnBuy -> {
                 when (GameData.INSTANCE.currentMap()) {
                     is CityBean -> {
                         val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                        showNormalDialog("是否购买 "+cityBean.name+" ?", object : OnAlterDialogListener{
-                            override fun onSure() {
-                                GameOption.buyCity(cityBean)
-                            }
+                        showNormalDialog(
+                            "是否用金钱" + cityBean.buyPrice + "购买 " + cityBean.name + " ?",
+                            object : OnAlterDialogListener {
+                                override fun onSure() {
+                                    GameOption.buyBaseCity(cityBean)
+                                }
 
-                        })
+                            })
                     }
 
                     is AreaBean -> {
                         val areaBean = GameData.INSTANCE.currentMap() as AreaBean
-                        mBtnLevel.visibility = GONE
+                        showNormalDialog(
+                            "是否用" + areaBean.army + "兵力攻占 " + areaBean.name + " ?",
+                            object : OnAlterDialogListener {
+                                override fun onSure() {
+                                    GameOption.buyBaseCity(areaBean)
+                                }
+
+                            })
                     }
                 }
             }
+
             R.id.mBtnLevel -> {
                 if (GameData.INSTANCE.currentMap() is CityBean) {
                     val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                    showNormalDialog("是否升级 "+cityBean.name+" ?", object : OnAlterDialogListener{
-                        override fun onSure() {
-                            GameOption.levelCity(cityBean)
-                        }
+                    showNormalDialog(
+                        "是否升级 " + cityBean.name + " ?",
+                        object : OnAlterDialogListener {
+                            override fun onSure() {
+                                GameOption.levelCity(cityBean)
+                            }
 
-                    })
+                        })
                 }
             }
+
+            R.id.mBtnDefense -> {
+                val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
+                DefenseDialog(context, baseCityBean).show()
+            }
+
             R.id.mBtnCost -> {
-                if (GameData.INSTANCE.currentMap() is CityBean) {
-                    val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                    showNormalDialog("是否交费 "+cityBean.getCostMoney()+" ?", object : OnAlterDialogListener{
+
+                var msg = ""
+                when (GameData.INSTANCE.currentMap()) {
+                    is CityBean -> {
+                        val cityBean = GameData.INSTANCE.currentMap() as CityBean
+                        msg = "是否交费 " + cityBean.needCost() + " ?"
+                    }
+
+                    is AreaBean -> {
+                        val areaBean = GameData.INSTANCE.currentMap() as AreaBean
+                        msg = "是否交费 " + areaBean.owner?.allAreaCost() + " ?"
+                    }
+                }
+
+                showNormalDialog(
+                    msg,
+                    object : OnAlterDialogListener {
                         override fun onSure() {
-                            GameOption.costCity(cityBean)
+                            GameOption.costBaseCity(GameData.INSTANCE.currentMap() as BaseCityBean)
                         }
 
                     })
-                }
             }
         }
     }

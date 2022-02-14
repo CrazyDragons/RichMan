@@ -15,6 +15,7 @@ import com.chad.library.adapter.base.listener.OnItemLongClickListener
 import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.PlayerInfoAdapter
 import com.hzw.android.richman.base.BaseActivity
+import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
@@ -55,7 +56,7 @@ class GameActivity : BaseActivity(),
     OnWalkListener,
     View.OnClickListener,
     OnMapClickListener,
-    OnAddLogListener, OnItemClickListener,OnOptionListener, OnItemLongClickListener {
+    OnAddLogListener, OnItemClickListener, OnOptionListener, OnItemLongClickListener {
 
     private var playerViewList = mutableListOf<PlayerView>()
 
@@ -312,25 +313,37 @@ class GameActivity : BaseActivity(),
         mLlOption.visibility = VISIBLE
         mLlOption.removeAllViews()
         when (GameData.INSTANCE.currentMap()) {
-            is CityBean -> {
-                val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                val cityView =
-                    mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as CityView
-                val cityInfoView = CityInfoView(this)
-                cityView.setData(cityBean)
-                cityInfoView.setData(cityBean)
+
+            is BaseCityBean -> {
+                when (GameData.INSTANCE.currentMap()) {
+                    is CityBean -> {
+                        val cityBean = GameData.INSTANCE.currentMap() as CityBean
+                        val cityView =
+                            mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as CityView
+                        cityView.setData(cityBean)
+                        val cityInfoView = CityInfoView(this)
+                        cityInfoView.setData(cityBean)
+                        mLlOption.addView(cityInfoView)
+                    }
+                    is AreaBean -> {
+                        val areaBean = GameData.INSTANCE.currentMap() as AreaBean
+                        val areaView =
+                            mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as AreaView
+                        areaView.setData(areaBean)
+                        val areaInfoView = AreaInfoView(this)
+                        areaInfoView.setData(areaBean)
+                        mLlOption.addView(areaInfoView)
+                    }
+
+                }
+
                 val optionView = OptionView(this)
-                mLlOption.addView(cityInfoView)
                 mLlOption.addView(optionView)
                 mRvPlayerInfo.adapter?.notifyDataSetChanged()
-                optionStatus(false, GameData.INSTANCE.currentPlayer().status != PlayerBean.STATUS.ATTACK)
-            }
-
-            is AreaBean -> {
-                val areaInfoView = AreaInfoView(this)
-                val areaBean = GameData.INSTANCE.currentMap() as AreaBean
-                areaInfoView.setData(areaBean)
-                mLlOption.addView(areaInfoView)
+                optionStatus(
+                    false,
+                    GameData.INSTANCE.currentPlayer().status != PlayerBean.STATUS.ATTACK
+                )
             }
 
             is SpecialBean -> {

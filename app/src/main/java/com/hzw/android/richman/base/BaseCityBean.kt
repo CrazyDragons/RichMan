@@ -10,7 +10,10 @@ import com.hzw.android.richman.bean.PlayerBean
  * note
  * create date 2022/2/13
  */
-open class BaseCityBean : BaseMapBean(){
+open class BaseCityBean : BaseMapBean() {
+
+    //城池级别
+    var level = 0
 
     //购入价
     var buyPrice = 0
