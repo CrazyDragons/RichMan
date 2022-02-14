@@ -71,6 +71,7 @@ object GameOption : Option {
         }
         baseCityBean.generals = generalsBean
         generalsBean?.city = baseCityBean
+        GameLog.INSTANCE.addDefenseCityLog(baseCityBean)
         onOptionListener?.onOptionFinish()
     }
 
@@ -93,8 +94,10 @@ object GameOption : Option {
                 //平局
                 else -> {
                     //同归于尽
+                    GameLog.INSTANCE.addSystemLog("同归于尽")
+                    resetGenerals(baseCityBean.generals!!)
+                    resetGenerals(generalsBean)
                     baseCityBean.owner!!.generals.remove(baseCityBean.generals)
-                    baseCityBean.owner = null
                     generalsBean.owner!!.generals.remove(generalsBean)
                 }
             }
@@ -103,10 +106,10 @@ object GameOption : Option {
         else {
             //攻方攻击力小于随机防御力
             if (generalsBean.attack < Math.random() * 100) {
-                GameLog.INSTANCE.addSystemLog("攻方连空城都打不下来？")
+                GameLog.INSTANCE.addSystemLog("攻方未赢下小兵")
                 costMoney(baseCityBean, generalsBean)
-                generalsLife(generalsBean, false)
             }
+            generalsLife(generalsBean, false)
         }
         playerBean.status = PlayerBean.STATUS.OPTION_TRUE
         onOptionListener?.onOptionFinish()
@@ -137,6 +140,8 @@ object GameOption : Option {
                 //平局
                 else -> {
                     //同归于尽
+                    resetGenerals(baseCityBean.generals!!)
+                    resetGenerals(generalsBean)
                     baseCityBean.owner!!.generals.remove(baseCityBean.generals)
                     baseCityBean.owner = null
                     generalsBean.owner!!.generals.remove(generalsBean)
@@ -147,7 +152,7 @@ object GameOption : Option {
         else {
             //攻方攻击力小于随机防御力
             if (generalsBean.attack < Math.random() * 100) {
-                GameLog.INSTANCE.addSystemLog("攻方连空城都pk不过？")
+                GameLog.INSTANCE.addSystemLog("攻方w？")
                 baseCityBean.owner = GameData.INSTANCE.currentPlayer()
                 baseCityBean.generals = null
                 generalsLife(generalsBean, true)
@@ -196,9 +201,15 @@ object GameOption : Option {
             //武将死亡
             generalsBean.owner!!.generals.remove(generalsBean)
             //回武将池
-            generalsBean.action = generalsBean.life
-            GameData.INSTANCE.generalsData.add(generalsBean)
+            resetGenerals(generalsBean)
         }
+    }
+
+    private fun resetGenerals(generalsBean: GeneralsBean) {
+        generalsBean.city = null
+        generalsBean.owner = null
+        generalsBean.action = generalsBean.life
+        GameData.INSTANCE.generalsData.add(generalsBean)
     }
 
 
@@ -216,9 +227,8 @@ object GameOption : Option {
                 baseCityBean.owner!!.money += baseCityBean.owner!!.allAreaCostMoney()
             }
         }
-
-
         playerBean.status = PlayerBean.STATUS.OPTION_TRUE
+        GameLog.INSTANCE.addCostCityLog(baseCityBean)
         onOptionListener?.onOptionFinish()
     }
 

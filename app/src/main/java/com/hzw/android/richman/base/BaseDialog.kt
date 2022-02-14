@@ -63,6 +63,11 @@ open class BaseDialog(context: Context) : Dialog(context, R.style.dialog_style) 
         setFullHeight(h)
     }
 
+    fun setFull() {
+        setFullWidth(1.0)
+        setFullHeight(1.0)
+    }
+
     init {
         initBase(context)
     }

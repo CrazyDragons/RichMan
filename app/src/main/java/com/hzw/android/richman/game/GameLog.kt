@@ -57,8 +57,13 @@ class GameLog {
         onAddLogListener.onAddLog()
     }
 
-    fun addCostCityLog(cityBean: CityBean) {
-        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：交过路费 " + cityBean.name)
+    fun addDefenseCityLog(baseCityBean: BaseCityBean) {
+        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：派武将驻守了" + baseCityBean.name)
+        onAddLogListener.onAddLog()
+    }
+
+    fun addCostCityLog(baseCityBean: BaseCityBean) {
+        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：交了 "+baseCityBean.name+" 的过路费")
         onAddLogListener.onAddLog()
     }
 

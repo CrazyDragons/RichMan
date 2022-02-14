@@ -1,9 +1,9 @@
 package com.hzw.android.richman.utils
 
-import androidx.appcompat.app.AlertDialog
 import com.hzw.android.richman.activity.GameActivity
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.config.Value
+import com.hzw.android.richman.dialog.TipsDialog
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.listener.OnWalkListener
 import io.reactivex.Observable
@@ -73,9 +73,6 @@ object MapUtil {
     }
 
     fun showTurnTips(activity: GameActivity) {
-        AlertDialog.Builder(activity)
-            .setMessage("轮到 "+GameData.INSTANCE.currentPlayer().name)
-            .setPositiveButton("我知道了", null)
-            .show()
+        TipsDialog(activity, "轮到 "+GameData.INSTANCE.currentPlayer().name).show()
     }
 }
