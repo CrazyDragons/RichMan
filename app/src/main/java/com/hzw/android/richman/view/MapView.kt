@@ -9,8 +9,8 @@ import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.SpecialBean
-import com.hzw.android.richman.config.Value.X_COUNT
-import com.hzw.android.richman.config.Value.Y_COUNT
+import com.hzw.android.richman.config.Value.COUNT_MAP_X
+import com.hzw.android.richman.config.Value.COUNT_MAP_Y
 import com.hzw.android.richman.game.GameInit
 import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.utils.ScreenUtil
@@ -35,8 +35,8 @@ class MapView @JvmOverloads constructor(
 
         val sumCount = GameInit.INSTANCE.mapList.size
 
-        val itemWidth = ScreenUtil.screenWidth / Y_COUNT / 2
-        val itemHeight = ScreenUtil.screenHeight / Y_COUNT
+        val itemWidth = ScreenUtil.screenWidth / COUNT_MAP_Y / 2
+        val itemHeight = ScreenUtil.screenHeight / COUNT_MAP_Y
 
         val constraintSet = ConstraintSet()
 
@@ -81,7 +81,7 @@ class MapView @JvmOverloads constructor(
                 )
             }
 
-            if (i in 1 until X_COUNT) {
+            if (i in 1 until COUNT_MAP_X) {
                 constraintSet.connect(
                     mapItem.id,
                     ConstraintSet.END,
@@ -96,7 +96,7 @@ class MapView @JvmOverloads constructor(
                 )
             }
 
-            if (i in X_COUNT until X_COUNT + Y_COUNT - 1) {
+            if (i in COUNT_MAP_X until COUNT_MAP_X + COUNT_MAP_Y - 1) {
                 constraintSet.connect(
                     mapItem.id,
                     ConstraintSet.BOTTOM,
@@ -111,7 +111,7 @@ class MapView @JvmOverloads constructor(
                 )
             }
 
-            if (i in X_COUNT + Y_COUNT - 1 until X_COUNT + Y_COUNT + X_COUNT - 1) {
+            if (i in COUNT_MAP_X + COUNT_MAP_Y - 1 until COUNT_MAP_X + COUNT_MAP_Y + COUNT_MAP_X - 1) {
                 constraintSet.connect(
                     mapItem.id,
                     ConstraintSet.START,
@@ -126,7 +126,7 @@ class MapView @JvmOverloads constructor(
                 )
             }
 
-            if (i in X_COUNT + Y_COUNT + X_COUNT - 2 until X_COUNT + Y_COUNT + X_COUNT + Y_COUNT - 4) {
+            if (i in COUNT_MAP_X + COUNT_MAP_Y + COUNT_MAP_X - 2 until COUNT_MAP_X + COUNT_MAP_Y + COUNT_MAP_X + COUNT_MAP_Y - 4) {
                 constraintSet.connect(
                     mapItem.id,
                     ConstraintSet.TOP,

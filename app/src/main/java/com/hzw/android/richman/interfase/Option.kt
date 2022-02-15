@@ -13,7 +13,7 @@ import com.hzw.android.richman.bean.GeneralsBean
  */
 interface Option {
     fun buyBaseCity(baseCityBean: BaseCityBean)
-    fun levelCity(cityBean: CityBean)
-    fun costBaseCity(baseCityBean: BaseCityBean)
-    fun defense(baseCityBean: BaseCityBean, generalsBean: GeneralsBean?)
+    fun levelCity(cityBean: CityBean, needFinish:Boolean)
+    fun costBaseCity(baseCityBean: BaseCityBean, needFinish:Boolean)
+    fun defense(baseCityBean: BaseCityBean, generalsBean: GeneralsBean?, needFinish:Boolean)
 }

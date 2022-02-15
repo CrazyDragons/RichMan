@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">真三国无双</string>
     <string name="player">玩家</string>
-    <string name="computer">玩家</string>
+    <string name="computer">电脑</string>
     <string name="no_player">请至少添加一个玩家</string>
     <string name="input_nick">输入昵称</string>
     <string name="join">加入</string>

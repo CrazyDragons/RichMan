@@ -42,36 +42,36 @@ class AreaInfoView @JvmOverloads constructor(
         mTvAreaArmyCost.text =
             String.format(
                 resources.getString(R.string.defense_cost),
-                (areaBean.army * Value.DEFENSE_ARMY_COST_X).toInt()
+                (areaBean.army * Value.X_DEFENSE_ARMY_COST).toInt()
             )
         mTvAreaLevel_1.text =
             String.format(
                 resources.getString(R.string.area_level_1),
-                (areaBean.army * Value.LEVEL_AREA_MONEY_1).toInt(),
-                areaBean.army * Value.LEVEL_AREA_ARMY_1
+                (areaBean.army * Value.X_AREA_MONEY_LEVEL_1).toInt(),
+                areaBean.army * Value.X_AREA_ARMY_LEVEL_1
             )
         mTvAreaLevel_2.text =
             String.format(
                 resources.getString(R.string.area_level_2),
-                areaBean.army * Value.LEVEL_AREA_MONEY_2,
-                areaBean.army * Value.LEVEL_AREA_ARMY_2
+                areaBean.army * Value.X_AREA_MONEY_LEVEL_2,
+                areaBean.army * Value.X_AREA_ARMY_LEVEL_2
             )
         mTvAreaLevel_3.text =
             String.format(
-                resources.getString(R.string.area_level_3) , areaBean.army * Value.LEVEL_AREA_MONEY_3,
-                areaBean.army * Value.LEVEL_AREA_ARMY_3
+                resources.getString(R.string.area_level_3) , areaBean.army * Value.X_AREA_MONEY_LEVEL_3,
+                areaBean.army * Value.X_AREA_ARMY_LEVEL_3
             )
         mTvAreaLevel_4.text =
             String.format(
-                resources.getString(R.string.area_level_4) , areaBean.army * Value.LEVEL_AREA_MONEY_4,
-                areaBean.army * Value.LEVEL_AREA_ARMY_4
+                resources.getString(R.string.area_level_4) , areaBean.army * Value.X_AREA_MONEY_LEVEL_4,
+                areaBean.army * Value.X_AREA_ARMY_LEVEL_4
             )
         mTvAreaLevel_5.text =
             String.format(
-                resources.getString(R.string.area_level_5) , areaBean.army * Value.LEVEL_AREA_MONEY_5,
-                areaBean.army * Value.LEVEL_AREA_ARMY_5
+                resources.getString(R.string.area_level_5) , areaBean.army * Value.X_AREA_MONEY_LEVEL_5,
+                areaBean.army * Value.X_AREA_ARMY_LEVEL_5
             )
         mTvAreaSale.text =
-            String.format(resources.getString(R.string.sale_cost), (areaBean.army * Value.SALE_X).toInt())
+            String.format(resources.getString(R.string.sale_cost), (areaBean.army * Value.X_SALE).toInt())
     }
 }

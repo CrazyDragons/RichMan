@@ -43,33 +43,33 @@ class CityInfoView @JvmOverloads constructor(
         mTvOwner.text =
             String.format(resources.getString(R.string.owner), cityBean.owner?.name)
         mTvCityLevelCost.text =
-            String.format(resources.getString(R.string.level_cost), (cityBean.buyPrice * Value.LEVEL_CITY_COST_X).toInt())
+            String.format(resources.getString(R.string.level_cost), (cityBean.buyPrice * Value.X_LEVEL_CITY_COST).toInt())
         mTvCityArmyCost.text =
-            String.format(resources.getString(R.string.defense_cost), (cityBean.buyPrice * Value.DEFENSE_ARMY_COST_X).toInt())
+            String.format(resources.getString(R.string.defense_cost), (cityBean.buyPrice * Value.X_DEFENSE_ARMY_COST).toInt())
         mTvCityLevel_0.text =
             String.format(
                 resources.getString(R.string.city_level_0),
-                (cityBean.buyPrice * Value.LEVEL_CITY_MONEY_0).toInt(),
-                (cityBean.buyPrice * Value.LEVEL_CITY_ARMY_0).toInt()
+                (cityBean.buyPrice * Value.X_CITY_MONEY_LEVEL_0).toInt(),
+                (cityBean.buyPrice * Value.X_CITY_ARMY_LEVEL_0).toInt()
             )
         mTvCityLevel_1.text =
             String.format(
                 resources.getString(R.string.city_level_1),
-                cityBean.buyPrice * Value.LEVEL_CITY_MONEY_1,
-                cityBean.buyPrice * Value.LEVEL_CITY_ARMY_1
+                cityBean.buyPrice * Value.X_CITY_MONEY_LEVEL_1,
+                cityBean.buyPrice * Value.X_CITY_ARMY_LEVEL_1
             )
         mTvCityLevel_2.text =
             String.format(
-                resources.getString(R.string.city_level_2) , cityBean.buyPrice * Value.LEVEL_CITY_MONEY_2,
-                cityBean.buyPrice * Value.LEVEL_CITY_ARMY_2
+                resources.getString(R.string.city_level_2) , cityBean.buyPrice * Value.X_CITY_MONEY_LEVEL_2,
+                cityBean.buyPrice * Value.X_CITY_ARMY_LEVEL_2
             )
         mTvCityLevel_3.text =
             String.format(
-                resources.getString(R.string.city_level_3) , cityBean.buyPrice * Value.LEVEL_CITY_MONEY_3,
-                cityBean.buyPrice * Value.LEVEL_CITY_ARMY_3
+                resources.getString(R.string.city_level_3) , cityBean.buyPrice * Value.X_CITY_MONEY_LEVEL_3,
+                cityBean.buyPrice * Value.X_CITY_ARMY_LEVEL_3
             )
         mTvCitySale.text =
-            String.format(resources.getString(R.string.sale_cost), (cityBean.buyPrice * Value.SALE_X).toInt())
+            String.format(resources.getString(R.string.sale_cost), (cityBean.buyPrice * Value.X_SALE).toInt())
 
         when (cityBean.color) {
             CityBean.Color.RED -> {

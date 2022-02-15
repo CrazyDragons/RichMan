@@ -1,11 +1,14 @@
 package com.hzw.android.richman.dialog
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import com.hzw.android.richman.R
 import com.hzw.android.richman.base.BaseDialog
+import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.listener.OnClickTipsListener
 import kotlinx.android.synthetic.main.dialog_tips.*
 
@@ -25,6 +28,7 @@ class TipsDialog(
 ) : BaseDialog(context) {
 
     constructor(context: Context, message: String) : this(context, message, null, null, null)
+    constructor(context: Context, message: String, onClickTipsListener: OnClickTipsListener?) : this(context, message, null, null, onClickTipsListener)
 
 
     init {
@@ -52,5 +56,11 @@ class TipsDialog(
             onClickTipsListener?.onClickNo()
             dismiss()
         }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+                mTvYes.performClick()
+            }
+        }, 1000)
     }
 }

@@ -71,7 +71,7 @@ class OptionView @JvmOverloads constructor(
                         val canLevel =
                             (GameData.INSTANCE.currentMap() is CityBean)
                                     && (GameData.INSTANCE.currentMap() as CityBean).level < 3
-                                    && playerBean.status == PlayerBean.STATUS.OPTION_FALSE && playerBean.money >= (GameData.INSTANCE.currentMap() as CityBean).buyPrice * Value.LEVEL_CITY_COST_X
+                                    && playerBean.status == PlayerBean.STATUS.OPTION_FALSE && playerBean.money >= (GameData.INSTANCE.currentMap() as CityBean).buyPrice * Value.X_LEVEL_CITY_COST
                         buttonStatus(
                             false,
                             canLevel,
@@ -192,10 +192,10 @@ class OptionView @JvmOverloads constructor(
                 if (GameData.INSTANCE.currentMap() is CityBean) {
                     val cityBean = GameData.INSTANCE.currentMap() as CityBean
                     showNormalDialog(
-                        "是否用 " + (cityBean.buyPrice * Value.LEVEL_CITY_COST_X) + " 升级 " + cityBean.name + " ?",
+                        "是否用 " + (cityBean.buyPrice * Value.X_LEVEL_CITY_COST) + " 升级 " + cityBean.name + " ?",
                         object : OnClickTipsListener {
                             override fun onClickYes() {
-                                GameOption.levelCity(cityBean)
+                                GameOption.levelCity(cityBean, false)
                             }
 
                         })
@@ -204,18 +204,11 @@ class OptionView @JvmOverloads constructor(
 
             R.id.mBtnDefense -> {
                 val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
-                showNormalDialog(
-                    "是否派武将驻守 " + baseCityBean.name + " ?",
-                    object : OnClickTipsListener {
-                        override fun onClickYes() {
-                            OptionGeneralsDialog(
-                                context,
-                                OptionGeneralsDialog.TYPE.DEFENSE,
-                                baseCityBean
-                            ).show()
-                        }
-
-                    })
+                OptionGeneralsDialog(
+                    context,
+                    OptionGeneralsDialog.TYPE.DEFENSE,
+                    baseCityBean
+                ).show()
             }
 
             R.id.mBtnPk -> {
@@ -278,7 +271,7 @@ class OptionView @JvmOverloads constructor(
                     msg,
                     object : OnClickTipsListener {
                         override fun onClickYes() {
-                            GameOption.costBaseCity(GameData.INSTANCE.currentMap() as BaseCityBean)
+                            GameOption.costBaseCity(GameData.INSTANCE.currentMap() as BaseCityBean, false)
                         }
 
                     })

@@ -22,7 +22,8 @@ import kotlinx.android.synthetic.main.dialog_option_generals.*
  * note
  * create date 2022/2/13
  */
-class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean) : BaseDialog(context) {
+class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean) :
+    BaseDialog(context) {
     init {
         setContentView(R.layout.dialog_option_generals)
         setWindowAnimations(R.style.scale_alpha_animation)
@@ -33,15 +34,15 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
         generalsAdapter.setNewInstance(getStayGenerals())
         mRvGenerals.adapter = generalsAdapter
 
-        when(type) {
+        when (type) {
             TYPE.DEFENSE -> {
                 mTvTips.visibility = View.VISIBLE
                 mTvTips.setOnClickListener {
-                    GameOption.defense(cityBean, null)
+                    GameOption.defense(cityBean, null, false)
                     dismiss()
                 }
                 generalsAdapter.setOnItemClickListener { _, _, position ->
-                    GameOption.defense(cityBean, generalsAdapter.data[position])
+                    GameOption.defense(cityBean, generalsAdapter.data[position], false)
                     dismiss()
                 }
             }
@@ -49,7 +50,7 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
             TYPE.PK -> {
                 mTvTips.visibility = View.GONE
                 generalsAdapter.setOnItemClickListener { _, _, position ->
-                    GameOption.pk(cityBean, generalsAdapter.data[position])
+                    GameOption.pk(cityBean, generalsAdapter.data[position], false)
                     dismiss()
                 }
             }
@@ -57,17 +58,16 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
             TYPE.ATTACK -> {
                 mTvTips.visibility = View.GONE
                 generalsAdapter.setOnItemClickListener { _, _, position ->
-                    GameOption.attack(cityBean, generalsAdapter.data[position])
+                    GameOption.attack(cityBean, generalsAdapter.data[position], false)
                     dismiss()
                 }
             }
         }
 
 
-
     }
 
-    private fun getStayGenerals():MutableList<GeneralsBean> {
+    private fun getStayGenerals(): MutableList<GeneralsBean> {
         val list = mutableListOf<GeneralsBean>()
 
         for (item in GameData.INSTANCE.currentPlayer().generals) {
@@ -80,6 +80,6 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
     }
 
     enum class TYPE {
-        DEFENSE,PK,ATTACK
+        DEFENSE, PK, ATTACK
     }
 }

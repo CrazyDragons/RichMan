@@ -67,12 +67,12 @@
         android:textColor="@color/black"
         android:textSize="12sp"
         app:drawableStartCompat="@drawable/icon_city"
-        app:layout_constraintEnd_toStartOf="@id/mTvGeneral"
+        app:layout_constraintEnd_toStartOf="@id/mTvGenerals"
         app:layout_constraintStart_toStartOf="@id/mTvGDP"
         app:layout_constraintTop_toBottomOf="@id/mTvGDP" />
 
     <TextView
-        android:id="@+id/mTvGeneral"
+        android:id="@+id/mTvGenerals"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawablePadding="5dp"
@@ -97,7 +97,7 @@
         app:drawableStartCompat="@drawable/icon_equipment"
         app:layout_constraintBottom_toBottomOf="@id/mTvCity"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/mTvGeneral" />
+        app:layout_constraintStart_toEndOf="@id/mTvGenerals" />
 
     <View
         android:layout_width="match_parent"

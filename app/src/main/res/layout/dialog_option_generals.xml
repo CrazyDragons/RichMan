@@ -2,23 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:background="@drawable/shape_rectangle_solid_orange_r10"
     android:orientation="vertical"
-    android:background="@drawable/shape_rectangle_solid_orange_r10">
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/mTvTips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
         android:layout_marginBottom="10dp"
         android:background="@drawable/shape_rectangle_solid_gray_r10"
         android:gravity="center"
-        android:text="空城"/>
+        android:text="空城"
+        android:textColor="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mRvGenerals"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:overScrollMode="never" />
 
 </LinearLayout>

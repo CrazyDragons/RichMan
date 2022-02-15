@@ -98,7 +98,7 @@ class GameInit private constructor() {
     private fun initGenerals() {
 
         for (i in 1 .. 50) {
-            generals.add(GeneralsBean(i.toString()+"将", R.drawable.icon_test, 1 + (Math.random()*80).toInt()/20, (Math.random()*100).toInt(), (Math.random()*100).toInt()))
+            generals.add(GeneralsBean("将$i", R.drawable.icon_test, 1 + (Math.random()*80).toInt()/20, (Math.random()*100).toInt(), (Math.random()*100).toInt()))
         }
 
     }

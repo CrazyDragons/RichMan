@@ -21,19 +21,19 @@ import com.hzw.android.richman.bean.AreaBean
 import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.bean.SpecialBean
+import com.hzw.android.richman.config.Value
+import com.hzw.android.richman.dialog.ComputerOptionTisDialog
 import com.hzw.android.richman.dialog.MapInfoDialog
 import com.hzw.android.richman.dialog.PlayerInfoDialog
+import com.hzw.android.richman.dialog.TipsDialog
+import com.hzw.android.richman.event.OptionFinishEvent
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.game.GameSave
-import com.hzw.android.richman.listener.OnAddLogListener
-import com.hzw.android.richman.listener.OnMapClickListener
-import com.hzw.android.richman.listener.OnOptionListener
-import com.hzw.android.richman.listener.OnWalkListener
+import com.hzw.android.richman.listener.*
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.MapUtil.setNextTurn
-import com.hzw.android.richman.utils.MapUtil.showTurnTips
 import com.hzw.android.richman.utils.ToastUtil
 import com.hzw.android.richman.view.*
 import io.reactivex.Observable
@@ -42,6 +42,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_game.*
+import kotlinx.android.synthetic.main.view_option.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -56,13 +60,16 @@ class GameActivity : BaseActivity(),
     OnWalkListener,
     View.OnClickListener,
     OnMapClickListener,
-    OnAddLogListener, OnItemClickListener, OnOptionListener, OnItemLongClickListener {
+    OnAddLogListener, OnItemClickListener, OnOptionListener, OnItemLongClickListener,
+    OnClickTipsListener {
 
     private var playerViewList = mutableListOf<PlayerView>()
+    private lateinit var computerOptionTipsDialog: ComputerOptionTisDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        EventBus.getDefault().register(this)
 
         val isNewGame = intent.getBooleanExtra("newGame", true)
         if (isNewGame) {
@@ -71,9 +78,9 @@ class GameActivity : BaseActivity(),
             GameSave.loadMap()
         }
 
-        initViews()
+        GameData.INSTANCE.load()
 
-        inItGame()
+        initViews()
     }
 
     private fun initViews() {
@@ -85,51 +92,46 @@ class GameActivity : BaseActivity(),
         GameOption.onOptionListener = this
         mRvPlayerInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         mRvLog.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-    }
-
-
-    private fun inItGame() {
-
-        GameData.INSTANCE.load()
-
+        computerOptionTipsDialog = ComputerOptionTisDialog(this)
         val playerInfoAdapter = PlayerInfoAdapter()
         playerInfoAdapter.setNewInstance(GameData.INSTANCE.playerData)
         playerInfoAdapter.setOnItemClickListener(this)
         playerInfoAdapter.setOnItemLongClickListener(this)
         mRvPlayerInfo.adapter = playerInfoAdapter
         mRvLog.adapter = GameLog.INSTANCE.logAdapter
+        GameLog.INSTANCE.clear()
+        Handler(Looper.getMainLooper()).postDelayed({
+            initPlayerViews()
+            TipsDialog(this, "准备开始游戏吧", this).show()
+        }, 200)
+    }
+
+
+    private fun startGame() {
 
         optionStatus(walk = true, finish = false)
 
-        GameLog.INSTANCE.clear()
-        GameLog.INSTANCE.addSystemLog("欢迎来到大富翁")
+        showTurnTips(this)
 
         Handler(Looper.getMainLooper()).postDelayed({
-
-
-            for (item in GameData.INSTANCE.playerData) {
-
-                val playerView = PlayerView(this)
-                playerView.setData(item)
-                mRootMap.addView(playerView)
-                playerViewList.add(playerView)
-
-                movePlayer(playerView, item, 0, this)
+            if (!GameData.INSTANCE.playerData[0].isPlayer) {
+                mBtnWalk.performClick()
+            } else {
+                setNextTurn()
             }
+        }, 2000)
+    }
 
-            showTurnTips(this)
+    private fun initPlayerViews() {
+        for (item in GameData.INSTANCE.playerData) {
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (!GameData.INSTANCE.playerData[0].isPlayer) {
-                    mBtnWalk.performClick()
-                } else {
-                    setNextTurn()
-                }
-            }, 2000)
+            val playerView = PlayerView(this)
+            playerView.setData(item)
+            mRootMap.addView(playerView)
+            playerViewList.add(playerView)
 
-        }, 200)
-
-
+            movePlayer(playerView, item, 0, this)
+        }
     }
 
     override fun onWalkStart(count: Int, isFinish: Boolean) {
@@ -156,15 +158,12 @@ class GameActivity : BaseActivity(),
             finish = GameData.INSTANCE.currentPlayer().isPlayer && GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.OPTION_FALSE
         )
 
-        optionComputer()
-
         refreshViews()
 
         if (!GameData.INSTANCE.currentPlayer().isPlayer) {
             Handler(Looper.getMainLooper()).postDelayed({
-
-                mBtnFinishOption.performClick()
-            }, 2000)
+                GameOption.autoOption()
+            }, 1000)
         }
     }
 
@@ -185,7 +184,7 @@ class GameActivity : BaseActivity(),
         playerBean.walkIndex += count
         var restart = false
 
-        Observable.interval(0, 500, TimeUnit.MILLISECONDS)
+        Observable.interval(0, Value.WALK_TIME, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Long?> {
@@ -229,10 +228,6 @@ class GameActivity : BaseActivity(),
                 }
             })
 
-    }
-
-    private fun optionComputer() {
-        GameLog.INSTANCE.addOptionLog()
     }
 
     override fun onClick(view: View?) {
@@ -337,8 +332,11 @@ class GameActivity : BaseActivity(),
 
                 }
 
-                val optionView = OptionView(this)
-                mLlOption.addView(optionView)
+                if (GameData.INSTANCE.currentPlayer().isPlayer) {
+                    val optionView = OptionView(this)
+                    mLlOption.addView(optionView)
+                }
+
                 mRvPlayerInfo.adapter?.notifyDataSetChanged()
                 optionStatus(
                     false,
@@ -370,9 +368,33 @@ class GameActivity : BaseActivity(),
         return true
     }
 
-    override fun onOptionFinish() {
+    override fun onOptionFinish(needFinish: Boolean) {
         refreshViews()
+        if (!needFinish) {
+            if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    GameOption.autoOption()
+                }, 1000)
+            }
+        }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun event(optionFinishEvent: OptionFinishEvent) {
+        computerOptionTipsDialog.dismiss()
+        mBtnFinishOption.performClick()
+    }
+
+    private fun showTurnTips(activity: GameActivity) {
+        if (GameData.INSTANCE.currentPlayer().isPlayer) {
+            TipsDialog(activity, "轮到 " + GameData.INSTANCE.currentPlayer().name).show()
+        } else {
+            computerOptionTipsDialog.show()
+        }
+    }
+
+    override fun onClickYes() {
+        startGame()
+    }
 
 }

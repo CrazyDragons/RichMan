@@ -3,6 +3,7 @@ package com.hzw.android.richman.game
 import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.*
+import com.hzw.android.richman.config.Value
 
 /**
  * class Date
@@ -43,7 +44,7 @@ class GameData private constructor() {
         generalsData = GameInit.INSTANCE.generals
 
         for (item in playerData) {
-            for (i in 2 downTo 0) {
+            for (i in Value.DEFAULT_GENERALS - 1 downTo 0) {
                 generalsData[i].owner = item
                 item.generals.add(generalsData[i])
                 generalsData.removeAt(i)
@@ -52,7 +53,7 @@ class GameData private constructor() {
 
         equipmentData = GameInit.INSTANCE.equipments
         for (item in playerData) {
-            for (i in 1 downTo 0) {
+            for (i in Value.DEFAULT_EQUIPMENTS - 1 downTo 0) {
                 equipmentData[i].owner = item
                 item.equipments.add(equipmentData[i])
                 equipmentData.removeAt(i)

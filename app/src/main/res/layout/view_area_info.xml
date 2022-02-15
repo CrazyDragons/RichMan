@@ -132,6 +132,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:textSize="9sp"
         android:text="@string/all_color_tips"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@id/mIvAreaCover"

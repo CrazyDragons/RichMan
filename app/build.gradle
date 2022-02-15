@@ -48,4 +48,5 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.79'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.10'
+    implementation 'org.greenrobot:eventbus:3.3.1'
 }

@@ -60,20 +60,20 @@ class CityBean : BaseCityBean {
 
     fun needCostMoney():Int {
         return when(level) {
-            0 -> (buyPrice * Value.LEVEL_CITY_MONEY_0).toInt()
-            1 -> (buyPrice * Value.LEVEL_CITY_MONEY_1)
-            2 -> (buyPrice * Value.LEVEL_CITY_MONEY_2)
-            3 -> (buyPrice * Value.LEVEL_CITY_MONEY_3)
+            0 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_0).toInt()
+            1 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_1)
+            2 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_2)
+            3 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_3)
             else -> 0
         }
     }
 
     fun needCostArmy():Int {
         return when(level) {
-            0 -> (buyPrice * Value.LEVEL_CITY_ARMY_0).toInt()
-            1 -> (buyPrice * Value.LEVEL_CITY_ARMY_1)
-            2 -> (buyPrice * Value.LEVEL_CITY_ARMY_2)
-            3 -> (buyPrice * Value.LEVEL_CITY_ARMY_3)
+            0 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_0).toInt()
+            1 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_1)
+            2 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_2)
+            3 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_3)
             else -> 0
         }
     }

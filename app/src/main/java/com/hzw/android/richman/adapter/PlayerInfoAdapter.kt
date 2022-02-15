@@ -21,7 +21,7 @@ class PlayerInfoAdapter : BaseQuickAdapter<PlayerBean, BaseViewHolder>(R.layout.
             .setText(R.id.mTvMoney, item.money.toString())
             .setText(R.id.mTvArmy, item.army.toString())
             .setText(R.id.mTvCity, item.city.size.toString())
-            .setText(R.id.mTvGeneral, item.allGenerals().size.toString())
+            .setText(R.id.mTvGenerals, item.allGenerals().size.toString())
             .setText(R.id.mTvEquipments, item.equipments.size.toString())
     }
 }

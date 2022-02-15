@@ -95,11 +95,11 @@ class PlayerBean(//昵称
 
     fun allAreaCostArmy(): Int {
         return when (allArea()) {
-            1 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_1)
-            2 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_2)
-            3 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_3)
-            4 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_4)
-            5 -> return (Value.AREA_ARMY * Value.LEVEL_AREA_ARMY_5)
+            1 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_1)
+            2 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_2)
+            3 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_3)
+            4 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_4)
+            5 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_5)
             else -> {
                 0
             }

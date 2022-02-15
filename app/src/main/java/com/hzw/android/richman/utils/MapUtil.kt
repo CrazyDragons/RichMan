@@ -1,9 +1,7 @@
 package com.hzw.android.richman.utils
 
-import com.hzw.android.richman.activity.GameActivity
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.config.Value
-import com.hzw.android.richman.dialog.TipsDialog
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.listener.OnWalkListener
 import io.reactivex.Observable
@@ -38,7 +36,7 @@ object MapUtil {
                     val count = (Math.random() * Value.MAX_WALK + 1).toInt()
                     onWalkListener.onWalkStart(count, false)
                     if (t == Value.WALK_TURN) {
-                        onWalkListener.onWalkStart(1, true)
+                        onWalkListener.onWalkStart(Value.TEST, true)
                         mWalkDisposable?.dispose()
                     }
 
@@ -70,9 +68,5 @@ object MapUtil {
             item.status = PlayerBean.STATUS.READY
         }
         GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.OPTION_FALSE
-    }
-
-    fun showTurnTips(activity: GameActivity) {
-        TipsDialog(activity, "轮到 "+GameData.INSTANCE.currentPlayer().name).show()
     }
 }

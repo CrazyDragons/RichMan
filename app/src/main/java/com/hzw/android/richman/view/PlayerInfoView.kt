@@ -45,7 +45,7 @@ class PlayerInfoView @JvmOverloads constructor(
         mTvMoney.text = playerBean.money.toString()
         mTvArmy.text = playerBean.army.toString()
         mTvCity.text = playerBean.city.size.toString()
-        mTvGeneral.text = playerBean.generals.size.toString()
+        mTvGenerals.text = playerBean.allGenerals().size.toString()
         mTvEquipments.text = playerBean.equipments.size.toString()
 
         val baseCityAdapter = BaseCityAdapter()
