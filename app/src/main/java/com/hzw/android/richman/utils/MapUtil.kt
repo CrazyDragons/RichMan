@@ -1,5 +1,8 @@
 package com.hzw.android.richman.utils
 
+import com.hzw.android.richman.base.BaseCityBean
+import com.hzw.android.richman.bean.AreaBean
+import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.game.GameData
@@ -68,5 +71,27 @@ object MapUtil {
             item.status = PlayerBean.STATUS.READY
         }
         GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.OPTION_FALSE
+    }
+
+    fun judgeAllColor(baseCityBean: BaseCityBean):Boolean {
+        if (baseCityBean.owner == null) {
+            return false
+        }
+        if (baseCityBean is CityBean) {
+            val color = baseCityBean.color
+            var x = 0
+            for (item in baseCityBean.owner!!.city) {
+                if (item is CityBean && item.color == color) {
+                    x += 1
+                }
+            }
+            return if (x == 5) {
+                true
+            }else color == CityBean.Color.PURPLE && x == 4
+        }
+        if (baseCityBean is AreaBean) {
+            return baseCityBean.owner!!.allArea() == 5
+        }
+        return false
     }
 }

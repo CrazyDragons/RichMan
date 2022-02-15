@@ -26,7 +26,6 @@ import com.hzw.android.richman.dialog.ComputerOptionTisDialog
 import com.hzw.android.richman.dialog.MapInfoDialog
 import com.hzw.android.richman.dialog.PlayerInfoDialog
 import com.hzw.android.richman.dialog.TipsDialog
-import com.hzw.android.richman.event.OptionFinishEvent
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
@@ -43,9 +42,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.android.synthetic.main.view_option.view.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -69,7 +65,6 @@ class GameActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        EventBus.getDefault().register(this)
 
         val isNewGame = intent.getBooleanExtra("newGame", true)
         if (isNewGame) {
@@ -207,15 +202,19 @@ class GameActivity : BaseActivity(),
                     playerView.translationY = mBaseMap.mapViewList[next].y + playerOffsetY
                     mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
                     if (restart) {
-                        ToastUtil.show("经过了起点")
-                        restart = false
+                        GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY
+                        ToastUtil.show("经过了起点，获得 "+Value.START_ADD_MONEY)
                     }
-
 
                     if (t == count.toLong()) {
                         playerBean.walkIndex = next
-                        playerView.mDisposable?.dispose()
+                        if (restart) {
+                            GameData.INSTANCE.currentPlayer().money +=  Value.START_ADD_MONEY
+                            TipsDialog(this@GameActivity, "恭喜！获得再获得 "+Value.START_ADD_MONEY)
+                        }
+                        restart = false
                         onWalkListener.onWalkFinish()
+                        playerView.mDisposable?.dispose()
                     } else {
                         optionStatus(walk = false, finish = false)
                     }
@@ -251,9 +250,9 @@ class GameActivity : BaseActivity(),
                     playerViewList[GameData.INSTANCE.optionPlayerTurnIndex].x.toInt() - cameraOffsetX,
                     0
                 )
+                showTurnTips(this)
                 if (GameData.INSTANCE.currentPlayer().isPlayer) {
                     optionStatus(walk = true, finish = false)
-                    showTurnTips(this)
                 } else {
                     Handler(Looper.getMainLooper()).postDelayed({
                         mBtnWalk.performClick()
@@ -337,7 +336,6 @@ class GameActivity : BaseActivity(),
                     mLlOption.addView(optionView)
                 }
 
-                mRvPlayerInfo.adapter?.notifyDataSetChanged()
                 optionStatus(
                     false,
                     GameData.INSTANCE.currentPlayer().status != PlayerBean.STATUS.ATTACK
@@ -351,6 +349,7 @@ class GameActivity : BaseActivity(),
                 mLlOption.addView(specialInfoView)
             }
         }
+        mRvPlayerInfo.adapter?.notifyDataSetChanged()
     }
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
@@ -368,7 +367,7 @@ class GameActivity : BaseActivity(),
         return true
     }
 
-    override fun onOptionFinish(needFinish: Boolean) {
+    override fun onOnceOptionFinish(needFinish: Boolean) {
         refreshViews()
         if (!needFinish) {
             if (!GameData.INSTANCE.currentPlayer().isPlayer) {
@@ -379,8 +378,7 @@ class GameActivity : BaseActivity(),
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun event(optionFinishEvent: OptionFinishEvent) {
+    override fun onAllOptionFinish() {
         computerOptionTipsDialog.dismiss()
         mBtnFinishOption.performClick()
     }

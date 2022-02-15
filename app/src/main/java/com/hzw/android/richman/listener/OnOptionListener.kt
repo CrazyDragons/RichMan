@@ -8,5 +8,6 @@ package com.hzw.android.richman.listener
  * create date 2022/2/13
  */
 interface OnOptionListener {
-    fun onOptionFinish(needFinish: Boolean)
+    fun onOnceOptionFinish(needFinish: Boolean)
+    fun onAllOptionFinish()
 }

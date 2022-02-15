@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.Gravity
 import com.hzw.android.richman.R
 import com.hzw.android.richman.base.BaseDialog
+import com.hzw.android.richman.game.GameData
+import kotlinx.android.synthetic.main.dialog_computer_option_tips.*
 
 /**
  * class ComputerOptionTisDialog
@@ -19,5 +21,6 @@ class ComputerOptionTisDialog(context: Context) : BaseDialog(context) {
         setWindowAnimations(R.style.scale_alpha_animation)
         setFull()
         setGravity(Gravity.CENTER)
+        mTvTips.text = GameData.INSTANCE.currentPlayer().name+" 正在操作\n请稍后..."
     }
 }

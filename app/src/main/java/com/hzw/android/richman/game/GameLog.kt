@@ -33,11 +33,6 @@ class GameLog {
         GameData.INSTANCE.logData.clear()
     }
 
-    fun addOptionLog(finish: Boolean) {
-        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + if (!finish) "：正在操作中" else "：操作完成")
-        onAddLogListener.onAddLog()
-    }
-
     fun addWalkLog(walk: Int) {
         logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：投掷了 " + walk + " 点")
         onAddLogListener.onAddLog()
@@ -68,7 +63,41 @@ class GameLog {
     }
 
     fun addCostCityLog(baseCityBean: BaseCityBean) {
-        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：交了"+baseCityBean.name+" 过路费")
+        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：交了 "+baseCityBean.name+" 过路费")
+        onAddLogListener.onAddLog()
+    }
+
+    fun addPkLog(baseCityBean: BaseCityBean, generalsBean: GeneralsBean, win: Boolean) {
+        if (win) {
+            if (baseCityBean.generals != null) {
+                logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "： "+generalsBean.name+" 在 " + baseCityBean.name+" 单挑 "+baseCityBean.generals!!.name+" 获胜，免过路费")
+            }else {
+                logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "： "+generalsBean.name+" 在 " + baseCityBean.name+" 单挑小兵获胜，免过路费")
+            }
+        }else {
+            if (baseCityBean.generals != null) {
+                logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "："+generalsBean.name+" 在 " + baseCityBean.name+" 单挑失败，多交过路费")
+            }else {
+                logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "："+generalsBean.name+" 在 " + baseCityBean.name+" 单挑小兵失败， 多交过路费")
+            }
+        }
+        onAddLogListener.onAddLog()
+    }
+
+    fun addAttackLog(baseCityBean: BaseCityBean, generalsBean: GeneralsBean, win: Boolean) {
+        if (win) {
+            if (baseCityBean.generals != null) {
+                logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "： "+generalsBean.name+" 在 " + baseCityBean.name+" 攻城获胜，并俘虏 "+baseCityBean.generals!!.name)
+            }else {
+                logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "： "+generalsBean.name+" 在 " + baseCityBean.name+" 攻空城获胜")
+            }
+        }else {
+            if (baseCityBean.generals != null) {
+                logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "："+generalsBean.name+" 在 " + baseCityBean.name+" 攻城失败，被 "+baseCityBean.generals!!.name + " 俘虏")
+            }else {
+                logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "："+generalsBean.name+" 在 " + baseCityBean.name+" 攻空城失败")
+            }
+        }
         onAddLogListener.onAddLog()
     }
 

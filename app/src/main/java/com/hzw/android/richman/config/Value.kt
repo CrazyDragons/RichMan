@@ -31,7 +31,7 @@ object Value {
     const val WALK_TURN_TIME: Long = 20
 
     //单格行走时间
-    const val WALK_TIME: Long = 500
+    const val WALK_TIME: Long = 100
 
     //X轴地图数
     const val COUNT_MAP_X = 27
@@ -76,19 +76,19 @@ object Value {
     const val X_CITY_ARMY_LEVEL_3 = 4
 
     ///一区过路费系数
-    const val X_AREA_MONEY_LEVEL_1 = 0.5
+    const val X_AREA_MONEY_LEVEL_1 = 1
 
     //二区过路费系数
-    const val X_AREA_MONEY_LEVEL_2 = 1
+    const val X_AREA_MONEY_LEVEL_2 = 2
 
     //三区过路费系数
-    const val X_AREA_MONEY_LEVEL_3 = 2
+    const val X_AREA_MONEY_LEVEL_3 = 3
 
     ///四区过路费系数
-    const val X_AREA_MONEY_LEVEL_4 = 4
+    const val X_AREA_MONEY_LEVEL_4 = 5
 
     //五区过路费系数
-    const val X_AREA_MONEY_LEVEL_5 = 8
+    const val X_AREA_MONEY_LEVEL_5 = 10
 
     ///一区驻兵系数
     const val X_AREA_ARMY_LEVEL_1 = 1
@@ -106,10 +106,10 @@ object Value {
     const val X_AREA_ARMY_LEVEL_5 = 10
 
     //默认初始金钱
-    const val DEFAULT_MONEY = 10000
+    const val DEFAULT_MONEY = 99999
 
     //默认初始兵力
-    const val DEFAULT_ARMY = 10000
+    const val DEFAULT_ARMY = 99999
 
     //默认初始武将
     const val DEFAULT_GENERALS = 5
@@ -127,17 +127,50 @@ object Value {
     const val X_COMPUTER_BASE = 100
 
     //电脑购买城池概率
-    const val X_COMPUTER_BUY = 60
+    const val X_COMPUTER_BUY = 90
 
     //电脑升级城池概率
-    const val X_COMPUTER_LEVEL = 80
+    const val X_COMPUTER_LEVEL = 90
 
-    //电脑助手城池概率
-    const val X_COMPUTER_DEFENSE = 90
+    //电脑驻守城池概率
+    const val X_COMPUTER_DEFENSE = 80
 
     //电脑选择交费概率
     const val X_COMPUTER_COST = 60
 
     //电脑选择攻城概率
     const val X_COMPUTER_ATTACK = 90
+
+    //经过起点增加金钱
+    const val START_ADD_MONEY = 2000
+
+    //有驻守武将PK失败损钱系数
+    const val X_PK_LOSER = 1.5
+
+    //无驻守武将PK失败损钱系数
+    const val X_PK_LOSER_EMPTY = 2.0
+
+    //有驻守武将攻城失败损兵系数
+    const val X_ATTACK_LOSER = 1
+
+    //无驻守武将攻城失败损兵系数
+    const val X_ATTACK_LOSER_EMPTY = 2
+
+    //守城增加防御
+    const val ADD_DEFENSE = 5
+
+    //同色增钱系数
+    const val X_ALL_COLOR_MONEY = 2
+
+    //同色增兵系数
+    const val X_ALL_COLOR_ARMY = 1.5
+
+    //同色增防
+    const val ALL_COLOR_DEFENSE = 20
+
+    //攻城消耗行动力
+    const val ACTION_ATTACK = 2
+
+    //单挑消耗行动力
+    const val ACTION_PK = 1
 }

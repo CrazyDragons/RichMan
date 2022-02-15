@@ -6,7 +6,7 @@
     <color name="red">#FF0000</color>
     <color name="gray">#808080</color>
 
-    <color name="area">#2196F3</color>
+    <color name="area">#FF00FB</color>
     <color name="start">#FF5722</color>
     <color name="army">#FF9800</color>
     <color name="generals">#FFC107</color>
@@ -24,7 +24,7 @@
 
     <color name="colorRed">#FF0000</color>
     <color name="colorOrange">#FF7A22</color>
-    <color name="colorYellow">#FFEB3B</color>
+    <color name="colorYellow">#FFC107</color>
     <color name="colorGreen">#4CAF50</color>
     <color name="colorQing">#009688</color>
     <color name="colorBlue">#03A9F4</color>

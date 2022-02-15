@@ -10,6 +10,7 @@ import com.hzw.android.richman.adapter.GeneralsAdapter
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.base.BaseDialog
 import com.hzw.android.richman.bean.GeneralsBean
+import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameOption
 import kotlinx.android.synthetic.main.dialog_option_generals.*
@@ -31,7 +32,7 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
 
         mRvGenerals.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         val generalsAdapter = GeneralsAdapter()
-        generalsAdapter.setNewInstance(getStayGenerals())
+        generalsAdapter.setNewInstance(getStayGenerals(type == TYPE.ATTACK))
         mRvGenerals.adapter = generalsAdapter
 
         when (type) {
@@ -67,12 +68,18 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
 
     }
 
-    private fun getStayGenerals(): MutableList<GeneralsBean> {
+    private fun getStayGenerals(isAttack:Boolean): MutableList<GeneralsBean> {
         val list = mutableListOf<GeneralsBean>()
 
         for (item in GameData.INSTANCE.currentPlayer().generals) {
             if (item.city == null) {
-                list.add(item)
+                if (isAttack) {
+                    if (item.action > Value.ACTION_ATTACK) {
+                        list.add(item)
+                    }
+                } else {
+                    list.add(item)
+                }
             }
         }
 

@@ -16,6 +16,7 @@ import com.hzw.android.richman.dialog.TipsDialog
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.listener.OnClickTipsListener
+import com.hzw.android.richman.utils.MapUtil
 import kotlinx.android.synthetic.main.view_option.view.*
 
 /**
@@ -98,14 +99,14 @@ class OptionView @JvmOverloads constructor(
 
                             if (baseCityBean is CityBean) {
                                 canCost = playerBean.money >= baseCityBean.needCostMoney()
-                                canAttack = playerBean.army >= baseCityBean.needCostArmy()
+                                canAttack = playerBean.army >= baseCityBean.needCostArmy() && playerBean.allAttackGenerals().size > 0
                             }
 
                             if (baseCityBean is AreaBean) {
                                 canCost =
                                     playerBean.money >= baseCityBean.owner!!.allAreaCostMoney()
                                 canAttack =
-                                    playerBean.army >= baseCityBean.owner!!.allAreaCostArmy() && playerBean.generals.size > 0
+                                    playerBean.army >= baseCityBean.owner!!.allAreaCostArmy() && playerBean.allAttackGenerals().size > 0
                             }
 
                             val canPK: Boolean = playerBean.generals.size > 0
@@ -192,7 +193,7 @@ class OptionView @JvmOverloads constructor(
                 if (GameData.INSTANCE.currentMap() is CityBean) {
                     val cityBean = GameData.INSTANCE.currentMap() as CityBean
                     showNormalDialog(
-                        "是否用 " + (cityBean.buyPrice * Value.X_LEVEL_CITY_COST) + " 升级 " + cityBean.name + " ?",
+                        "是否用 " + (cityBean.buyPrice * Value.X_LEVEL_CITY_COST).toInt() + " 升级 " + cityBean.name + " ?",
                         object : OnClickTipsListener {
                             override fun onClickYes() {
                                 GameOption.levelCity(cityBean, false)
@@ -214,7 +215,7 @@ class OptionView @JvmOverloads constructor(
             R.id.mBtnPk -> {
                 val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
                 showNormalDialog(
-                    "是否派武将单挑 " + baseCityBean.name + " ?",
+                    "是否在 "+baseCityBean.name+" 派武将单挑?",
                     object : OnClickTipsListener {
                         override fun onClickYes() {
                             OptionGeneralsDialog(
@@ -232,11 +233,11 @@ class OptionView @JvmOverloads constructor(
                 var msg = ""
                 if (baseCityBean is CityBean) {
                     msg =
-                        "是否用 " + baseCityBean.needCostArmy() + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+                        "是否用 " + (baseCityBean.needCostArmy() * (if (MapUtil.judgeAllColor(baseCityBean)) Value.X_ALL_COLOR_ARMY else 1.0)).toInt() + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
                 }
                 if (baseCityBean is AreaBean) {
                     msg =
-                        "是否用 " + baseCityBean.owner!!.allAreaCostArmy() + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+                        "是否用 " + (baseCityBean.owner!!.allAreaCostArmy() * (if (MapUtil.judgeAllColor(baseCityBean)) Value.X_ALL_COLOR_ARMY else 1.0)).toInt() + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
                 }
                 showNormalDialog(
                     msg,
@@ -258,12 +259,12 @@ class OptionView @JvmOverloads constructor(
                 when (GameData.INSTANCE.currentMap()) {
                     is CityBean -> {
                         val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                        msg = "是否交费 " + cityBean.needCostMoney() + " ?"
+                        msg = "是否交费 " + (cityBean.needCostMoney() * if (MapUtil.judgeAllColor(cityBean)) Value.X_ALL_COLOR_MONEY else 1) + " ?"
                     }
 
                     is AreaBean -> {
                         val areaBean = GameData.INSTANCE.currentMap() as AreaBean
-                        msg = "是否交费 " + areaBean.owner?.allAreaCostMoney() + " ?"
+                        msg = "是否交费 " + (areaBean.owner!!.allAreaCostMoney() * if (MapUtil.judgeAllColor(areaBean)) Value.X_ALL_COLOR_MONEY else 1) + " ?"
                     }
                 }
 

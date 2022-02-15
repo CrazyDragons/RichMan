@@ -35,10 +35,7 @@ class AreaInfoView @JvmOverloads constructor(
         mTvAreaName.text = areaBean.name
         mTvOwner.visibility = if (areaBean.owner == null) GONE else VISIBLE
         mIvAreaGeneral.visibility = if (areaBean.generals == null) GONE else VISIBLE
-        mTvOwner.text = String.format(
-            resources.getString(R.string.owner),
-            areaBean.owner?.name
-        )
+        mTvOwner.text = areaBean.owner?.name
         mTvAreaArmyCost.text =
             String.format(
                 resources.getString(R.string.defense_cost),

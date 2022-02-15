@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import com.alibaba.fastjson.JSONObject
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value
+import com.hzw.android.richman.utils.MapUtil
 
 /**
  * class CityBean
@@ -59,21 +60,23 @@ class CityBean : BaseCityBean {
     }
 
     fun needCostMoney():Int {
+        val x = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_MONEY else 1
         return when(level) {
-            0 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_0).toInt()
-            1 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_1)
-            2 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_2)
-            3 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_3)
+            0 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_0 * x).toInt()
+            1 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_1) * x
+            2 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_2) * x
+            3 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_3) * x
             else -> 0
         }
     }
 
     fun needCostArmy():Int {
+        val x = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_ARMY else 1.0
         return when(level) {
-            0 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_0).toInt()
-            1 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_1)
-            2 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_2)
-            3 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_3)
+            0 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_0 * x).toInt()
+            1 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_1 * x).toInt()
+            2 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_2 * x).toInt()
+            3 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_3 * x).toInt()
             else -> 0
         }
     }
