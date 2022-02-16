@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mLlEquipment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="2dp"
+    android:background="@drawable/shape_rectangle_solid_yellow_r5"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/mIvCover"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/icon_bao"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/mTvName"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_margin="1dp"
+        android:textSize="12sp"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray"/>
+
+    <TextView
+        android:id="@+id/mTvPrice"
+        android:layout_width="match_parent"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/red"
+        android:layout_margin="1dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textSize="11sp"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

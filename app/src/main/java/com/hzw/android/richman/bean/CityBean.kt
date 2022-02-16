@@ -59,24 +59,29 @@ class CityBean : BaseCityBean {
         this.color = color
     }
 
-    fun needCostMoney():Int {
-        val x = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_MONEY else 1
-        return when(level) {
-            0 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_0 * x).toInt()
-            1 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_1) * x
-            2 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_2) * x
-            3 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_3) * x
-            else -> 0
+    fun needCostMoney(): Int {
+        return if (owner!!.status == PlayerBean.STATUS.PRISON) {
+            0
+        }else {
+            val x = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_MONEY else 1
+            when (level) {
+                0 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_0 * x).toInt()
+                1 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_1) * x
+                2 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_2) * x
+                3 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_3) * x
+                else -> 0
+            }
         }
     }
 
-    fun needCostArmy():Int {
+    fun needCostArmy(): Int {
+        val isPrison = if (owner!!.status == PlayerBean.STATUS.PRISON) 0.5 else 1.0
         val x = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_ARMY else 1.0
-        return when(level) {
-            0 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_0 * x).toInt()
-            1 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_1 * x).toInt()
-            2 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_2 * x).toInt()
-            3 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_3 * x).toInt()
+        return when (level) {
+            0 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_0 * x * isPrison).toInt()
+            1 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_1 * x * isPrison).toInt()
+            2 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_2 * x * isPrison).toInt()
+            3 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_3 * x * isPrison).toInt()
             else -> 0
         }
     }

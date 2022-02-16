@@ -16,7 +16,6 @@ import com.hzw.android.richman.dialog.TipsDialog
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.listener.OnClickTipsListener
-import com.hzw.android.richman.utils.MapUtil
 import kotlinx.android.synthetic.main.view_base_city_option.view.*
 
 /**
@@ -233,11 +232,11 @@ class BaseCityOptionView @JvmOverloads constructor(
                 var msg = ""
                 if (baseCityBean is CityBean) {
                     msg =
-                        "是否用 " + (baseCityBean.needCostArmy() * (if (MapUtil.judgeAllColor(baseCityBean)) Value.X_ALL_COLOR_ARMY else 1.0)).toInt() + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+                        "是否用 " + (baseCityBean.needCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
                 }
                 if (baseCityBean is AreaBean) {
                     msg =
-                        "是否用 " + (baseCityBean.owner!!.allAreaCostArmy() * (if (MapUtil.judgeAllColor(baseCityBean)) Value.X_ALL_COLOR_ARMY else 1.0)).toInt() + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+                        "是否用 " + (baseCityBean.owner!!.allAreaCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
                 }
                 showNormalDialog(
                     msg,
@@ -259,12 +258,12 @@ class BaseCityOptionView @JvmOverloads constructor(
                 when (GameData.INSTANCE.currentMap()) {
                     is CityBean -> {
                         val cityBean = GameData.INSTANCE.currentMap() as CityBean
-                        msg = "是否交费 " + (cityBean.needCostMoney() * if (MapUtil.judgeAllColor(cityBean)) Value.X_ALL_COLOR_MONEY else 1) + " ?"
+                        msg = "是否交费 " + cityBean.needCostMoney() + " ?"
                     }
 
                     is AreaBean -> {
                         val areaBean = GameData.INSTANCE.currentMap() as AreaBean
-                        msg = "是否交费 " + (areaBean.owner!!.allAreaCostMoney() * if (MapUtil.judgeAllColor(areaBean)) Value.X_ALL_COLOR_MONEY else 1) + " ?"
+                        msg = "是否交费 " + areaBean.owner!!.allAreaCostMoney() + " ?"
                     }
                 }
 

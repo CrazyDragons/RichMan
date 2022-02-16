@@ -26,8 +26,8 @@ class BaseCityAdapter : BaseQuickAdapter<BaseCityBean, BaseViewHolder>(R.layout.
         else (item.generals!!.defense + addDefense + if (MapUtil.judgeAllColor(item)) Value.ALL_COLOR_DEFENSE else 0)
         holder.setText(R.id.mTvName, item.name)
             .setText(R.id.mTvCost,
-                if (item is CityBean) (item.needCostMoney() * if (MapUtil.judgeAllColor(item)) Value.X_ALL_COLOR_MONEY else 1).toString()
-                else (item.owner!!.allAreaCostMoney() * if (MapUtil.judgeAllColor(item)) Value.X_ALL_COLOR_MONEY else 1).toString()
+                if (item is CityBean) item.needCostMoney().toString()
+                else item.owner!!.allAreaCostMoney().toString()
             )
             .setText(
                 R.id.mTvDefense, defense.toString()

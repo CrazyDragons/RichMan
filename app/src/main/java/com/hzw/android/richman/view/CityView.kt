@@ -6,7 +6,6 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.CityBean
-import com.hzw.android.richman.utils.MapUtil
 import kotlinx.android.synthetic.main.view_city.view.*
 
 /**
@@ -37,7 +36,6 @@ class CityView @JvmOverloads constructor(
         mViewLevel.setLevel(cityBean.level, false)
         mIvDefense.visibility = if (cityBean.generals == null) GONE else VISIBLE
         mTvOwner.visibility = if (cityBean.owner == null) GONE else VISIBLE
-        mIvAllColor.visibility = if (MapUtil.judgeAllColor(cityBean)) VISIBLE else GONE
         mTvOwner.text = cityBean.owner?.name
 
         when (cityBean.color) {

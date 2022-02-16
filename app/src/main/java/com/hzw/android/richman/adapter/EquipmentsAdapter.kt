@@ -6,7 +6,7 @@ import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.EquipmentBean
 
 /**
- * class EqupmentsAdapter
+ * class EquipmentsAdapter
  * @author CrazyDragon
  * description
  * note

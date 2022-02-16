@@ -2,6 +2,7 @@ package com.hzw.android.richman.interfase
 
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.bean.CityBean
+import com.hzw.android.richman.bean.EquipmentBean
 import com.hzw.android.richman.bean.GeneralsBean
 
 /**
@@ -20,4 +21,11 @@ interface Option {
     fun attack(baseCityBean: BaseCityBean, generalsBean: GeneralsBean, needFinish: Boolean)
 
     fun buyArmy(army:Int)
+    fun buyGenerals()
+    fun bigMoney(count:Int)
+    fun freeGenerals(count: Int)
+    fun bank(count: Int)
+    fun shop(equipmentBean: EquipmentBean)
+    fun chance(count: Int)
+    fun prison(count: Int)
 }

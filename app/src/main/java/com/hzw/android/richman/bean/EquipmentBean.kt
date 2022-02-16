@@ -18,6 +18,8 @@ class EquipmentBean(var type: TYPE) {
 
     var desc = ""
 
+    var price = 1000
+
     var owner:PlayerBean? = null
 
     init {

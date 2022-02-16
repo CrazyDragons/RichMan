@@ -31,6 +31,7 @@ import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.*
+import com.hzw.android.richman.utils.LogUtil
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.MapUtil.setNextTurn
 import com.hzw.android.richman.utils.ToastUtil
@@ -148,6 +149,9 @@ class GameActivity : BaseActivity(),
 
     override fun onWalkFinish() {
 
+
+        LogUtil.print("结束状态"+GameData.INSTANCE.currentPlayer().status.toString())
+
         optionStatus(
             walk = false,
             finish = GameData.INSTANCE.currentPlayer().isPlayer && GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.OPTION_FALSE
@@ -203,14 +207,17 @@ class GameActivity : BaseActivity(),
                     mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
                     if (restart) {
                         GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY
-                        ToastUtil.show("经过了起点，获得 "+Value.START_ADD_MONEY)
+                        ToastUtil.show("经过了起点，获得 " + Value.START_ADD_MONEY)
                     }
 
                     if (t == count.toLong()) {
                         playerBean.walkIndex = next
                         if (restart) {
-                            GameData.INSTANCE.currentPlayer().money +=  Value.START_ADD_MONEY
-                            TipsDialog(this@GameActivity, "恭喜！获得再获得 "+Value.START_ADD_MONEY)
+                            GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY
+                            TipsDialog(
+                                this@GameActivity,
+                                "恭喜！再获得 " + Value.START_ADD_MONEY
+                            ).show()
                         }
                         restart = false
                         onWalkListener.onWalkFinish()
@@ -241,7 +248,16 @@ class GameActivity : BaseActivity(),
 
             //点击投掷
             R.id.mBtnWalk -> {
-                MapUtil.walk(this)
+                if (GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.PRISON) {
+                    TipsDialog(this, "你出狱了，但也只能出狱而已", object : OnClickTipsListener {
+                        override fun onClickYes() {
+                            GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.OPTION_FALSE
+                            mBtnFinishOption.performClick()
+                        }
+                    }).show()
+                } else {
+                    MapUtil.walk(this)
+                }
             }
 
             //点击结束
@@ -270,7 +286,9 @@ class GameActivity : BaseActivity(),
     }
 
     override fun onMapClick(index: Int) {
-        showMapInfoDialog(GameData.INSTANCE.mapData[index])
+        if (GameData.INSTANCE.mapData[index] is BaseCityBean) {
+            showMapInfoDialog(GameData.INSTANCE.mapData[index])
+        }
     }
 
     private fun showMapInfoDialog(baseMapBean: BaseMapBean) {
@@ -401,9 +419,11 @@ class GameActivity : BaseActivity(),
     override fun onSure() {
         refreshViews()
         mLlOption.removeAllViews()
-        computerOptionTipsDialog.dismiss()
         if (!GameData.INSTANCE.currentPlayer().isPlayer) {
-            mBtnFinishOption.performClick()
+            Handler(Looper.getMainLooper()).postDelayed({
+                computerOptionTipsDialog.dismiss()
+                mBtnFinishOption.performClick()
+            }, 1000)
         }
     }
 

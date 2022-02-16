@@ -100,25 +100,31 @@ class PlayerBean(//昵称
     }
 
     fun allAreaCostMoney(): Int {
-        return when (allArea()) {
-            1 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_1)
-            2 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_2)
-            3 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_3)
-            4 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_4)
-            5 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_5)
-            else -> {
-                0
+        if (status == STATUS.PRISON) {
+            return 0
+        }else {
+            return when (allArea()) {
+                1 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_1)
+                2 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_2)
+                3 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_3)
+                4 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_4)
+                5 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_5)
+                else -> {
+                    0
+                }
             }
         }
     }
 
     fun allAreaCostArmy(): Int {
+        val isPrison = if (status == STATUS.PRISON) 0.5 else 1.0
+        val x = if (allArea() == 5) Value.X_ALL_COLOR_ARMY else 1.0
         return when (allArea()) {
-            1 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_1)
-            2 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_2)
-            3 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_3)
-            4 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_4)
-            5 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_5)
+            1 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_1 * x * isPrison).toInt()
+            2 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_2* x * isPrison).toInt()
+            3 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_3* x * isPrison).toInt()
+            4 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_4* x * isPrison).toInt()
+            5 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_5* x * isPrison).toInt()
             else -> {
                 0
             }

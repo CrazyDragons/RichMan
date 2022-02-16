@@ -92,15 +92,6 @@
             android:textSize="8sp"
             tools:ignore="SmallSp" />
 
-        <ImageView
-            android:id="@+id/mIvAllColor"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/icon_all_color"
-            android:layout_gravity="end|bottom"
-            android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
-
     </FrameLayout>
 
 </LinearLayout>

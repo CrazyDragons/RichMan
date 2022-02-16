@@ -25,13 +25,13 @@ object Value {
     const val MAX_WALK = 12
 
     //投掷随机次数
-    const val WALK_TURN: Long = 20
+    const val WALK_TURN: Long = 10
 
     //单次投掷时间
     const val WALK_TURN_TIME: Long = 20
 
     //单格行走时间
-    const val WALK_TIME: Long = 100
+    const val WALK_TIME: Long = 50
 
     //X轴地图数
     const val COUNT_MAP_X = 27
@@ -179,6 +179,9 @@ object Value {
 
     //购买兵力单位
     const val X_BUY_ARMY = 500
+
+    //购买武将价格
+    const val X_BUY_GENERALS = 2000
 
     //最大购买兵力
     const val MAX_BUY_ARMY = 10000

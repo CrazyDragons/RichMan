@@ -137,11 +137,41 @@ object GameOption : Option {
                 val specialBean = GameData.INSTANCE.currentMap() as SpecialBean
                 when (specialBean.type) {
                     BaseMapBean.MapType.ARMY -> {
-                        buyArmy(((playerBean.money * Value.X_COMPUTER_ARMY)/Value.X_BUY_ARMY).toInt() * Value.X_BUY_ARMY)
+                        buyArmy(((playerBean.money * Value.X_COMPUTER_ARMY) / Value.X_BUY_ARMY).toInt() * Value.X_BUY_ARMY)
+                    }
+                    BaseMapBean.MapType.GENERALS -> {
+                        if (playerBean.money >= Value.COMPUTER_MIN_MONEY) {
+                            buyGenerals()
+                        } else {
+                            onSpecialOptionListener?.onSure()
+                        }
+                    }
+                    BaseMapBean.MapType.BIG_MONEY -> {
+                        bigMoney(randomCount())
+                    }
+                    BaseMapBean.MapType.FREE_GENERALS -> {
+                        freeGenerals(judgeFreeGenerals(randomCount()))
+                    }
+                    BaseMapBean.MapType.BANK -> {
+                        bank(randomCount())
+                    }
+                    BaseMapBean.MapType.SHOP -> {
+                        shop(GameData.INSTANCE.equipmentData[0])
+                    }
+                    BaseMapBean.MapType.CHANCE -> {
+                        chance(randomCount())
+                    }
+
+                    BaseMapBean.MapType.PRISON -> {
+                        prison(randomCount())
                     }
                 }
             }
         }
+    }
+
+    private fun randomCount(): Int {
+        return (Math.random() * Value.MAX_WALK + 1).toInt()
     }
 
     private fun randomAttack(
@@ -215,25 +245,13 @@ object GameOption : Option {
 
         when (baseCityBean) {
             is CityBean -> {
-                playerBean.money -= baseCityBean.needCostMoney() * if (MapUtil.judgeAllColor(
-                        baseCityBean
-                    )
-                ) Value.X_ALL_COLOR_MONEY else 1
-                baseCityBean.owner!!.money += baseCityBean.needCostMoney() * if (MapUtil.judgeAllColor(
-                        baseCityBean
-                    )
-                ) Value.X_ALL_COLOR_MONEY else 1
+                playerBean.money -= baseCityBean.needCostMoney()
+                baseCityBean.owner!!.money += baseCityBean.needCostMoney()
             }
 
             is AreaBean -> {
-                playerBean.money -= baseCityBean.owner!!.allAreaCostMoney() * if (MapUtil.judgeAllColor(
-                        baseCityBean
-                    )
-                ) Value.X_ALL_COLOR_MONEY else 1
-                baseCityBean.owner!!.money += baseCityBean.owner!!.allAreaCostMoney() * if (MapUtil.judgeAllColor(
-                        baseCityBean
-                    )
-                ) Value.X_ALL_COLOR_MONEY else 1
+                playerBean.money -= baseCityBean.owner!!.allAreaCostMoney()
+                baseCityBean.owner!!.money += baseCityBean.owner!!.allAreaCostMoney()
             }
         }
         playerBean.status = PlayerBean.STATUS.OPTION_TRUE
@@ -352,32 +370,134 @@ object GameOption : Option {
     override fun buyArmy(army: Int) {
         val playerBean = GameData.INSTANCE.currentPlayer()
         playerBean.army += army
-        playerBean.money += army * Value.X_ARMY_MONEY
+        playerBean.money -= army * Value.X_ARMY_MONEY
         GameLog.INSTANCE.addArmyLog(army)
         onSpecialOptionListener?.onSure()
+    }
+
+    override fun buyGenerals() {
+        val playerBean = GameData.INSTANCE.currentPlayer()
+        val generalsBean = GameData.INSTANCE.generalsData[0]
+        playerBean.generals.add(generalsBean)
+        GameData.INSTANCE.generalsData.remove(generalsBean)
+        playerBean.money -= Value.X_BUY_GENERALS
+        GameLog.INSTANCE.addGeneralsLog(generalsBean)
+        onSpecialOptionListener?.onSure()
+    }
+
+    override fun bigMoney(count: Int) {
+        val playerBean = GameData.INSTANCE.currentPlayer()
+        playerBean.money += count * 1000
+        GameLog.INSTANCE.addBigMoneyLog(count)
+        onSpecialOptionListener?.onSure()
+    }
+
+    override fun freeGenerals(count: Int) {
+        for (i in 1..count) {
+            giveGenerals()
+        }
+        onSpecialOptionListener?.onSure()
+    }
+
+    fun judgeFreeGenerals(count: Int): Int {
+        when (count) {
+            in 1..6 -> {
+                return 1
+            }
+            in 7..9 -> {
+                return 2
+            }
+            in 10..11 -> {
+                return 3
+            }
+            12 -> {
+                return 5
+            }
+            else -> {
+                return 0
+            }
+        }
+    }
+
+    private fun giveGenerals() {
+        val playerBean = GameData.INSTANCE.currentPlayer()
+        val generalsBean = GameData.INSTANCE.generalsData[0]
+        GameLog.INSTANCE.addFreeGeneralsLog(generalsBean)
+        GameData.INSTANCE.generalsData.remove(generalsBean)
+        playerBean.generals.add(generalsBean)
+    }
+
+    override fun bank(count: Int) {
+        val playerBean = GameData.INSTANCE.currentPlayer()
+        when (count) {
+            in 1..3 -> {
+                for (item in GameData.INSTANCE.playerData) {
+                    giveMoney(playerBean, item, 1000)
+                }
+            }
+            in 4..6 -> {
+                giveMoney(playerBean, null, 1000)
+            }
+            in 7..9 -> {
+                giveMoney(null, playerBean, 1000)
+            }
+            in 10..12 -> {
+                for (item in GameData.INSTANCE.playerData) {
+                    giveMoney(item, playerBean, 1000)
+                }
+            }
+        }
+        onSpecialOptionListener?.onSure()
+    }
+
+    override fun shop(equipmentBean: EquipmentBean) {
+        GameData.INSTANCE.equipmentData.remove(equipmentBean)
+        GameData.INSTANCE.currentPlayer().equipments.add(equipmentBean)
+        GameData.INSTANCE.currentPlayer().money -= equipmentBean.price
+        GameLog.INSTANCE.addEquipmentLog(equipmentBean)
+        onSpecialOptionListener?.onSure()
+    }
+
+    override fun chance(count: Int) {
+        onSpecialOptionListener?.onSure()
+    }
+
+    override fun prison(count: Int) {
+        when(count) {
+            in 1 ..2 -> {
+                GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.PRISON
+                GameData.INSTANCE.currentPlayer().money -= 5000
+                GameLog.INSTANCE.addPrisonLog(true)
+            }
+            in 3..10 -> {
+                GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.PRISON
+                GameLog.INSTANCE.addPrisonLog(false)
+            }else -> {
+
+            }
+        }
+        onSpecialOptionListener?.onSure()
+    }
+
+    private fun giveMoney(give: PlayerBean?, get: PlayerBean?, money: Int) {
+        if (give != null) {
+            give.money -= money
+        }
+        if (get != null) {
+            get.money += money
+        }
+        GameLog.INSTANCE.addBankLog(give, get, money)
     }
 
     private fun costMoney(baseCityBean: BaseCityBean, generalsBean: GeneralsBean) {
         val x = if (baseCityBean.generals != null) Value.X_PK_LOSER else Value.X_PK_LOSER_EMPTY
         if (baseCityBean is CityBean) {
-            generalsBean.owner!!.money -= (baseCityBean.needCostMoney() * x * if (MapUtil.judgeAllColor(
-                    baseCityBean
-                )
-            ) Value.X_ALL_COLOR_MONEY else 1).toInt()
-            baseCityBean.owner!!.money += (baseCityBean.needCostMoney() * x * if (MapUtil.judgeAllColor(
-                    baseCityBean
-                )
-            ) Value.X_ALL_COLOR_MONEY else 1).toInt()
+            generalsBean.owner!!.money -= (baseCityBean.needCostMoney() * x).toInt()
+            baseCityBean.owner!!.money += (baseCityBean.needCostMoney() * x).toInt()
         }
         if (baseCityBean is AreaBean) {
-            generalsBean.owner!!.money -= (baseCityBean.owner!!.allAreaCostMoney() * x + if (MapUtil.judgeAllColor(
-                    baseCityBean
-                )
-            ) Value.X_ALL_COLOR_MONEY else 1).toInt()
-            baseCityBean.owner!!.money += (baseCityBean.owner!!.allAreaCostMoney() * x + if (MapUtil.judgeAllColor(
-                    baseCityBean
-                )
-            ) Value.X_ALL_COLOR_MONEY else 1).toInt()
+            generalsBean.owner!!.money -= (baseCityBean.owner!!.allAreaCostMoney() * x).toInt()
+            baseCityBean.owner!!.money += (baseCityBean.owner!!.allAreaCostMoney() * x).toInt()
         }
     }
 
