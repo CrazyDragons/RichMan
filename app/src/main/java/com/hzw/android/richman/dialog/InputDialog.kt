@@ -41,21 +41,22 @@ class InputDialog(context: AppCompatActivity, onInputListener: OnInputListener) 
         }
     }
 
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-    }
-
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-    }
-
-    override fun afterTextChanged(p0: Editable?) {
-        msg = p0.toString()
-    }
-
     override fun onEditorAction(v: TextView?, actionId: Int, p2: KeyEvent?): Boolean {
         if (actionId == 0) {
             onInputListener.onInput(msg)
             dismiss()
         }
         return false
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+    }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        msg = s.toString()
+    }
+
+    override fun afterTextChanged(s: Editable?) {
     }
 }

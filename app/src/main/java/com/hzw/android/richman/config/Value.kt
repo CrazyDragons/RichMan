@@ -106,10 +106,10 @@ object Value {
     const val X_AREA_ARMY_LEVEL_5 = 10
 
     //默认初始金钱
-    const val DEFAULT_MONEY = 99999
+    const val DEFAULT_MONEY = 10000
 
     //默认初始兵力
-    const val DEFAULT_ARMY = 99999
+    const val DEFAULT_ARMY = 10000
 
     //默认初始武将
     const val DEFAULT_GENERALS = 5
@@ -140,6 +140,9 @@ object Value {
 
     //电脑选择攻城概率
     const val X_COMPUTER_ATTACK = 90
+
+    //电脑购买兵力的经济占比
+    const val X_COMPUTER_ARMY = 0.2
 
     //经过起点增加金钱
     const val START_ADD_MONEY = 2000
@@ -173,4 +176,13 @@ object Value {
 
     //单挑消耗行动力
     const val ACTION_PK = 1
+
+    //购买兵力单位
+    const val X_BUY_ARMY = 500
+
+    //最大购买兵力
+    const val MAX_BUY_ARMY = 10000
+
+    //兵力价格
+    const val X_ARMY_MONEY = 2
 }

@@ -16,4 +16,8 @@ interface Option {
     fun levelCity(cityBean: CityBean, needFinish:Boolean)
     fun costBaseCity(baseCityBean: BaseCityBean, needFinish:Boolean)
     fun defense(baseCityBean: BaseCityBean, generalsBean: GeneralsBean?, needFinish:Boolean)
+    fun pk(baseCityBean: BaseCityBean, generalsBean: GeneralsBean, needFinish: Boolean)
+    fun attack(baseCityBean: BaseCityBean, generalsBean: GeneralsBean, needFinish: Boolean)
+
+    fun buyArmy(army:Int)
 }

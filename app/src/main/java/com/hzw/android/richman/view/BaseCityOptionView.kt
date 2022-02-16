@@ -17,7 +17,7 @@ import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.listener.OnClickTipsListener
 import com.hzw.android.richman.utils.MapUtil
-import kotlinx.android.synthetic.main.view_option.view.*
+import kotlinx.android.synthetic.main.view_base_city_option.view.*
 
 /**
  * class OptionView
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.view_option.view.*
  * note
  * create date 2022/2/13
  */
-class OptionView @JvmOverloads constructor(
+class BaseCityOptionView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -37,7 +37,7 @@ class OptionView @JvmOverloads constructor(
     }
 
     private fun initViews(context: Context) {
-        inflate(context, R.layout.view_option, this)
+        inflate(context, R.layout.view_base_city_option, this)
 
         mBtnBuy.setOnClickListener(this)
         mBtnLevel.setOnClickListener(this)

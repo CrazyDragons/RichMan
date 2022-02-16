@@ -5,6 +5,7 @@
     <color name="green">#2EAA01</color>
     <color name="red">#FF0000</color>
     <color name="gray">#808080</color>
+    <color name="transparent">#33000000</color>
 
     <color name="area">#FF00FB</color>
     <color name="start">#FF5722</color>

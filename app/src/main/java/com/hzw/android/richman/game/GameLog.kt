@@ -101,4 +101,9 @@ class GameLog {
         onAddLogListener.onAddLog()
     }
 
+    fun addArmyLog(army:Int) {
+        logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：购买了 "+army+" 兵力")
+        onAddLogListener.onAddLog()
+    }
+
 }

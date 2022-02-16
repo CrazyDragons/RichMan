@@ -41,7 +41,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_game.*
-import kotlinx.android.synthetic.main.view_option.view.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -56,8 +55,8 @@ class GameActivity : BaseActivity(),
     OnWalkListener,
     View.OnClickListener,
     OnMapClickListener,
-    OnAddLogListener, OnItemClickListener, OnOptionListener, OnItemLongClickListener,
-    OnClickTipsListener {
+    OnAddLogListener, OnItemClickListener, OnBaseCityOptionListener, OnItemLongClickListener,
+    OnClickTipsListener, OnSpecialOptionListener {
 
     private var playerViewList = mutableListOf<PlayerView>()
     private lateinit var computerOptionTipsDialog: ComputerOptionTisDialog
@@ -84,7 +83,8 @@ class GameActivity : BaseActivity(),
         mRootMap.setOnClickListener(this)
         mBaseMap.onMapClickListener = this
         GameLog.INSTANCE.onAddLogListener = this
-        GameOption.onOptionListener = this
+        GameOption.onBaseCityOptionListener = this
+        GameOption.onSpecialOptionListener = this
         mRvPlayerInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         mRvLog.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         computerOptionTipsDialog = ComputerOptionTisDialog(this)
@@ -234,7 +234,9 @@ class GameActivity : BaseActivity(),
         when (view?.id) {
 
             R.id.mRootMap -> {
-                mLlOption.visibility = if (mLlOption.visibility == VISIBLE) GONE else VISIBLE
+                if (mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] is BaseCityBean) {
+                    mLlOption.visibility = if (mLlOption.visibility == VISIBLE) GONE else VISIBLE
+                }
             }
 
             //点击投掷
@@ -332,7 +334,7 @@ class GameActivity : BaseActivity(),
                 }
 
                 if (GameData.INSTANCE.currentPlayer().isPlayer) {
-                    val optionView = OptionView(this)
+                    val optionView = BaseCityOptionView(this)
                     mLlOption.addView(optionView)
                 }
 
@@ -344,6 +346,7 @@ class GameActivity : BaseActivity(),
 
             is SpecialBean -> {
                 val specialInfoView = SpecialInfoView(this)
+                specialInfoView.onSpecialOptionListener = this
                 val specialBean = GameData.INSTANCE.currentMap() as SpecialBean
                 specialInfoView.setData(specialBean)
                 mLlOption.addView(specialInfoView)
@@ -393,6 +396,15 @@ class GameActivity : BaseActivity(),
 
     override fun onClickYes() {
         startGame()
+    }
+
+    override fun onSure() {
+        refreshViews()
+        mLlOption.removeAllViews()
+        computerOptionTipsDialog.dismiss()
+        if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+            mBtnFinishOption.performClick()
+        }
     }
 
 }
