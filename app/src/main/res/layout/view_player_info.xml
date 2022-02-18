@@ -26,18 +26,16 @@
 
             <TextView
                 android:id="@+id/mTvGDP"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:drawablePadding="5dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 app:drawableStartCompat="@drawable/icon_gdp"
-                app:layout_constraintEnd_toStartOf="@id/mTvMoney"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/mTvName" />
+                app:layout_constraintStart_toStartOf="@id/mTvArmy"
+                app:layout_constraintBottom_toBottomOf="@id/mTvName"
+                app:layout_constraintTop_toTopOf="@id/mTvName" />
 
             <TextView
                 android:id="@+id/mTvMoney"
@@ -51,8 +49,8 @@
                 android:textColor="@color/black"
                 app:drawableStartCompat="@drawable/icon_money"
                 app:layout_constraintEnd_toStartOf="@id/mTvArmy"
-                app:layout_constraintStart_toEndOf="@id/mTvGDP"
-                app:layout_constraintTop_toTopOf="@id/mTvGDP" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mTvName" />
 
             <TextView
                 android:id="@+id/mTvArmy"
@@ -65,9 +63,21 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/icon_army"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/mTvStock"
                 app:layout_constraintStart_toEndOf="@id/mTvMoney"
-                app:layout_constraintTop_toTopOf="@id/mTvGDP" />
+                app:layout_constraintTop_toTopOf="@id/mTvMoney" />
+
+            <TextView
+                android:id="@+id/mTvStock"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/icon_stock"
+                app:layout_constraintTop_toTopOf="@id/mTvMoney"
+                app:layout_constraintStart_toEndOf="@id/mTvArmy"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <TextView
                 android:id="@+id/mTvCity"
@@ -82,8 +92,8 @@
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/icon_city"
                 app:layout_constraintEnd_toStartOf="@id/mTvGenerals"
-                app:layout_constraintStart_toStartOf="@id/mTvGDP"
-                app:layout_constraintTop_toBottomOf="@id/mTvGDP" />
+                app:layout_constraintStart_toStartOf="@id/mTvMoney"
+                app:layout_constraintTop_toBottomOf="@id/mTvMoney" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mRvCity"

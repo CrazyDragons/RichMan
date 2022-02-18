@@ -114,13 +114,13 @@ class BaseCityOptionView @JvmOverloads constructor(
                                 buy = false,
                                 level = false,
                                 defense = false,
-                                cost = canCost,
+                                cost = true,
                                 pk = canPK,
                                 attack = canAttack
                             )
 
                             if (!canCost && !canPK && !canAttack) {
-                                TipsDialog(context, "进入拍卖").show()
+                                TipsDialog(context, "注意，你已经不能支付过路费，现在银行先垫付，下次轮到你时需要进行拍卖").show()
                             }
                         }
 

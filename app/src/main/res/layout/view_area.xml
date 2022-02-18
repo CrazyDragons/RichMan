@@ -72,7 +72,7 @@
             android:id="@+id/mTvOwner"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:layout_gravity="end|bottom"
+            android:layout_gravity="start|bottom"
             android:background="@drawable/shape_oval_solid_white"
             android:gravity="center"
             android:includeFontPadding="false"

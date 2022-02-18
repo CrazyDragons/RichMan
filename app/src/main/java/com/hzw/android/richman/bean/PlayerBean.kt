@@ -4,7 +4,6 @@ import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.game.GameData
 import java.math.BigDecimal
-import java.util.*
 import kotlin.math.pow
 
 /**
@@ -30,19 +29,23 @@ class PlayerBean(//昵称
     var army = Value.DEFAULT_ARMY
 
     //武将
-    var generals = ArrayList<GeneralsBean>()
+    var generals = mutableListOf<GeneralsBean>()
 
     //城池
-    var city = ArrayList<BaseCityBean>()
+    var city = mutableListOf<BaseCityBean>()
 
     //道具
-    var equipments = ArrayList<EquipmentBean>()
+    var equipments = mutableListOf<EquipmentBean>()
+
+    var stocks = mutableListOf<StockBean>()
 
     //地图位置
     var walkIndex = 0
 
     //状态
     var status = STATUS.READY
+
+    var bank = BANK.BOC
 
     enum class STATUS {
         //准备状态
@@ -58,7 +61,14 @@ class PlayerBean(//昵称
         ATTACK,
 
         //监狱状态
-        PRISON
+        PRISON,
+
+        //负债
+        LOSER
+    }
+
+    enum class BANK {
+        ICBC, ABC, CCB, BOC, BOCM
     }
 
     private fun getSingleGDP(playerBean: PlayerBean): Double {
@@ -89,7 +99,7 @@ class PlayerBean(//昵称
         return list
     }
 
-    fun allAttackGenerals():MutableList<GeneralsBean> {
+    fun allAttackGenerals(): MutableList<GeneralsBean> {
         val list = mutableListOf<GeneralsBean>()
         for (item in generals) {
             if (item.action > Value.ACTION_ATTACK) {
@@ -102,7 +112,7 @@ class PlayerBean(//昵称
     fun allAreaCostMoney(): Int {
         if (status == STATUS.PRISON) {
             return 0
-        }else {
+        } else {
             return when (allArea()) {
                 1 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_1)
                 2 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_2)
@@ -121,10 +131,10 @@ class PlayerBean(//昵称
         val x = if (allArea() == 5) Value.X_ALL_COLOR_ARMY else 1.0
         return when (allArea()) {
             1 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_1 * x * isPrison).toInt()
-            2 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_2* x * isPrison).toInt()
-            3 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_3* x * isPrison).toInt()
-            4 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_4* x * isPrison).toInt()
-            5 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_5* x * isPrison).toInt()
+            2 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_2 * x * isPrison).toInt()
+            3 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_3 * x * isPrison).toInt()
+            4 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_4 * x * isPrison).toInt()
+            5 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_5 * x * isPrison).toInt()
             else -> {
                 0
             }
@@ -155,5 +165,62 @@ class PlayerBean(//昵称
         return BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
     }
 
+    fun stockMoney():Int{
+        var sum = 0
+        for (item in GameData.INSTANCE.stocksData) {
+            sum += stockNumber(item.name) * item.newPrice
+        }
+        return sum
+    }
 
+    fun stockNumber(name: String): Int {
+        for (item in stocks) {
+            if (item.name == name) {
+                return item.number
+            }
+        }
+        return 0
+    }
+
+    fun stockNumber(): Int {
+        var s = 0
+        for (item in stocks) {
+           s += item.number
+        }
+        return s
+    }
+
+    fun buyStock(stockBean: StockBean, number: Int) {
+
+        if (haveStock(stockBean)) {
+            for (item in stocks) {
+                if (item.name == stockBean.name) {
+                    item.number += number
+                }
+            }
+        } else {
+            stocks.add(StockBean(stockBean.name, number))
+        }
+
+
+        money -= stockBean.newPrice * number
+    }
+
+    fun saleStock(stockBean: StockBean, number: Int) {
+        for (item in stocks) {
+            if (item.name == stockBean.name) {
+                item.number -= number
+            }
+        }
+        money += stockBean.newPrice * number
+    }
+
+    private fun haveStock(stockBean: StockBean): Boolean {
+        for (item in stocks) {
+            if (item.name == stockBean.name) {
+                return true
+            }
+        }
+        return false
+    }
 }

@@ -36,16 +36,24 @@ object GameOption : Option {
             is BaseCityBean -> {
                 val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
                 if (baseCityBean.owner == null) {
-                    var canBuy = true
-                    if (baseCityBean is CityBean && (playerBean.money - baseCityBean.buyPrice) < Value.COMPUTER_MIN_MONEY) {
-                        canBuy = false
+                    if (baseCityBean is CityBean) {
+                        if ((playerBean.money - baseCityBean.buyPrice) >= Value.COMPUTER_MIN_MONEY) {
+                            if (randomOption(Value.X_COMPUTER_BUY)) {
+                                buyBaseCity(baseCityBean)
+                            } else {
+                                onBaseCityOptionListener?.onAllOptionFinish()
+                            }
+                        } else {
+                            onBaseCityOptionListener?.onAllOptionFinish()
+                        }
                     }
-                    if (baseCityBean is AreaBean && (playerBean.army - Value.AREA_ARMY) < Value.COMPUTER_MIN_ARMY) {
-                        canBuy = false
-                    }
-                    if (canBuy) {
-                        if (randomOption(Value.X_COMPUTER_BUY)) {
-                            buyBaseCity(baseCityBean)
+                    if (baseCityBean is AreaBean) {
+                        if ((playerBean.army - Value.AREA_ARMY) >= Value.COMPUTER_MIN_ARMY) {
+                            if (randomOption(Value.X_COMPUTER_BUY)) {
+                                buyBaseCity(baseCityBean)
+                            } else {
+                                onBaseCityOptionListener?.onAllOptionFinish()
+                            }
                         } else {
                             onBaseCityOptionListener?.onAllOptionFinish()
                         }
@@ -79,30 +87,21 @@ object GameOption : Option {
                         } else {
                             GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.ATTACK
 
-                            var canCost = true
                             var canAttack = true
 
                             if (baseCityBean is CityBean) {
-                                canCost = playerBean.money >= baseCityBean.needCostMoney()
                                 canAttack = playerBean.army >= baseCityBean.needCostArmy()
                             }
 
                             if (baseCityBean is AreaBean) {
-                                canCost =
-                                    playerBean.money >= baseCityBean.owner!!.allAreaCostMoney()
                                 canAttack =
                                     playerBean.army >= baseCityBean.owner!!.allAreaCostArmy() && playerBean.generals.size > 0
                             }
 
                             val canPK: Boolean = playerBean.generals.size > 0
 
-                            if (!canCost && !canPK && !canAttack) {
-                                GameLog.INSTANCE.addSystemLog("进入拍卖")
-                                return
-                            }
-
                             var x = (Math.random() * Value.X_COMPUTER_BASE + 1).toInt()
-                            while (!randomAttack(x, canCost, canPK, canAttack)) {
+                            while (!randomAttack(x, canPK, canAttack)) {
                                 x = (Math.random() * Value.X_COMPUTER_BASE + 1).toInt()
                             }
 
@@ -176,12 +175,11 @@ object GameOption : Option {
 
     private fun randomAttack(
         x: Int,
-        canCost: Boolean,
         canPK: Boolean,
         canAttack: Boolean
     ): Boolean {
         when {
-            x < Value.X_COMPUTER_COST && canCost -> {
+            x < Value.X_COMPUTER_COST -> {
                 return true
             }
             x > Value.X_COMPUTER_ATTACK && canAttack -> {
@@ -463,8 +461,8 @@ object GameOption : Option {
     }
 
     override fun prison(count: Int) {
-        when(count) {
-            in 1 ..2 -> {
+        when (count) {
+            in 1..2 -> {
                 GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.PRISON
                 GameData.INSTANCE.currentPlayer().money -= 5000
                 GameLog.INSTANCE.addPrisonLog(true)
@@ -472,7 +470,8 @@ object GameOption : Option {
             in 3..10 -> {
                 GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.PRISON
                 GameLog.INSTANCE.addPrisonLog(false)
-            }else -> {
+            }
+            else -> {
 
             }
         }

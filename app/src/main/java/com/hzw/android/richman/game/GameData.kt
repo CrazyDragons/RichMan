@@ -14,6 +14,8 @@ import com.hzw.android.richman.config.Value
  */
 class GameData private constructor() {
 
+    var turnCount = 0
+
     //操作角色轮询位置
     var optionPlayerTurnIndex = 0
 
@@ -32,6 +34,9 @@ class GameData private constructor() {
     //道具数据
     var equipmentData = mutableListOf<EquipmentBean>()
 
+    //股票数据
+    var stocksData = mutableListOf<StockBean>()
+
     companion object {
         val INSTANCE: GameData by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             GameData()
@@ -40,6 +45,7 @@ class GameData private constructor() {
 
     fun load() {
         playerData = JSON.parseArray(GameSave.loadPlayer(), PlayerBean::class.java)
+        optionPlayerTurnIndex = playerData.size - 1
         parseMap()
         generalsData = GameInit.INSTANCE.generals
 
@@ -59,6 +65,8 @@ class GameData private constructor() {
                 equipmentData.removeAt(i)
             }
         }
+
+        stocksData = GameInit.INSTANCE.stocks
     }
 
     private fun parseMap() {

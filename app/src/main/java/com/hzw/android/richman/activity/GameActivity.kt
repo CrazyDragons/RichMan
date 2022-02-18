@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -14,6 +15,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.chad.library.adapter.base.listener.OnItemLongClickListener
 import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.PlayerInfoAdapter
+import com.hzw.android.richman.adapter.StockAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.base.BaseMapBean
@@ -22,10 +24,7 @@ import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.bean.SpecialBean
 import com.hzw.android.richman.config.Value
-import com.hzw.android.richman.dialog.ComputerOptionTisDialog
-import com.hzw.android.richman.dialog.MapInfoDialog
-import com.hzw.android.richman.dialog.PlayerInfoDialog
-import com.hzw.android.richman.dialog.TipsDialog
+import com.hzw.android.richman.dialog.*
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
@@ -34,7 +33,6 @@ import com.hzw.android.richman.listener.*
 import com.hzw.android.richman.utils.LogUtil
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.MapUtil.setNextTurn
-import com.hzw.android.richman.utils.ToastUtil
 import com.hzw.android.richman.view.*
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -57,7 +55,7 @@ class GameActivity : BaseActivity(),
     View.OnClickListener,
     OnMapClickListener,
     OnAddLogListener, OnItemClickListener, OnBaseCityOptionListener, OnItemLongClickListener,
-    OnClickTipsListener, OnSpecialOptionListener {
+    OnClickTipsListener, OnSpecialOptionListener, OnRefreshListener {
 
     private var playerViewList = mutableListOf<PlayerView>()
     private lateinit var computerOptionTipsDialog: ComputerOptionTisDialog
@@ -86,13 +84,16 @@ class GameActivity : BaseActivity(),
         GameLog.INSTANCE.onAddLogListener = this
         GameOption.onBaseCityOptionListener = this
         GameOption.onSpecialOptionListener = this
+        mRvStock.layoutManager = GridLayoutManager(this, 6)
         mRvPlayerInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         mRvLog.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         computerOptionTipsDialog = ComputerOptionTisDialog(this)
+        val stockAdapter = StockAdapter()
         val playerInfoAdapter = PlayerInfoAdapter()
-        playerInfoAdapter.setNewInstance(GameData.INSTANCE.playerData)
+        stockAdapter.setOnItemClickListener(this)
         playerInfoAdapter.setOnItemClickListener(this)
         playerInfoAdapter.setOnItemLongClickListener(this)
+        mRvStock.adapter = stockAdapter
         mRvPlayerInfo.adapter = playerInfoAdapter
         mRvLog.adapter = GameLog.INSTANCE.logAdapter
         GameLog.INSTANCE.clear()
@@ -107,15 +108,13 @@ class GameActivity : BaseActivity(),
 
         optionStatus(walk = true, finish = false)
 
-        showTurnTips(this)
+        TipsDialog(this, "轮到 " + GameData.INSTANCE.playerData[0].name).show()
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (!GameData.INSTANCE.playerData[0].isPlayer) {
-                mBtnWalk.performClick()
-            } else {
-                setNextTurn()
-            }
-        }, 2000)
+        if (!GameData.INSTANCE.playerData[0].isPlayer) {
+            mBtnWalk.performClick()
+        } else {
+            setNextTurn()
+        }
     }
 
     private fun initPlayerViews() {
@@ -150,7 +149,7 @@ class GameActivity : BaseActivity(),
     override fun onWalkFinish() {
 
 
-        LogUtil.print("结束状态"+GameData.INSTANCE.currentPlayer().status.toString())
+        LogUtil.print("结束状态" + GameData.INSTANCE.currentPlayer().status.toString())
 
         optionStatus(
             walk = false,
@@ -191,6 +190,7 @@ class GameActivity : BaseActivity(),
                     playerView.mDisposable = d
                 }
 
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onNext(t: Long) {
 
                     var next = playerBean.walkIndex - count + t.toInt()
@@ -206,19 +206,84 @@ class GameActivity : BaseActivity(),
                     playerView.translationY = mBaseMap.mapViewList[next].y + playerOffsetY
                     mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
                     if (restart) {
-                        GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY
-                        ToastUtil.show("经过了起点，获得 " + Value.START_ADD_MONEY)
+                        when (GameData.INSTANCE.currentPlayer().bank) {
+                            PlayerBean.BANK.ABC -> {
+                                GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY
+                            }
+                            PlayerBean.BANK.BOC -> {
+                                GameData.INSTANCE.currentPlayer().money += if (Math.random() > 0.5) Value.START_ADD_MONEY * 2 else 0
+                            }
+                            PlayerBean.BANK.BOCM -> {
+                                GameData.INSTANCE.currentPlayer().money += (GameData.INSTANCE.currentPlayer().money * 0.2).toInt()
+                            }
+                            PlayerBean.BANK.CCB -> {
+                                GameData.INSTANCE.currentPlayer().money += t.toInt() * 500
+                            }
+                            PlayerBean.BANK.ICBC -> {
+                                GameData.INSTANCE.currentPlayer().money += GameData.INSTANCE.currentPlayer().stockNumber() * 100
+                            }
+                        }
+
                     }
 
                     if (t == count.toLong()) {
-                        playerBean.walkIndex = next
-                        if (restart) {
-                            GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY
-                            TipsDialog(
-                                this@GameActivity,
-                                "恭喜！再获得 " + Value.START_ADD_MONEY
-                            ).show()
+
+
+                        if (count == 1) {
+                            when (GameData.INSTANCE.currentPlayer().bank) {
+                                PlayerBean.BANK.ABC -> {
+                                    GameData.INSTANCE.currentPlayer().money -= Value.START_ADD_MONEY/2
+                                }
+                                PlayerBean.BANK.BOC -> {
+                                    GameData.INSTANCE.currentPlayer().money -= if (Math.random() > 0.5) Value.START_ADD_MONEY else 0
+                                }
+                                PlayerBean.BANK.BOCM -> {
+                                    GameData.INSTANCE.currentPlayer().money -= (GameData.INSTANCE.currentPlayer().money * 0.15).toInt()
+                                }
+                                PlayerBean.BANK.CCB -> {
+                                    GameData.INSTANCE.currentPlayer().money -= 500
+                                }
+                                PlayerBean.BANK.ICBC -> {
+                                    GameData.INSTANCE.currentPlayer().money -= GameData.INSTANCE.currentPlayer().stockNumber() * 20
+                                }
+                            }
                         }
+
+
+                        if (count == 12) {
+                            when (GameData.INSTANCE.currentPlayer().bank) {
+                                PlayerBean.BANK.ABC -> {
+                                    GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY/2
+                                }
+                                PlayerBean.BANK.BOC -> {
+                                    GameData.INSTANCE.currentPlayer().money += if (Math.random() > 0.5) Value.START_ADD_MONEY else 0
+                                }
+                                PlayerBean.BANK.BOCM -> {
+                                    GameData.INSTANCE.currentPlayer().money += (GameData.INSTANCE.currentPlayer().money * 0.05).toInt()
+                                }
+                                PlayerBean.BANK.CCB -> {
+                                    GameData.INSTANCE.currentPlayer().money += 1500
+                                }
+                                PlayerBean.BANK.ICBC -> {
+                                    GameData.INSTANCE.currentPlayer().money += GameData.INSTANCE.currentPlayer().stockNumber() * 20
+                                }
+                            }
+                        }
+
+
+
+
+
+                        playerBean.walkIndex = next
+
+
+                        if (restart) {
+                            whenOnlyStart()
+                        }
+
+
+
+                        mRvStock.adapter?.notifyDataSetChanged()
                         restart = false
                         onWalkListener.onWalkFinish()
                         playerView.mDisposable?.dispose()
@@ -248,10 +313,38 @@ class GameActivity : BaseActivity(),
 
             //点击投掷
             R.id.mBtnWalk -> {
+//                if (GameData.INSTANCE.currentPlayer().money < 0) {
+////                    TipsDialog(this, "先把欠银行的钱还了吧").show()
+//
+//                    if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+//                        computerOptionTipsDialog.dismiss()
+//                    }
+//
+//                    val killIndex = GameData.INSTANCE.optionPlayerTurnIndex
+//
+//                    setNextTurn()
+//
+//
+//                    GameLog.INSTANCE.addSystemLog(GameData.INSTANCE.playerData[killIndex].name+"退出游戏")
+//                    GameData.INSTANCE.playerData.remove(GameData.INSTANCE.playerData[killIndex])
+//                    playerViewList.remove(playerViewList[killIndex])
+//                    mRvPlayerInfo.adapter?.notifyDataSetChanged()
+//
+//
+//                    if (GameData.INSTANCE.playerData.size == 1) {
+//                        GameData.INSTANCE.optionPlayerTurnIndex = 0
+//                        TipsDialog(this, GameData.INSTANCE.currentPlayer().name+"，你才是真正的三国无双！").show()
+//                    }
+//
+//                    mBtnFinishOption.performClick()
+//                    return
+//                }
+
                 if (GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.PRISON) {
-                    TipsDialog(this, "你出狱了，但也只能出狱而已", object : OnClickTipsListener {
+                    TipsDialog(this, "还有一年徒刑", object : OnClickTipsListener {
                         override fun onClickYes() {
-                            GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.OPTION_FALSE
+                            GameData.INSTANCE.currentPlayer().status =
+                                PlayerBean.STATUS.OPTION_FALSE
                             mBtnFinishOption.performClick()
                         }
                     }).show()
@@ -263,6 +356,7 @@ class GameActivity : BaseActivity(),
             //点击结束
             R.id.mBtnFinishOption -> {
                 mLlOption.removeAllViews()
+
                 setNextTurn()
                 mCamera.smoothScrollTo(
                     playerViewList[GameData.INSTANCE.optionPlayerTurnIndex].x.toInt() - cameraOffsetX,
@@ -292,7 +386,6 @@ class GameActivity : BaseActivity(),
     }
 
     private fun showMapInfoDialog(baseMapBean: BaseMapBean) {
-        mLlOption.visibility = GONE
         var view = View(this)
         when (baseMapBean) {
             is CityBean -> {
@@ -374,7 +467,11 @@ class GameActivity : BaseActivity(),
     }
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
-        mCamera.smoothScrollTo(playerViewList[position].x.toInt() - cameraOffsetX, 0)
+        if (adapter is PlayerInfoAdapter) {
+            mCamera.smoothScrollTo(playerViewList[position].x.toInt() - cameraOffsetX, 0)
+        } else if (adapter is StockAdapter) {
+            StockDialog(this, adapter.data[position], this).show()
+        }
     }
 
     override fun onItemLongClick(
@@ -425,6 +522,15 @@ class GameActivity : BaseActivity(),
                 mBtnFinishOption.performClick()
             }, 1000)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onRefreshData() {
+        mRvPlayerInfo.adapter?.notifyDataSetChanged()
+    }
+
+    private fun whenOnlyStart() {
+
     }
 
 }

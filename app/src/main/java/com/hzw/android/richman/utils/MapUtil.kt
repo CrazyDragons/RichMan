@@ -56,13 +56,19 @@ object MapUtil {
     }
 
     private fun whichPlayerWalk() {
-        for (i in 0 until GameData.INSTANCE.playerData.size) {
-            if (GameData.INSTANCE.playerData[i].status == PlayerBean.STATUS.OPTION_FALSE || GameData.INSTANCE.playerData[i].status == PlayerBean.STATUS.OPTION_TRUE) {
-                return if (i < GameData.INSTANCE.playerData.size - 1) {
-                    GameData.INSTANCE.optionPlayerTurnIndex = i + 1
-                } else {
-                    GameData.INSTANCE.optionPlayerTurnIndex = 0
+
+        if (GameData.INSTANCE.optionPlayerTurnIndex < GameData.INSTANCE.playerData.size - 1) {
+            GameData.INSTANCE.optionPlayerTurnIndex++
+        } else {
+            GameData.INSTANCE.turnCount++
+            if (GameData.INSTANCE.turnCount % 5 == 0) {
+                for (stock in GameData.INSTANCE.stocksData) {
+                    stock.randomX()
                 }
+            }
+            GameData.INSTANCE.optionPlayerTurnIndex = 0
+            for (stock in GameData.INSTANCE.stocksData) {
+                stock.change()
             }
         }
     }
@@ -79,7 +85,7 @@ object MapUtil {
         }
     }
 
-    fun judgeAllColor(baseCityBean: BaseCityBean):Boolean {
+    fun judgeAllColor(baseCityBean: BaseCityBean): Boolean {
         if (baseCityBean.owner == null) {
             return false
         }
@@ -93,7 +99,7 @@ object MapUtil {
             }
             return if (x == 5) {
                 true
-            }else color == CityBean.Color.PURPLE && x == 4
+            } else color == CityBean.Color.PURPLE && x == 4
         }
         if (baseCityBean is AreaBean) {
             return baseCityBean.owner!!.allArea() == 5
@@ -128,7 +134,7 @@ object MapUtil {
             })
     }
 
-    fun bankMsg(count:Int):String {
+    fun bankMsg(count: Int): String {
         return when (count) {
             in 1..3 -> {
                 "向其他玩家打款1000"
@@ -141,11 +147,12 @@ object MapUtil {
             }
             in 10..12 -> {
                 "其他玩家向你打款1000"
-            }else -> ""
+            }
+            else -> ""
         }
     }
 
-    fun prisonMsg(count:Int):String {
+    fun prisonMsg(count: Int): String {
         return when (count) {
             in 1..2 -> {
                 "坐牢并罚款5000"

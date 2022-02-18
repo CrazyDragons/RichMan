@@ -17,6 +17,7 @@ class GameInit private constructor() {
     var mapList = mutableListOf<BaseMapBean>()
     var generals = mutableListOf<GeneralsBean>()
     var equipments = mutableListOf<EquipmentBean>()
+    var stocks = mutableListOf<StockBean>()
 
     companion object {
         val INSTANCE: GameInit by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -28,32 +29,38 @@ class GameInit private constructor() {
         initMap()
         initGenerals()
         initEquipments()
+        initStocks()
     }
 
     private fun initMap() {
         mapList.add(SpecialBean(BaseMapBean.MapType.START))
-        mapList.add(SpecialBean(BaseMapBean.MapType.PRISON))
-        mapList.add(SpecialBean(BaseMapBean.MapType.CHANCE))
-
         mapList.add(SpecialBean(BaseMapBean.MapType.BANK))
-        mapList.add(SpecialBean(BaseMapBean.MapType.BIG_MONEY))
-        mapList.add(SpecialBean(BaseMapBean.MapType.FREE_GENERALS))
         mapList.add(SpecialBean(BaseMapBean.MapType.SHOP))
-        mapList.add(SpecialBean(BaseMapBean.MapType.GENERALS))
         mapList.add(SpecialBean(BaseMapBean.MapType.ARMY))
 
-
+        mapList.add(SpecialBean(BaseMapBean.MapType.BIG_MONEY))
+        mapList.add(SpecialBean(BaseMapBean.MapType.FREE_GENERALS))
+        mapList.add(SpecialBean(BaseMapBean.MapType.GENERALS))
 
         mapList.add(CityBean("安徽", R.drawable.bg_anhui, 1500, CityBean.Color.RED))
         mapList.add(CityBean("澳门", R.drawable.bg_aomen, 1000, CityBean.Color.RED))
         mapList.add(CityBean("北京", R.drawable.bg_beijing, 1000, CityBean.Color.RED))
         mapList.add(CityBean("重庆", R.drawable.bg_chongqing, 2000, CityBean.Color.RED))
         mapList.add(CityBean("福建", R.drawable.bg_fujian, 1000, CityBean.Color.RED))
+        mapList.add(SpecialBean(BaseMapBean.MapType.PRISON))
         mapList.add(AreaBean("北部战区"))
         mapList.add(AreaBean("中部战区"))
         mapList.add(AreaBean("东部战区"))
         mapList.add(AreaBean("西部战区"))
         mapList.add(AreaBean("南部战区"))
+
+        mapList.add(SpecialBean(BaseMapBean.MapType.CHANCE))
+
+
+
+
+
+
         mapList.add(CityBean("甘肃", R.drawable.bg_gansu, 1000, CityBean.Color.ORANGE))
         mapList.add(SpecialBean(BaseMapBean.MapType.ARMY))
         mapList.add(CityBean("广东", R.drawable.bg_guangdong, 1500, CityBean.Color.ORANGE))
@@ -116,5 +123,14 @@ class GameInit private constructor() {
         equipments.add(EquipmentBean(EquipmentBean.TYPE.C))
         equipments.add(EquipmentBean(EquipmentBean.TYPE.D))
         equipments.add(EquipmentBean(EquipmentBean.TYPE.D))
+    }
+
+    private fun initStocks() {
+        stocks.add(StockBean("A"))
+        stocks.add(StockBean("B"))
+        stocks.add(StockBean("C"))
+        stocks.add(StockBean("D"))
+        stocks.add(StockBean("E"))
+        stocks.add(StockBean("F"))
     }
 }

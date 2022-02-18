@@ -7,8 +7,10 @@ import android.util.AttributeSet
 import android.widget.SeekBar
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hzw.android.richman.R
+import com.hzw.android.richman.adapter.BanksAdapter
 import com.hzw.android.richman.adapter.BuyEquipmentsAdapter
 import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.SpecialBean
@@ -73,7 +75,6 @@ class SpecialInfoView @JvmOverloads constructor(
         mRvEquipments.layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
         val buyEquipmentsAdapter = BuyEquipmentsAdapter()
         buyEquipmentsAdapter.setOnItemClickListener { adapter, _, position ->
-
             if (oldPosition == position) {
                 return@setOnItemClickListener
             } else {
@@ -88,8 +89,16 @@ class SpecialInfoView @JvmOverloads constructor(
         }
         mRvEquipments.adapter = buyEquipmentsAdapter
 
+        mRvBanks.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        val banksAdapter = BanksAdapter()
+        banksAdapter.setOnItemClickListener { _, _, position ->
+            TipsDialog(context, "选择了"+banksAdapter.data[position]).show()
+            GameData.INSTANCE.currentPlayer().bank = banksAdapter.data[position]
+        }
+        mRvBanks.adapter = banksAdapter
 
-        mTvSure.setOnClickListener {
+
+        mTvCount.setOnClickListener {
             when (specialBean.type) {
                 BaseMapBean.MapType.ARMY -> {
                     if (GameData.INSTANCE.currentPlayer().money < army * 2) {
@@ -170,7 +179,7 @@ class SpecialInfoView @JvmOverloads constructor(
                         override fun onCount(finalCount: Int) {
                             val msg = MapUtil.bankMsg(finalCount)
                             Handler(Looper.getMainLooper()).postDelayed({
-                                TipsDialog(context, msg, object : OnClickTipsListener{
+                                TipsDialog(context, msg, object : OnClickTipsListener {
                                     override fun onClickYes() {
                                         GameOption.bank(finalCount)
                                     }
@@ -194,7 +203,7 @@ class SpecialInfoView @JvmOverloads constructor(
                         override fun onCount(finalCount: Int) {
                             val msg = MapUtil.prisonMsg(finalCount)
                             Handler(Looper.getMainLooper()).postDelayed({
-                                TipsDialog(context, msg, object : OnClickTipsListener{
+                                TipsDialog(context, msg, object : OnClickTipsListener {
                                     override fun onClickYes() {
                                         GameOption.prison(finalCount)
                                     }
@@ -214,16 +223,20 @@ class SpecialInfoView @JvmOverloads constructor(
         mTvTitle.text = specialBean.name
         mTvDesc.text = specialBean.desc
         when (specialBean.type) {
-            BaseMapBean.MapType.START -> mTvSure.visibility = GONE
-            BaseMapBean.MapType.ARMY -> mLlArmy.visibility = VISIBLE
-            BaseMapBean.MapType.BIG_MONEY -> mTvCount.visibility = VISIBLE
-            BaseMapBean.MapType.FREE_GENERALS -> mTvCount.visibility = VISIBLE
-            BaseMapBean.MapType.BANK -> mTvCount.visibility = VISIBLE
-            BaseMapBean.MapType.PRISON -> mTvCount.visibility = VISIBLE
+            BaseMapBean.MapType.START -> mTvCount.visibility = GONE
+            BaseMapBean.MapType.ARMY -> {
+                mTvCount.text = "👌"
+                mLlArmy.visibility = VISIBLE
+            }
+            BaseMapBean.MapType.BIG_MONEY -> { }
+            BaseMapBean.MapType.FREE_GENERALS -> { }
+            BaseMapBean.MapType.BANK -> { mRvBanks.visibility = VISIBLE }
+            BaseMapBean.MapType.PRISON -> { }
             BaseMapBean.MapType.CHANCE -> mTvCount.visibility = VISIBLE
             BaseMapBean.MapType.SHOP -> {
                 mTvDesc.visibility = GONE
                 mRvEquipments.visibility = VISIBLE
+                mTvCount.text = "👌"
             }
         }
     }

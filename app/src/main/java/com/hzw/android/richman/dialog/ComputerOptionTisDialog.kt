@@ -21,6 +21,10 @@ class ComputerOptionTisDialog(context: Context) : BaseDialog(context) {
         setWindowAnimations(R.style.scale_alpha_animation)
         setFull()
         setGravity(Gravity.CENTER)
+    }
+
+    override fun show() {
+        super.show()
         mTvTips.text = GameData.INSTANCE.currentPlayer().name+" 正在操作\n请稍后..."
     }
 }

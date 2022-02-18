@@ -109,10 +109,10 @@ object Value {
     const val DEFAULT_MONEY = 10000
 
     //默认初始兵力
-    const val DEFAULT_ARMY = 10000
+    const val DEFAULT_ARMY = 0
 
     //默认初始武将
-    const val DEFAULT_GENERALS = 5
+    const val DEFAULT_GENERALS = 0
 
     //默认初始道具
     const val DEFAULT_EQUIPMENTS = 1
