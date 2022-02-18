@@ -263,12 +263,14 @@ object GameOption : Option {
         if (baseCityBean.generals != null) {
             when {
                 //如果攻方获胜
-                generalsBean.attack > baseCityBean.generals!!.defense -> {
+                generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0)
+                        > baseCityBean.generals!!.defense + (if (baseCityBean.generals!!.owner!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) -> {
                     GameLog.INSTANCE.addPkLog(baseCityBean, generalsBean, true)
                     generalsLife(generalsBean, false)
                 }
                 //如果攻方失败
-                generalsBean.attack < baseCityBean.generals!!.defense -> {
+                generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0)
+                        < baseCityBean.generals!!.defense + (if (baseCityBean.generals!!.owner!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) -> {
                     GameLog.INSTANCE.addPkLog(baseCityBean, generalsBean, false)
                     costMoney(baseCityBean, generalsBean)
                     generalsLife(generalsBean, false)
@@ -287,7 +289,7 @@ object GameOption : Option {
         //没有武将
         else {
             //攻方攻击力小于随机防御力
-            if (generalsBean.attack < Math.random() * 100) {
+            if (generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0) < Math.random() * 100) {
                 GameLog.INSTANCE.addPkLog(baseCityBean, generalsBean, false)
                 costMoney(baseCityBean, generalsBean)
             } else {
@@ -319,7 +321,8 @@ object GameOption : Option {
         if (baseCityBean.generals != null) {
             when {
                 //如果攻方获胜
-                generalsBean.attack > baseCityBean.generals!!.defense + addDefense -> {
+                generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0)
+                        > baseCityBean.generals!!.defense + addDefense + (if (baseCityBean.generals!!.owner!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) -> {
                     GameLog.INSTANCE.addAttackLog(baseCityBean, generalsBean, true)
                     baseCityBean.owner!!.city.remove(baseCityBean)
                     baseCityBean.owner = playerBean
@@ -330,7 +333,8 @@ object GameOption : Option {
                     baseCityBean.generals = null
                 }
                 //如果攻方失败
-                generalsBean.attack < baseCityBean.generals!!.defense + addDefense -> {
+                generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0)
+                        < baseCityBean.generals!!.defense + addDefense + (if (baseCityBean.generals!!.owner!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) -> {
                     GameLog.INSTANCE.addAttackLog(baseCityBean, generalsBean, false)
                     if (generalsLife(generalsBean, true)) {
 
@@ -351,7 +355,7 @@ object GameOption : Option {
         //没有武将
         else {
             //攻方攻击力大于随机防御力
-            if (generalsBean.attack >= Math.random() * Value.X_COMPUTER_BASE + addDefense) {
+            if (generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0) >= Math.random() * Value.X_COMPUTER_BASE + addDefense) {
                 GameLog.INSTANCE.addAttackLog(baseCityBean, generalsBean, true)
                 baseCityBean.owner!!.city.remove(baseCityBean)
                 baseCityBean.owner = playerBean

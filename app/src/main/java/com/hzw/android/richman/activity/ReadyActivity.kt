@@ -12,6 +12,7 @@ import com.hzw.android.richman.adapter.AddPlayerAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.config.Constants
+import com.hzw.android.richman.dialog.InputDialog
 import com.hzw.android.richman.dialog.ProgressDialog
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.OnInputListener
@@ -48,12 +49,12 @@ class ReadyActivity : BaseActivity(), OnInputListener {
 
 
         mTvAddPlayer.setOnClickListener {
-            adapter.addData(PlayerBean(resources.getString(R.string.player), true))
-//            InputDialog(this, this).show()
+//            adapter.addData(PlayerBean(resources.getString(R.string.player), randomBuff(),true))
+            InputDialog(this, this).show()
         }
 
         mTvAddComputer.setOnClickListener {
-            adapter.addData(PlayerBean(resources.getString(R.string.computer), false))
+            adapter.addData(PlayerBean(resources.getString(R.string.computer), randomBuff(), false))
         }
 
         mTvStart.setOnClickListener {
@@ -94,13 +95,32 @@ class ReadyActivity : BaseActivity(), OnInputListener {
         progressDialog.dismiss()
     }
 
-    override fun onInput(msg: String) {
-        adapter.addData(PlayerBean(msg, true))
+    override fun onInput(msg: String, buff: PlayerBean.BUFF) {
+        adapter.addData(PlayerBean(msg, buff, true))
         val im: InputMethodManager =
             this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         im.hideSoftInputFromWindow(
             this.currentFocus?.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS
         )
+    }
+
+    private fun randomBuff(): PlayerBean.BUFF {
+        val x = (Math.random() * 12 + 1).toInt()
+        return when (x) {
+            1 -> PlayerBean.BUFF.ADD_COST
+            2 -> PlayerBean.BUFF.REDUCE_COST
+            3 -> PlayerBean.BUFF.ADD_ATTACK
+            4 -> PlayerBean.BUFF.ADD_DEFENSE
+            5 -> PlayerBean.BUFF.ADD_ATTACK_ARMY
+            6 -> PlayerBean.BUFF.REDUCE_ATTACK_ARMY
+            7 -> PlayerBean.BUFF.ADD_MONEY
+            8 -> PlayerBean.BUFF.ADD_ARMY
+            9 -> PlayerBean.BUFF.ADD_CITY
+            10 -> PlayerBean.BUFF.ADD_GENERALS
+            11 -> PlayerBean.BUFF.ADD_EQUIPMENTS
+            12 -> PlayerBean.BUFF.ADD_STOCK
+            else -> PlayerBean.BUFF.ADD_MONEY
+        }
     }
 }

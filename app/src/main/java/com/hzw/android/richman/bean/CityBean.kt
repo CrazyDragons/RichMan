@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import com.alibaba.fastjson.JSONObject
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value
+import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.utils.MapUtil
 
 /**
@@ -63,12 +64,14 @@ class CityBean : BaseCityBean {
         return if (owner!!.status == PlayerBean.STATUS.PRISON) {
             0
         }else {
-            val x = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_MONEY else 1
+            val color = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_MONEY else 1
+            val buff = if (owner!!.buff == PlayerBean.BUFF.ADD_COST) 1.1 else 1.0
+            val deBuff = if (GameData.INSTANCE.currentPlayer().buff == PlayerBean.BUFF.REDUCE_COST) 0.9 else 1.0
             when (level) {
-                0 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_0 * x).toInt()
-                1 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_1) * x
-                2 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_2) * x
-                3 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_3) * x
+                0 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_0 * color * buff * deBuff).toInt()
+                1 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_1 * color * buff * deBuff).toInt()
+                2 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_2 * color * buff * deBuff).toInt()
+                3 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_3 * color * buff * deBuff).toInt()
                 else -> 0
             }
         }
@@ -76,12 +79,14 @@ class CityBean : BaseCityBean {
 
     fun needCostArmy(): Int {
         val isPrison = if (owner!!.status == PlayerBean.STATUS.PRISON) 0.5 else 1.0
-        val x = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_ARMY else 1.0
+        val color = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_ARMY else 1.0
+        val buff = if (owner!!.buff == PlayerBean.BUFF.ADD_ATTACK_ARMY) 1.1 else 1.0
+        val deBuff = if (GameData.INSTANCE.currentPlayer().buff == PlayerBean.BUFF.REDUCE_ATTACK_ARMY) 0.9 else 1.0
         return when (level) {
-            0 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_0 * x * isPrison).toInt()
-            1 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_1 * x * isPrison).toInt()
-            2 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_2 * x * isPrison).toInt()
-            3 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_3 * x * isPrison).toInt()
+            0 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_0 * color * isPrison * buff * deBuff).toInt()
+            1 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_1 * color * isPrison * buff * deBuff).toInt()
+            2 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_2 * color * isPrison * buff * deBuff).toInt()
+            3 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_3 * color * isPrison * buff * deBuff).toInt()
             else -> 0
         }
     }

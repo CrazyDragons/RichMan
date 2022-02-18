@@ -15,7 +15,8 @@ import kotlin.math.pow
  * create date 2022/2/10
  */
 class PlayerBean(//昵称
-    var name: String?,//是否是玩家
+    var name: String,
+    var buff: BUFF,
     var isPlayer: Boolean
 ) {
 
@@ -45,7 +46,7 @@ class PlayerBean(//昵称
     //状态
     var status = STATUS.READY
 
-    var bank = BANK.BOC
+    var bank = BANK.ABC
 
     enum class STATUS {
         //准备状态
@@ -67,9 +68,49 @@ class PlayerBean(//昵称
         LOSER
     }
 
+    enum class BUFF {
+        ADD_COST,
+        REDUCE_COST,
+        ADD_ATTACK,
+        ADD_DEFENSE,
+        ADD_ATTACK_ARMY,
+        REDUCE_ATTACK_ARMY,
+        ADD_MONEY,
+        ADD_ARMY,
+        ADD_CITY,
+        ADD_GENERALS,
+        ADD_EQUIPMENTS,
+        ADD_STOCK
+    }
+
     enum class BANK {
         ICBC, ABC, CCB, BOC, BOCM
     }
+
+
+    fun loadBuff(){
+        if (buff == BUFF.ADD_MONEY) {
+            money += (money*0.5).toInt()
+        }
+        if (buff == BUFF.ADD_ARMY) {
+            army += (army*0.2).toInt()
+        }
+        if (buff == BUFF.ADD_STOCK) {
+            stocks.add(StockBean("A", 50))
+        }
+        if (buff == BUFF.ADD_CITY) {
+            val baseCityBean = GameData.INSTANCE.mapData[1] as BaseCityBean
+            baseCityBean.owner = this
+            city.add(baseCityBean)
+        }
+        if (buff == BUFF.ADD_GENERALS) {
+            GameData.INSTANCE.giveGenerals(this, 2)
+        }
+        if (buff == BUFF.ADD_EQUIPMENTS) {
+            GameData.INSTANCE.giveEquipments(this, 2)
+        }
+    }
+
 
     private fun getSingleGDP(playerBean: PlayerBean): Double {
         return playerBean.money + playerBean.army * 2 +
@@ -113,12 +154,14 @@ class PlayerBean(//昵称
         if (status == STATUS.PRISON) {
             return 0
         } else {
+            val buff = if (buff == BUFF.ADD_COST) 1.1 else 1.0
+            val deBuff = if (GameData.INSTANCE.currentPlayer().buff == BUFF.REDUCE_COST) 0.9 else 1.0
             return when (allArea()) {
-                1 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_1)
-                2 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_2)
-                3 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_3)
-                4 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_4)
-                5 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_5)
+                1 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_1 * buff * deBuff).toInt()
+                2 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_2 * buff * deBuff).toInt()
+                3 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_3 * buff * deBuff).toInt()
+                4 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_4 * buff * deBuff).toInt()
+                5 -> return (Value.AREA_ARMY * Value.X_AREA_MONEY_LEVEL_5 * buff * deBuff).toInt()
                 else -> {
                     0
                 }
@@ -129,12 +172,14 @@ class PlayerBean(//昵称
     fun allAreaCostArmy(): Int {
         val isPrison = if (status == STATUS.PRISON) 0.5 else 1.0
         val x = if (allArea() == 5) Value.X_ALL_COLOR_ARMY else 1.0
+        val buff = if (buff == BUFF.ADD_ATTACK_ARMY) 1.1 else 1.0
+        val deBuff = if (GameData.INSTANCE.currentPlayer().buff == BUFF.REDUCE_ATTACK_ARMY) 0.9 else 1.0
         return when (allArea()) {
-            1 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_1 * x * isPrison).toInt()
-            2 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_2 * x * isPrison).toInt()
-            3 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_3 * x * isPrison).toInt()
-            4 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_4 * x * isPrison).toInt()
-            5 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_5 * x * isPrison).toInt()
+            1 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_1 * x * isPrison * buff * deBuff).toInt()
+            2 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_2 * x * isPrison * buff * deBuff).toInt()
+            3 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_3 * x * isPrison * buff * deBuff).toInt()
+            4 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_4 * x * isPrison * buff * deBuff).toInt()
+            5 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_5 * x * isPrison * buff * deBuff).toInt()
             else -> {
                 0
             }

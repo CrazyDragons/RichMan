@@ -10,6 +10,7 @@ import com.hzw.android.richman.adapter.BaseCityAdapter
 import com.hzw.android.richman.adapter.EquipmentsAdapter
 import com.hzw.android.richman.adapter.GeneralsAdapter
 import com.hzw.android.richman.bean.PlayerBean
+import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.ScreenUtil
 import kotlinx.android.synthetic.main.view_player_info.view.*
 
@@ -48,6 +49,7 @@ class PlayerInfoView @JvmOverloads constructor(
         mTvCity.text = playerBean.city.size.toString()
         mTvGenerals.text = playerBean.allGenerals().size.toString()
         mTvEquipments.text = playerBean.equipments.size.toString()
+        mTvBuffBank.text = MapUtil.buffDesc(playerBean.buff) + "\n" +MapUtil.bankDesc(playerBean.bank)
 
         val baseCityAdapter = BaseCityAdapter()
         baseCityAdapter.setNewInstance(playerBean.city)

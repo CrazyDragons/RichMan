@@ -34,6 +34,7 @@ class GameInit private constructor() {
 
     private fun initMap() {
         mapList.add(SpecialBean(BaseMapBean.MapType.START))
+        mapList.add(CityBean("安徽", R.drawable.bg_anhui, 1500, CityBean.Color.RED))
         mapList.add(SpecialBean(BaseMapBean.MapType.BANK))
         mapList.add(SpecialBean(BaseMapBean.MapType.SHOP))
         mapList.add(SpecialBean(BaseMapBean.MapType.ARMY))
@@ -42,7 +43,6 @@ class GameInit private constructor() {
         mapList.add(SpecialBean(BaseMapBean.MapType.FREE_GENERALS))
         mapList.add(SpecialBean(BaseMapBean.MapType.GENERALS))
 
-        mapList.add(CityBean("安徽", R.drawable.bg_anhui, 1500, CityBean.Color.RED))
         mapList.add(CityBean("澳门", R.drawable.bg_aomen, 1000, CityBean.Color.RED))
         mapList.add(CityBean("北京", R.drawable.bg_beijing, 1000, CityBean.Color.RED))
         mapList.add(CityBean("重庆", R.drawable.bg_chongqing, 2000, CityBean.Color.RED))

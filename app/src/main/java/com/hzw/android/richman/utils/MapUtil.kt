@@ -166,4 +166,41 @@ object MapUtil {
             else -> ""
         }
     }
+
+    fun buffDesc(buff: PlayerBean.BUFF): String {
+        return when(buff) {
+            PlayerBean.BUFF.ADD_COST -> "收租金增加10%"
+            PlayerBean.BUFF.REDUCE_COST -> "交租金减少10%"
+            PlayerBean.BUFF.ADD_ATTACK_ARMY -> "驻兵增加10%"
+            PlayerBean.BUFF.REDUCE_ATTACK_ARMY -> "损兵减加10%"
+            PlayerBean.BUFF.ADD_ATTACK -> "攻击增加5"
+            PlayerBean.BUFF.ADD_DEFENSE -> "防御增加5"
+            PlayerBean.BUFF.ADD_MONEY -> "初始金额+50%"
+            PlayerBean.BUFF.ADD_ARMY -> "初始金额+50%"
+            PlayerBean.BUFF.ADD_GENERALS -> "初始武将+2"
+            PlayerBean.BUFF.ADD_EQUIPMENTS -> "初始道具+2"
+            PlayerBean.BUFF.ADD_CITY -> "初始城池+1"
+            PlayerBean.BUFF.ADD_STOCK -> "初始股票+50股"
+        }
+    }
+    
+    fun bankDesc(bank: PlayerBean.BANK):String {
+        return when(bank) {
+            PlayerBean.BANK.ABC -> {
+                "经过起点：得2000\n12点奖励：得1000\n1点惩罚：亏1000"
+            }
+            PlayerBean.BANK.BOC -> {
+                "经过起点：得4000（50%）\n12点奖励：得2000（50%）\n1点惩罚：亏2000（50%）"
+            }
+            PlayerBean.BANK.BOCM -> {
+                "经过起点：得本金20%\n12点奖励：得本金5%\n1点惩罚：亏本金15%"
+            }
+            PlayerBean.BANK.CCB -> {
+                "经过起点：得距离起点步数*500\n12点奖励：得500\n1点惩罚：亏1500"
+            }
+            PlayerBean.BANK.ICBC -> {
+                "经过起点：得股票数*100\n12点奖励：得股票数*20\n1点惩罚：亏股票数*20"
+            }
+        }
+    }
 }
