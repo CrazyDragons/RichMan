@@ -112,10 +112,10 @@ object Value {
     const val DEFAULT_ARMY = 10000
 
     //默认初始武将
-    const val DEFAULT_GENERALS = 5
+    const val DEFAULT_GENERALS = 15
 
     //默认初始道具
-    const val DEFAULT_EQUIPMENTS = 0
+    const val DEFAULT_EQUIPMENTS = 2
 
     //电脑金钱高于此才会操作
     const val COMPUTER_MIN_MONEY = 5000

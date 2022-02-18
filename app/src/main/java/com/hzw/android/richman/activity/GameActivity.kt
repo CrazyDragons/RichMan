@@ -313,9 +313,14 @@ class GameActivity : BaseActivity(),
 
             //点击投掷
             R.id.mBtnWalk -> {
-//                if (GameData.INSTANCE.currentPlayer().money < 0) {
-////                    TipsDialog(this, "先把欠银行的钱还了吧").show()
-//
+                if (GameData.INSTANCE.currentPlayer().money < 0) {
+                    TipsDialog(this, "先把欠银行的钱还了吧", object : OnClickTipsListener{
+                        override fun onClickYes() {
+                            SaleDialog(this@GameActivity, this@GameActivity).show()
+                        }
+                    }).show()
+                    return
+
 //                    if (!GameData.INSTANCE.currentPlayer().isPlayer) {
 //                        computerOptionTipsDialog.dismiss()
 //                    }
@@ -338,7 +343,7 @@ class GameActivity : BaseActivity(),
 //
 //                    mBtnFinishOption.performClick()
 //                    return
-//                }
+                }
 
                 if (GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.PRISON) {
                     TipsDialog(this, "还有一年徒刑", object : OnClickTipsListener {
@@ -355,22 +360,34 @@ class GameActivity : BaseActivity(),
 
             //点击结束
             R.id.mBtnFinishOption -> {
-                mLlOption.removeAllViews()
 
-                setNextTurn()
-                mCamera.smoothScrollTo(
-                    playerViewList[GameData.INSTANCE.optionPlayerTurnIndex].x.toInt() - cameraOffsetX,
-                    0
-                )
-                showTurnTips(this)
-                if (GameData.INSTANCE.currentPlayer().isPlayer) {
-                    optionStatus(walk = true, finish = false)
-                } else {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        mBtnWalk.performClick()
-                    }, 1000)
+                if (GameData.INSTANCE.currentPlayer().money < 0) {
+                    TipsDialog(this, "注意，刚刚银行已经帮你垫付费用，下回合将进行拍卖", object : OnClickTipsListener{
+                        override fun onClickYes() {
+                            onClickFinish()
+                        }
+                    }).show()
+                }else {
+                    onClickFinish()
                 }
             }
+        }
+    }
+
+    private fun onClickFinish() {
+        mLlOption.removeAllViews()
+        setNextTurn()
+        mCamera.smoothScrollTo(
+            playerViewList[GameData.INSTANCE.optionPlayerTurnIndex].x.toInt() - cameraOffsetX,
+            0
+        )
+        showTurnTips(this)
+        if (GameData.INSTANCE.currentPlayer().isPlayer) {
+            optionStatus(walk = true, finish = false)
+        } else {
+            Handler(Looper.getMainLooper()).postDelayed({
+                mBtnWalk.performClick()
+            }, 1000)
         }
     }
 

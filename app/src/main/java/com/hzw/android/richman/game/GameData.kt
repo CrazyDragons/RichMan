@@ -72,6 +72,10 @@ class GameData private constructor() {
         }
 
         for (item in playerData) {
+            giveEquipments(item, Value.DEFAULT_EQUIPMENTS)
+        }
+
+        for (item in playerData) {
             item.loadBuff()
         }
 

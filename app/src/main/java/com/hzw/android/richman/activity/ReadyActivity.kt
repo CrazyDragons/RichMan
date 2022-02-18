@@ -12,7 +12,6 @@ import com.hzw.android.richman.adapter.AddPlayerAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.config.Constants
-import com.hzw.android.richman.dialog.InputDialog
 import com.hzw.android.richman.dialog.ProgressDialog
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.OnInputListener
@@ -49,8 +48,8 @@ class ReadyActivity : BaseActivity(), OnInputListener {
 
 
         mTvAddPlayer.setOnClickListener {
-//            adapter.addData(PlayerBean(resources.getString(R.string.player), randomBuff(),true))
-            InputDialog(this, this).show()
+            adapter.addData(PlayerBean(resources.getString(R.string.player), randomBuff(),true))
+//            InputDialog(this, this).show()
         }
 
         mTvAddComputer.setOnClickListener {
@@ -72,6 +71,9 @@ class ReadyActivity : BaseActivity(), OnInputListener {
 
 
             for (i in 0 until adapter.data.size) {
+                if (i == 0) {
+                    adapter.data[0].money = -2000
+                }
                 adapter.data[i].id = i + 1
                 adapter.data[i].name = (i + 1).toString() + adapter.data[i].name
 //                if (!adapter.data[i].isPlayer) {
