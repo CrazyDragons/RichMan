@@ -48,11 +48,19 @@ class ReadyActivity : BaseActivity(), OnInputListener {
 
 
         mTvAddPlayer.setOnClickListener {
+            if (adapter.data.size == 6) {
+                ToastUtil.show("最多只能6人参加！")
+                return@setOnClickListener
+            }
             adapter.addData(PlayerBean(resources.getString(R.string.player), randomBuff(),true))
 //            InputDialog(this, this).show()
         }
 
         mTvAddComputer.setOnClickListener {
+            if (adapter.data.size == 6) {
+                ToastUtil.show("最多只能6人参加！")
+                return@setOnClickListener
+            }
             adapter.addData(PlayerBean(resources.getString(R.string.computer), randomBuff(), false))
         }
 
@@ -62,18 +70,11 @@ class ReadyActivity : BaseActivity(), OnInputListener {
                 ToastUtil.show(R.string.no_player)
                 return@setOnClickListener
             }
-            if (adapter.data.size > 6) {
-                ToastUtil.show("最多只能6人参加！")
-                return@setOnClickListener
-            }
 
             progressDialog.show()
 
 
             for (i in 0 until adapter.data.size) {
-                if (i == 0) {
-                    adapter.data[0].money = -2000
-                }
                 adapter.data[i].id = i + 1
                 adapter.data[i].name = (i + 1).toString() + adapter.data[i].name
 //                if (!adapter.data[i].isPlayer) {

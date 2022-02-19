@@ -8,5 +8,5 @@ package com.hzw.android.richman.listener
  * create date 2022/2/18
  */
 interface OnRefreshListener {
-    fun onRefreshData()
+    fun onRefreshData(needWalk:Boolean)
 }

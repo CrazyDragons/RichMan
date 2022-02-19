@@ -46,6 +46,7 @@ class GameData private constructor() {
     fun giveGenerals(playerBean: PlayerBean, number: Int) {
         for (i in 1 .. if (generalsData.size > number) number else generalsData.size) {
             val generalsBean = generalsData[(Math.random() * generalsData.size).toInt()]
+            generalsBean.owner = playerBean
             playerBean.generals.add(generalsBean)
             generalsData.remove(generalsBean)
         }
@@ -54,6 +55,7 @@ class GameData private constructor() {
     fun giveEquipments(playerBean: PlayerBean, number: Int) {
         for (i in 1 .. if (equipmentData.size > number) number else equipmentData.size) {
             val equipmentBean = equipmentData[(Math.random() * equipmentData.size).toInt()]
+            equipmentBean.owner = playerBean
             playerBean.equipments.add(equipmentBean)
             equipmentData.remove(equipmentBean)
         }
@@ -61,7 +63,6 @@ class GameData private constructor() {
 
     fun load() {
         playerData = JSON.parseArray(GameSave.loadPlayer(), PlayerBean::class.java)
-        optionPlayerTurnIndex = playerData.size - 1
         parseMap()
         generalsData = GameInit.INSTANCE.generals
         equipmentData = GameInit.INSTANCE.equipments

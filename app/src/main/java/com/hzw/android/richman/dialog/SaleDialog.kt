@@ -2,11 +2,8 @@ package com.hzw.android.richman.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.text.TextUtils
 import android.view.Gravity
-import android.widget.EditText
+import android.widget.SeekBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -27,8 +24,6 @@ import com.hzw.android.richman.utils.ToastUtil
 import kotlinx.android.synthetic.main.dialog_sale.*
 
 
-
-
 /**
  * class SaleView
  * @author CrazyDragon
@@ -37,15 +32,17 @@ import kotlinx.android.synthetic.main.dialog_sale.*
  * create date 2022/2/19
  */
 @SuppressLint("NotifyDataSetChanged")
-class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDialog(context) {
+class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseDialog(context) {
 
-    private val saleAdapter = object : BaseQuickAdapter<SaleBean, BaseViewHolder>(R.layout.item_sale) {
-        override fun convert(holder: BaseViewHolder, item: SaleBean) {
-            holder.setText(R.id.mTvName, item.name).setText(R.id.mTvPrice, item.price.toString())
+    private val saleAdapter =
+        object : BaseQuickAdapter<SaleBean, BaseViewHolder>(R.layout.item_sale) {
+            override fun convert(holder: BaseViewHolder, item: SaleBean) {
+                holder.setText(R.id.mTvName, item.name)
+                    .setText(R.id.mTvPrice, item.price.toString())
+            }
         }
-    }
 
-
+    var army = 0
 
     init {
         setContentView(R.layout.dialog_sale)
@@ -56,30 +53,16 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
         val playerBean = GameData.INSTANCE.currentPlayer()
 
         mSbArmy.max = playerBean.army
-        mTvMaxArmy.text = playerBean.army.toString()
+        mTvMaxArmy.text = army.toString() + "(" + playerBean.army + ")"
 
         mRvCity.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         mRvGenerals.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         mRvEquipments.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         mRvSale.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        mRvSalePlayer.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
 
         saleAdapter.setNewInstance(mutableListOf())
         mRvSale.adapter = saleAdapter
-
-        val salePlayerAdapter = object : BaseQuickAdapter<SalePlayerBean, BaseViewHolder>(R.layout.item_sale_player) {
-            override fun convert(holder: BaseViewHolder, item: SalePlayerBean) {
-                holder.setText(R.id.mTvName, item.playerBean.name).setGone(R.id.mTvComputerPrice, item.playerBean.isPlayer).setGone(R.id.mEtPrice, !item.playerBean.isPlayer)
-                if (!item.playerBean.isPlayer) {
-                    holder.setText(R.id.mTvComputerPrice, update().toString())
-                    item.price = update()
-                }else {
-                    val price = holder.getView<EditText>(R.id.mEtPrice).text.toString()
-                    item.price = if (TextUtils.isEmpty(price)) 0 else price.toInt()
-                }
-            }
-        }
 
         val salePlayers = mutableListOf<SalePlayerBean>()
         for (item in GameData.INSTANCE.playerData) {
@@ -87,15 +70,36 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
                 salePlayers.add(SalePlayerBean(item, 0))
             }
         }
-        salePlayerAdapter.setNewInstance(salePlayers)
-        mRvSalePlayer.adapter = salePlayerAdapter
+        salePlayers.add(SalePlayerBean(null, 0))
+        mLlPlayer.setPlayers(salePlayers)
+
+
+        mSbArmy.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                army = progress
+                mTvMaxArmy.text = army.toString() + "(" + playerBean.army + ")"
+                update()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+        })
 
         val baseCityAdapter = BaseCityAdapter()
         baseCityAdapter.setNewInstance(playerBean.city)
         mRvCity.adapter = baseCityAdapter
         baseCityAdapter.setOnItemClickListener { _, _, position ->
             if (judge(baseCityAdapter.data[position].name!!)) {
-                saleAdapter.addData(SaleBean(baseCityAdapter.data[position].name!!, baseCityAdapter.data[position].buyPrice/2))
+                saleAdapter.addData(
+                    SaleBean(
+                        baseCityAdapter.data[position].name!!,
+                        baseCityAdapter.data[position].buyPrice / 2
+                    )
+                )
             }
             update()
         }
@@ -105,7 +109,12 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
         mRvGenerals.adapter = generalsAdapter
         generalsAdapter.setOnItemClickListener { _, _, position ->
             if (judge(generalsAdapter.data[position].name)) {
-                saleAdapter.addData(SaleBean(generalsAdapter.data[position].name, Value.X_BUY_GENERALS/2))
+                saleAdapter.addData(
+                    SaleBean(
+                        generalsAdapter.data[position].name,
+                        Value.X_BUY_GENERALS / 2
+                    )
+                )
             }
             update()
         }
@@ -115,36 +124,65 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
         mRvEquipments.adapter = equipmentsAdapter
         equipmentsAdapter.setOnItemClickListener { _, _, position ->
             if (judge(equipmentsAdapter.data[position].name)) {
-                saleAdapter.addData(SaleBean(equipmentsAdapter.data[position].name, equipmentsAdapter.data[position].price/2))
+                saleAdapter.addData(
+                    SaleBean(
+                        equipmentsAdapter.data[position].name,
+                        equipmentsAdapter.data[position].price / 2
+                    )
+                )
             }
             update()
         }
 
         mTvSureSale.setOnClickListener {
-            var player = salePlayerAdapter.data[0]
+            var player = mLlPlayer.playersData[0]
             var max = 0
-            for (item in salePlayerAdapter.data) {
+            for (item in mLlPlayer.playersData) {
                 if (item.price > max) {
                     max = item.price
                     player = item
                 }
             }
-            ToastUtil.show("最终以"+player.price+"拍卖给"+player.playerBean.name)
+            ToastUtil.show("最终以" + player.price + "拍卖给" + if (player.playerBean != null) player.playerBean!!.name else "银行")
 
             for (item in saleAdapter.data) {
                 sale(player.playerBean, item.name)
             }
-
-            player.playerBean.money -= player.price
+            if(player.playerBean != null) {
+                player.playerBean!!.army += army
+                player.playerBean!!.money -= player.price
+            }
+            GameData.INSTANCE.currentPlayer().army -= army
             GameData.INSTANCE.currentPlayer().money += player.price
 
             dismiss()
 
-            onRefreshListener.onRefreshData()
+            onRefreshListener.onRefreshData(!GameData.INSTANCE.currentPlayer().isPlayer)
         }
+
+        if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+
+            mSbArmy.isEnabled = false
+            baseCityAdapter.setOnItemClickListener(null)
+            generalsAdapter.setOnItemClickListener(null)
+            equipmentsAdapter.setOnItemClickListener(null)
+
+            mSbArmy.progress = GameData.INSTANCE.currentPlayer().army
+            for (item in playerBean.city) {
+                saleAdapter.addData(SaleBean(item.name!!, item.buyPrice / 2))
+            }
+            for (item in playerBean.generals) {
+                saleAdapter.addData(SaleBean(item.name, Value.X_BUY_GENERALS / 2))
+            }
+            for (item in playerBean.equipments) {
+                saleAdapter.addData(SaleBean(item.name, item.price / 2))
+            }
+            update()
+        }
+
     }
 
-    private fun judge(name:String):Boolean {
+    private fun judge(name: String): Boolean {
         for (item in saleAdapter.data) {
             if (item.name == name) {
                 saleAdapter.remove(item)
@@ -154,17 +192,14 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
         return true
     }
 
-    private fun update():Int {
+    private fun update() {
         var sum = 0
         for (item in saleAdapter.data) {
             sum += item.price
         }
+        sum += army
         mTvSalePrice.text = sum.toString()
-        Handler(Looper.getMainLooper()).postDelayed({
-            mRvSalePlayer.adapter?.notifyDataSetChanged()
-
-        }, 200)
-        return sum
+        mLlPlayer.update(sum)
     }
 
 
@@ -172,11 +207,11 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
 
     }
 
-    class SalePlayerBean(var playerBean: PlayerBean, var price: Int) {
+    class SalePlayerBean(var playerBean: PlayerBean?, var price: Int = 0) {
 
     }
 
-    private fun sale(playerBean: PlayerBean, name:String) {
+    private fun sale(playerBean: PlayerBean?, name: String) {
         for (item in saleAdapter.data) {
             val baseCityBean = searchBaseCity(name)
             val generalsBean = searchGenerals(name)
@@ -184,26 +219,50 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
 
             if (baseCityBean != null) {
                 GameData.INSTANCE.currentPlayer().city.remove(baseCityBean)
-                baseCityBean.owner = playerBean
-                playerBean.city.add(baseCityBean)
+                if (baseCityBean.generals != null) {
+                    baseCityBean.generals!!.city = null
+                }
+                baseCityBean.generals = null
+                if (playerBean != null) {
+                    baseCityBean.owner = playerBean
+                    playerBean.city.add(baseCityBean)
+                }else {
+                    baseCityBean.owner = null
+                }
             }
 
             if (generalsBean != null) {
                 GameData.INSTANCE.currentPlayer().generals.remove(generalsBean)
-                generalsBean.owner = playerBean
-                playerBean.generals.add(generalsBean)
+                if (generalsBean.city != null) {
+                    generalsBean.city!!.generals = null
+                }
+                generalsBean.city = null
+                if (playerBean != null) {
+                    generalsBean.owner = playerBean
+                    playerBean.generals.add(generalsBean)
+                }else {
+                    generalsBean.action = generalsBean.life
+                    GameData.INSTANCE.generalsData.add(generalsBean)
+                }
+
             }
 
             if (equipmentBean != null) {
                 GameData.INSTANCE.currentPlayer().equipments.remove(equipmentBean)
-                equipmentBean.owner = playerBean
-                playerBean.equipments.add(equipmentBean)
+                if(playerBean != null) {
+                    equipmentBean.owner = playerBean
+                    playerBean.equipments.add(equipmentBean)
+                }else {
+                    equipmentBean.owner = null
+                    GameData.INSTANCE.equipmentData.add(equipmentBean)
+                }
+
             }
         }
 
     }
 
-    private fun searchBaseCity(name: String):BaseCityBean? {
+    private fun searchBaseCity(name: String): BaseCityBean? {
         val baseCityBean = null
         for (item in GameData.INSTANCE.currentPlayer().city) {
             if (item.name == name) {
@@ -213,7 +272,7 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
         return baseCityBean
     }
 
-    private fun searchGenerals(name: String):GeneralsBean? {
+    private fun searchGenerals(name: String): GeneralsBean? {
         val generalsBean = null
         for (item in GameData.INSTANCE.currentPlayer().generals) {
             if (item.name == name) {
@@ -223,7 +282,7 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener): BaseDi
         return generalsBean
     }
 
-    private fun searchEquipments(name: String):EquipmentBean? {
+    private fun searchEquipments(name: String): EquipmentBean? {
         val equipmentBean = null
         for (item in GameData.INSTANCE.currentPlayer().equipments) {
             if (item.name == name) {

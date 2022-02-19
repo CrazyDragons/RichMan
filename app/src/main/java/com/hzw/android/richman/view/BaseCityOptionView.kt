@@ -14,6 +14,7 @@ import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.dialog.OptionGeneralsDialog
 import com.hzw.android.richman.dialog.TipsDialog
 import com.hzw.android.richman.game.GameData
+import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.listener.OnClickTipsListener
 import kotlinx.android.synthetic.main.view_base_city_option.view.*
@@ -120,7 +121,12 @@ class BaseCityOptionView @JvmOverloads constructor(
                             )
 
                             if (!canCost && !canPK && !canAttack) {
-                                TipsDialog(context, "注意，你已经不能支付过路费，现在银行先垫付，下次轮到你时需要进行拍卖").show()
+                                TipsDialog(context, "注意，你已经不能支付过路费，现在银行先垫付，如有股票请抛出，否则下次轮到你时需要进行强制拍卖").show()
+                                if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+                                    GameData.INSTANCE.currentPlayer().money += GameData.INSTANCE.currentPlayer().stockMoney()
+                                    GameData.INSTANCE.currentPlayer().stocks.clear()
+                                    GameLog.INSTANCE.addSystemLog("抛售了股票")
+                                }
                             }
                         }
 

@@ -38,6 +38,7 @@ class PlayerBean(//昵称
     //道具
     var equipments = mutableListOf<EquipmentBean>()
 
+    //股票
     var stocks = mutableListOf<StockBean>()
 
     //地图位置
@@ -85,6 +86,13 @@ class PlayerBean(//昵称
 
     enum class BANK {
         ICBC, ABC, CCB, BOC, BOCM
+    }
+
+    init {
+        if (!isPlayer) {
+            money += Value.DEFAULT_MONEY/2
+            stocks.add(StockBean("A", 50))
+        }
     }
 
 

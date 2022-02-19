@@ -57,10 +57,11 @@ class TipsDialog(
             dismiss()
         }
 
+
         Handler(Looper.getMainLooper()).postDelayed({
             if (!GameData.INSTANCE.currentPlayer().isPlayer) {
                 mTvYes.performClick()
             }
-        }, 1000)
+        }, 500)
     }
 }

@@ -78,13 +78,13 @@ class StockDialog (context: Context, stockBean: StockBean, onRefreshListener: On
 
         mTvBuy.setOnClickListener {
             GameData.INSTANCE.currentPlayer().buyStock(stockBean, buyNumber)
-            onRefreshListener.onRefreshData()
+            onRefreshListener.onRefreshData(false)
             dismiss()
         }
 
         mTvSale.setOnClickListener {
             GameData.INSTANCE.currentPlayer().saleStock(stockBean, saleNumber)
-            onRefreshListener.onRefreshData()
+            onRefreshListener.onRefreshData(false)
             dismiss()
         }
 

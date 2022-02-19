@@ -1,6 +1,7 @@
 package com.hzw.android.richman.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,7 +31,6 @@ import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.*
-import com.hzw.android.richman.utils.LogUtil
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.MapUtil.setNextTurn
 import com.hzw.android.richman.view.*
@@ -40,6 +40,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_game.*
+import kotlinx.android.synthetic.main.dialog_tips.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -57,7 +58,6 @@ class GameActivity : BaseActivity(),
     OnAddLogListener, OnItemClickListener, OnBaseCityOptionListener, OnItemLongClickListener,
     OnClickTipsListener, OnSpecialOptionListener, OnRefreshListener {
 
-    private var playerViewList = mutableListOf<PlayerView>()
     private lateinit var computerOptionTipsDialog: ComputerOptionTisDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +80,7 @@ class GameActivity : BaseActivity(),
         mBtnWalk.setOnClickListener(this)
         mBtnFinishOption.setOnClickListener(this)
         mRootMap.setOnClickListener(this)
-        mBaseMap.onMapClickListener = this
+        mRootMap.mBaseMap.onMapClickListener = this
         GameLog.INSTANCE.onAddLogListener = this
         GameOption.onBaseCityOptionListener = this
         GameOption.onSpecialOptionListener = this
@@ -112,8 +112,6 @@ class GameActivity : BaseActivity(),
 
         if (!GameData.INSTANCE.playerData[0].isPlayer) {
             mBtnWalk.performClick()
-        } else {
-            setNextTurn()
         }
     }
 
@@ -122,8 +120,7 @@ class GameActivity : BaseActivity(),
 
             val playerView = PlayerView(this)
             playerView.setData(item)
-            mRootMap.addView(playerView)
-            playerViewList.add(playerView)
+            mRootMap.addPlayerView(playerView)
 
             movePlayer(playerView, item, 0, this)
         }
@@ -138,7 +135,7 @@ class GameActivity : BaseActivity(),
             GameLog.INSTANCE.addWalkLog(count)
 
             movePlayer(
-                playerViewList[GameData.INSTANCE.optionPlayerTurnIndex],
+                mRootMap.playerViewList[GameData.INSTANCE.optionPlayerTurnIndex],
                 GameData.INSTANCE.currentPlayer(),
                 count,
                 this
@@ -147,9 +144,6 @@ class GameActivity : BaseActivity(),
     }
 
     override fun onWalkFinish() {
-
-
-        LogUtil.print("结束状态" + GameData.INSTANCE.currentPlayer().status.toString())
 
         optionStatus(
             walk = false,
@@ -173,8 +167,8 @@ class GameActivity : BaseActivity(),
     ) {
 
         if (count == 0) {
-            playerView.translationX = mBaseMap.mapViewList[0].x + playerOffsetX
-            playerView.translationY = mBaseMap.mapViewList[0].y + playerOffsetY
+            playerView.translationX = mRootMap.mBaseMap.mapViewList[0].x + playerOffsetX
+            playerView.translationY = mRootMap.mBaseMap.mapViewList[0].y + playerOffsetY
             mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
             return
         }
@@ -195,15 +189,15 @@ class GameActivity : BaseActivity(),
 
                     var next = playerBean.walkIndex - count + t.toInt()
 
-                    if (next >= mBaseMap.mapViewList.size) {
-                        if (next == mBaseMap.mapViewList.size) {
+                    if (next >= mRootMap.mBaseMap.mapViewList.size) {
+                        if (next == mRootMap.mBaseMap.mapViewList.size) {
                             restart = true
                         }
-                        next -= mBaseMap.mapViewList.size
+                        next -= mRootMap.mBaseMap.mapViewList.size
                     }
 
-                    playerView.translationX = mBaseMap.mapViewList[next].x + playerOffsetX
-                    playerView.translationY = mBaseMap.mapViewList[next].y + playerOffsetY
+                    playerView.translationX = mRootMap.mBaseMap.mapViewList[next].x + playerOffsetX
+                    playerView.translationY = mRootMap.mBaseMap.mapViewList[next].y + playerOffsetY
                     mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
                     if (restart) {
                         when (GameData.INSTANCE.currentPlayer().bank) {
@@ -283,7 +277,6 @@ class GameActivity : BaseActivity(),
 
 
 
-                        mRvStock.adapter?.notifyDataSetChanged()
                         restart = false
                         onWalkListener.onWalkFinish()
                         playerView.mDisposable?.dispose()
@@ -306,7 +299,7 @@ class GameActivity : BaseActivity(),
         when (view?.id) {
 
             R.id.mRootMap -> {
-                if (mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] is BaseCityBean) {
+                if (mRootMap.mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] is BaseCityBean) {
                     mLlOption.visibility = if (mLlOption.visibility == VISIBLE) GONE else VISIBLE
                 }
             }
@@ -314,35 +307,52 @@ class GameActivity : BaseActivity(),
             //点击投掷
             R.id.mBtnWalk -> {
                 if (GameData.INSTANCE.currentPlayer().money < 0) {
-                    TipsDialog(this, "先把欠银行的钱还了吧", object : OnClickTipsListener{
-                        override fun onClickYes() {
-                            SaleDialog(this@GameActivity, this@GameActivity).show()
-                        }
-                    }).show()
-                    return
 
+
+
+
+                    if (GameData.INSTANCE.currentPlayer().army == 0 && GameData.INSTANCE.currentPlayer().city.size == 0 && GameData.INSTANCE.currentPlayer().generals.size == 0 && GameData.INSTANCE.currentPlayer().equipments.size == 0) {
+                        TipsDialog(this, "很遗憾，你破产了", object : OnClickTipsListener{
+                            @SuppressLint("NotifyDataSetChanged")
+                            override fun onClickYes() {
+                                val killIndex = GameData.INSTANCE.optionPlayerTurnIndex
+                                GameLog.INSTANCE.addSystemLog(GameData.INSTANCE.playerData[killIndex].name+"退出游戏")
+                                GameData.INSTANCE.playerData.remove(GameData.INSTANCE.playerData[killIndex])
+                                mRootMap.removePlayerView(mRootMap.playerViewList[killIndex])
+                                mRvPlayerInfo.adapter?.notifyDataSetChanged()
+
+
+                                if (GameData.INSTANCE.playerData.size == 1) {
+                                    TipsDialog(this@GameActivity, GameData.INSTANCE.playerData[0].name+"，你才是真正的三国无双！",object :OnClickTipsListener{
+                                        override fun onClickYes() {
+                                            startActivity(Intent(this@GameActivity, MainActivity::class.java))
+                                            finish()
+                                        }
+
+                                    }).show()
+                                    return
+                                }
+
+                                GameData.INSTANCE.optionPlayerTurnIndex -= 1
+
+
+                                setNextTurn()
+                                showTurnTips(this@GameActivity)
+                            }
+
+                        }).show()
+                    }else {
+                        TipsDialog(this, "先把欠银行的钱还了吧", object : OnClickTipsListener{
+                            override fun onClickYes() {
+                                SaleDialog(this@GameActivity, this@GameActivity).show()
+                            }
+                        }).show()
+                    }
+
+                    return
 //                    if (!GameData.INSTANCE.currentPlayer().isPlayer) {
 //                        computerOptionTipsDialog.dismiss()
 //                    }
-//
-//                    val killIndex = GameData.INSTANCE.optionPlayerTurnIndex
-//
-//                    setNextTurn()
-//
-//
-//                    GameLog.INSTANCE.addSystemLog(GameData.INSTANCE.playerData[killIndex].name+"退出游戏")
-//                    GameData.INSTANCE.playerData.remove(GameData.INSTANCE.playerData[killIndex])
-//                    playerViewList.remove(playerViewList[killIndex])
-//                    mRvPlayerInfo.adapter?.notifyDataSetChanged()
-//
-//
-//                    if (GameData.INSTANCE.playerData.size == 1) {
-//                        GameData.INSTANCE.optionPlayerTurnIndex = 0
-//                        TipsDialog(this, GameData.INSTANCE.currentPlayer().name+"，你才是真正的三国无双！").show()
-//                    }
-//
-//                    mBtnFinishOption.performClick()
-//                    return
                 }
 
                 if (GameData.INSTANCE.currentPlayer().status == PlayerBean.STATUS.PRISON) {
@@ -362,7 +372,7 @@ class GameActivity : BaseActivity(),
             R.id.mBtnFinishOption -> {
 
                 if (GameData.INSTANCE.currentPlayer().money < 0) {
-                    TipsDialog(this, "注意，刚刚银行已经帮你垫付费用，下回合将进行拍卖", object : OnClickTipsListener{
+                    TipsDialog(this, "注意，刚刚银行已经帮你垫付费用，请立即卖出股票还清债务，否则下回合将强制进行拍卖", object : OnClickTipsListener{
                         override fun onClickYes() {
                             onClickFinish()
                         }
@@ -377,8 +387,9 @@ class GameActivity : BaseActivity(),
     private fun onClickFinish() {
         mLlOption.removeAllViews()
         setNextTurn()
+        mRvStock.adapter?.notifyDataSetChanged()
         mCamera.smoothScrollTo(
-            playerViewList[GameData.INSTANCE.optionPlayerTurnIndex].x.toInt() - cameraOffsetX,
+            mRootMap.playerViewList[GameData.INSTANCE.optionPlayerTurnIndex].x.toInt() - cameraOffsetX,
             0
         )
         showTurnTips(this)
@@ -443,7 +454,7 @@ class GameActivity : BaseActivity(),
                     is CityBean -> {
                         val cityBean = GameData.INSTANCE.currentMap() as CityBean
                         val cityView =
-                            mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as CityView
+                            mRootMap.mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as CityView
                         cityView.setData(cityBean)
                         val cityInfoView = CityInfoView(this)
                         cityInfoView.setData(cityBean)
@@ -452,7 +463,7 @@ class GameActivity : BaseActivity(),
                     is AreaBean -> {
                         val areaBean = GameData.INSTANCE.currentMap() as AreaBean
                         val areaView =
-                            mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as AreaView
+                            mRootMap.mBaseMap.mapViewList[GameData.INSTANCE.currentPlayer().walkIndex] as AreaView
                         areaView.setData(areaBean)
                         val areaInfoView = AreaInfoView(this)
                         areaInfoView.setData(areaBean)
@@ -485,7 +496,7 @@ class GameActivity : BaseActivity(),
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
         if (adapter is PlayerInfoAdapter) {
-            mCamera.smoothScrollTo(playerViewList[position].x.toInt() - cameraOffsetX, 0)
+            mCamera.smoothScrollTo(mRootMap.playerViewList[position].x.toInt() - cameraOffsetX, 0)
         } else if (adapter is StockAdapter) {
             StockDialog(this, adapter.data[position], this).show()
         }
@@ -542,8 +553,11 @@ class GameActivity : BaseActivity(),
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun onRefreshData() {
+    override fun onRefreshData(needWalk: Boolean) {
         mRvPlayerInfo.adapter?.notifyDataSetChanged()
+        if (needWalk) {
+            mBtnWalk.performClick()
+        }
     }
 
     private fun whenOnlyStart() {
