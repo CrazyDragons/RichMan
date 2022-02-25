@@ -38,8 +38,8 @@ class CityView @JvmOverloads constructor(
         mIvCityCover.setBackgroundResource(cityBean.cover)
         mViewLevel.setLevel(cityBean.level, false)
         mIvDefense.visibility = if (cityBean.generals == null) GONE else VISIBLE
-        mTvOwner.visibility = if (cityBean.owner == null) GONE else VISIBLE
-        mTvOwner.text = cityBean.owner?.name
+        mTvOwner.visibility = if (cityBean.ownerID == 0) GONE else VISIBLE
+        mTvOwner.text = cityBean.owner()?.name
 
         when (cityBean.color) {
             CityBean.Color.RED -> {

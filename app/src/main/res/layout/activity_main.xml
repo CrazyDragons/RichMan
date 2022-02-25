@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@drawable/shape_rectangle_solid_green_r25"
+        android:background="@drawable/selector_btn_r25"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:text="@string/continues"

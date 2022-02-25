@@ -51,7 +51,7 @@ class BaseCityOptionView @JvmOverloads constructor(
 
                 val playerBean = GameData.INSTANCE.currentPlayer()
                 val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
-                if (baseCityBean.owner == null) {
+                if (baseCityBean.ownerID == 0) {
                     var canBuy = true
                     if (baseCityBean is CityBean && playerBean.money < baseCityBean.buyPrice) {
                         canBuy = false
@@ -68,7 +68,7 @@ class BaseCityOptionView @JvmOverloads constructor(
                         attack = false
                     )
                 } else {
-                    if (baseCityBean.owner?.id == GameData.INSTANCE.currentPlayer().id) {
+                    if (baseCityBean.ownerID == GameData.INSTANCE.currentPlayer().id) {
                         val canLevel =
                             (GameData.INSTANCE.currentMap() is CityBean)
                                     && (GameData.INSTANCE.currentMap() as CityBean).level < 3
@@ -104,9 +104,9 @@ class BaseCityOptionView @JvmOverloads constructor(
 
                             if (baseCityBean is AreaBean) {
                                 canCost =
-                                    playerBean.money >= baseCityBean.owner!!.allAreaCostMoney()
+                                    playerBean.money >= baseCityBean.owner()!!.allAreaCostMoney()
                                 canAttack =
-                                    playerBean.army >= baseCityBean.owner!!.allAreaCostArmy() && playerBean.allAttackGenerals().size > 0
+                                    playerBean.army >= baseCityBean.owner()!!.allAreaCostArmy() && playerBean.allAttackGenerals().size > 0
                             }
 
                             val canPK: Boolean = playerBean.generals.size > 0
@@ -238,7 +238,7 @@ class BaseCityOptionView @JvmOverloads constructor(
 
                 var msg = ""
 
-                if (baseCityBean.owner!!.army < Value.DEFENSE_ARMY_COST) {
+                if (baseCityBean.owner()!!.army < Value.DEFENSE_ARMY_COST) {
                     msg = "好机会！对方驻守兵力不足，城池可直接占有并俘虏武将"
                 }else {
                     if (baseCityBean is CityBean) {
@@ -247,7 +247,7 @@ class BaseCityOptionView @JvmOverloads constructor(
                     }
                     if (baseCityBean is AreaBean) {
                         msg =
-                            "是否用 " + (baseCityBean.owner!!.allAreaCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+                            "是否用 " + (baseCityBean.owner()!!.allAreaCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
                     }
                 }
 
@@ -277,7 +277,7 @@ class BaseCityOptionView @JvmOverloads constructor(
 
                     is AreaBean -> {
                         val areaBean = GameData.INSTANCE.currentMap() as AreaBean
-                        msg = "是否交费 " + areaBean.owner!!.allAreaCostMoney() + " ?"
+                        msg = "是否交费 " + areaBean.owner()!!.allAreaCostMoney() + " ?"
                     }
                 }
 

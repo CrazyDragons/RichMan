@@ -101,7 +101,7 @@
                 android:id="@+id/mBtnWalk"
                 android:layout_width="45dp"
                 android:layout_height="30dp"
-                android:background="@drawable/selector_btn"
+                android:background="@drawable/selector_btn_r10"
                 android:gravity="center"
                 android:text="@string/walk"
                 android:textColor="@color/white" />
@@ -111,7 +111,7 @@
                 android:layout_width="45dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/selector_btn"
+                android:background="@drawable/selector_btn_r10"
                 android:gravity="center"
                 android:text="@string/end"
                 android:textColor="@color/white" />

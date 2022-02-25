@@ -44,6 +44,8 @@ open class BaseMapBean {
         PRISON
     }
 
+    var id = 0
+
     /**
      * 地图类型
      */

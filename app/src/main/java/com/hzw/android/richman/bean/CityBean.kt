@@ -1,6 +1,7 @@
 package com.hzw.android.richman.bean
 
 import androidx.annotation.DrawableRes
+import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value
@@ -19,6 +20,12 @@ class CityBean : BaseCityBean {
 
     //城池颜色
     var color: Color? = null
+
+    //城池级别
+    var level = 0
+
+    var defense = 0
+        get() = field + level * Value.ADD_DEFENSE + if (MapUtil.judgeAllColor(this)) Value.ALL_COLOR_DEFENSE else 0
 
     enum class Color {
         //红
@@ -45,11 +52,16 @@ class CityBean : BaseCityBean {
 
 
     constructor(jsonObject: JSONObject) {
+        id = jsonObject.getIntValue("id")
+        ownerID = jsonObject.getIntValue("ownerID")
         name = jsonObject.getString("name")
         buyPrice = jsonObject.getIntValue("buyPrice")
+        generals = JSON.parseObject(jsonObject.getString("generals"), GeneralsBean::class.java)
         type = MapType.valueOf(jsonObject.getString("type"))
         color = Color.valueOf(jsonObject.getString("color"))
         cover = jsonObject.getIntValue("cover")
+        level = jsonObject.getIntValue("level")
+        defense = jsonObject.getIntValue("defense")
     }
 
     constructor(name: String?, @DrawableRes cover: Int, buyPrice: Int, color: Color?) {
@@ -61,11 +73,11 @@ class CityBean : BaseCityBean {
     }
 
     fun needCostMoney(): Int {
-        return if (owner!!.status == PlayerBean.STATUS.PRISON) {
+        return if (owner()!!.status == PlayerBean.STATUS.PRISON) {
             0
         }else {
             val color = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_MONEY else 1
-            val buff = if (owner!!.buff == PlayerBean.BUFF.ADD_COST) 1.1 else 1.0
+            val buff = if (owner()!!.buff == PlayerBean.BUFF.ADD_COST) 1.1 else 1.0
             val deBuff = if (GameData.INSTANCE.currentPlayer().buff == PlayerBean.BUFF.REDUCE_COST) 0.9 else 1.0
             when (level) {
                 0 -> (buyPrice * Value.X_CITY_MONEY_LEVEL_0 * color * buff * deBuff).toInt()
@@ -78,9 +90,9 @@ class CityBean : BaseCityBean {
     }
 
     fun needCostArmy(): Int {
-        val isPrison = if (owner!!.status == PlayerBean.STATUS.PRISON) 0.5 else 1.0
+        val isPrison = if (owner()!!.status == PlayerBean.STATUS.PRISON) 0.5 else 1.0
         val color = if (MapUtil.judgeAllColor(this)) Value.X_ALL_COLOR_ARMY else 1.0
-        val buff = if (owner!!.buff == PlayerBean.BUFF.ADD_ATTACK_ARMY) 1.1 else 1.0
+        val buff = if (owner()!!.buff == PlayerBean.BUFF.ADD_ATTACK_ARMY) 1.1 else 1.0
         val deBuff = if (GameData.INSTANCE.currentPlayer().buff == PlayerBean.BUFF.REDUCE_ATTACK_ARMY) 0.9 else 1.0
         return when (level) {
             0 -> (Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_0 * color * isPrison * buff * deBuff).toInt()

@@ -72,7 +72,7 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
         val list = mutableListOf<GeneralsBean>()
 
         for (item in GameData.INSTANCE.currentPlayer().generals) {
-            if (item.city == null) {
+            if (item.cityID == 0) {
                 if (isAttack) {
                     if (item.action > Value.ACTION_ATTACK) {
                         list.add(item)

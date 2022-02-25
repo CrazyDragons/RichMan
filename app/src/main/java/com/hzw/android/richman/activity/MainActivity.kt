@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.view.View
 import com.hzw.android.richman.R
 import com.hzw.android.richman.base.BaseActivity
+import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameInit
 import com.hzw.android.richman.game.GameSave
-import com.hzw.android.richman.utils.LogUtil
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.ScreenUtil
 import com.hzw.android.richman.utils.ToastUtil
+import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -28,8 +29,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        LogUtil.print(ScreenUtil.getScreenWidth(this))
-        LogUtil.print(ScreenUtil.getScreenHeight(this))
+        Logger.d(ScreenUtil.getScreenWidth(this))
+        Logger.d(ScreenUtil.getScreenHeight(this))
 
         mTvGame.setOnClickListener(this)
         mTvGoOn.setOnClickListener(this)
@@ -45,18 +46,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
             R.id.mTvGame -> {
                 startActivity(Intent(this, ReadyActivity::class.java))
-                finish()
             }
 
             R.id.mTvGoOn -> {
-                ToastUtil.show("暂未开发此功能")
-//                startActivity(
-//                    Intent(this, GameActivity::class.java).putExtra(
-//                        (Constants.NEW_GAME),
-//                        false
-//                    )
-//                )
-//                finish()
+                startActivity(
+                    Intent(this, GameActivity::class.java)
+                )
             }
 
             R.id.mTvDesc -> {
@@ -64,10 +59,15 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.mTvExit -> {
-                GameSave.clean()
+                GameData.INSTANCE.currentPlayer()
                 finish()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mTvGoOn.isEnabled = !GameSave.newGame()
     }
 
 }

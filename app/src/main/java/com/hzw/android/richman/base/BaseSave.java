@@ -30,4 +30,14 @@ public abstract class BaseSave {
     protected String getStringData(String key) {
         return preferences.getString(key, "");
     }
+
+    public boolean putBooleanData(String key, boolean isTrue) {
+        this.editor.putBoolean(key, isTrue);
+        return editor.commit();
+    }
+
+
+    protected boolean getBooleanData(String key) {
+        return preferences.getBoolean(key, true);
+    }
 }

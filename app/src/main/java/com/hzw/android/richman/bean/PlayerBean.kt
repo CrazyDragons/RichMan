@@ -1,5 +1,7 @@
 package com.hzw.android.richman.bean
 
+import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.game.GameData
@@ -13,14 +15,14 @@ import kotlin.math.pow
  * note
  * create date 2022/2/10
  */
-class PlayerBean(//昵称
-    var name: String,
-    var buff: BUFF,
-    var isPlayer: Boolean
-) {
+class PlayerBean {
 
     //id
     var id = 0
+
+    var name = ""
+
+    var isPlayer = true
 
     //金钱
     var money = Value.DEFAULT_MONEY
@@ -47,6 +49,8 @@ class PlayerBean(//昵称
     var status = STATUS.READY
 
     var bank = BANK.ABC
+
+    var buff = BUFF.ADD_MONEY
 
     enum class STATUS {
         //准备状态
@@ -87,13 +91,50 @@ class PlayerBean(//昵称
         ICBC, ABC, CCB, BOC, BOCM
     }
 
-    init {
-        if (!isPlayer) {
-            money += Value.DEFAULT_MONEY/2
-            stocks.add(StockBean("A", 50))
-        }
+    constructor(name: String,buff: BUFF, isPlayer: Boolean) {
+        this.name = name
+        this.buff = buff
+        this.isPlayer = isPlayer
     }
 
+    constructor(init:Boolean, jsonObject: JSONObject) {
+        id = jsonObject.getIntValue("id")
+        name = jsonObject.getString("name")
+        isPlayer = jsonObject.getBooleanValue("player")
+        money = jsonObject.getIntValue("money")
+        army = jsonObject.getIntValue("army")
+        var generalsJsonArray = jsonObject.getJSONArray("generals")
+        var equipmentsJsonArray = jsonObject.getJSONArray("equipments")
+        var cityJsonArray = jsonObject.getJSONArray("city")
+        var stocksJsonArray = jsonObject.getJSONArray("stocks")
+
+        for (i in 0 until cityJsonArray.size) {
+            val objects = cityJsonArray.getJSONObject(i)
+            if (objects.getString("type") == "CITY") {
+                city.add(CityBean(objects))
+            }
+            if (objects.getString("type") == "AREA") {
+                city.add(AreaBean(objects))
+            }
+        }
+
+        generals = JSON.parseArray(jsonObject.getString("generals"), GeneralsBean::class.java)
+        equipments = JSON.parseArray(jsonObject.getString("equipments"), EquipmentBean::class.java)
+        stocks = JSON.parseArray(jsonObject.getString("stocks"), StockBean::class.java)
+
+
+        walkIndex = jsonObject.getIntValue("walkIndex")
+        status = STATUS.valueOf(jsonObject.getString("status"))
+        bank = BANK.valueOf(jsonObject.getString("bank"))
+        buff = BUFF.valueOf(jsonObject.getString("buff"))
+
+        if (init) {
+            if (!isPlayer) {
+                money += Value.DEFAULT_MONEY/2
+                stocks.add(StockBean("A", 50))
+            }
+        }
+    }
 
     fun loadBuff(){
         if (buff == BUFF.ADD_MONEY) {
@@ -120,7 +161,7 @@ class PlayerBean(//昵称
         }
     }
 
-    fun getCityMoney(arrayList: MutableList<BaseCityBean>): Double {
+    fun cityMoney(arrayList: MutableList<BaseCityBean>): Double {
         var money = 0.0
         for (i in arrayList.indices) {
 
@@ -132,7 +173,7 @@ class PlayerBean(//昵称
         return money
     }
 
-    fun getAreaMoney(): Double {
+    fun areaMoney(): Double {
         return if (allArea() > 0) Value.AREA_ARMY * 2 * 2.0.pow(allArea()) else 0.0
     }
 

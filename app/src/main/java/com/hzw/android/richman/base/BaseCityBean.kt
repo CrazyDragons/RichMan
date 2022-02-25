@@ -2,6 +2,7 @@ package com.hzw.android.richman.base
 
 import com.hzw.android.richman.bean.GeneralsBean
 import com.hzw.android.richman.bean.PlayerBean
+import com.hzw.android.richman.game.GameData
 
 /**
  * class BaseCityBean
@@ -12,9 +13,6 @@ import com.hzw.android.richman.bean.PlayerBean
  */
 open class BaseCityBean : BaseMapBean() {
 
-    //城池级别
-    var level = 0
-
     //购入价
     var buyPrice = 0
 
@@ -24,6 +22,16 @@ open class BaseCityBean : BaseMapBean() {
     //武将
     var generals: GeneralsBean? = null
 
-    //拥有者
-    var owner: PlayerBean? = null
+    var ownerID = 0
+
+    fun owner():PlayerBean? {
+        for (item in GameData.INSTANCE.playerData) {
+            if (ownerID == item.id) {
+                return item
+            }
+        }
+        return null
+    }
+
+
 }

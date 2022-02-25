@@ -221,26 +221,26 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseD
                 GameData.INSTANCE.currentPlayer().city.remove(baseCityBean)
                 if (baseCityBean.generals != null) {
                     GameData.INSTANCE.currentPlayer().generals.add(baseCityBean.generals!!)
-                    baseCityBean.generals!!.city = null
+                    baseCityBean.generals!!.cityID = 0
                 }
                 baseCityBean.generals = null
                 if (playerBean != null) {
-                    baseCityBean.owner = playerBean
+                    baseCityBean.ownerID = playerBean.id
                     playerBean.city.add(baseCityBean)
                 }else {
-                    baseCityBean.owner = null
+                    baseCityBean.ownerID = 0
                 }
             }
 
             if (generalsBean != null) {
-                if (generalsBean.city != null) {
-                    generalsBean.city!!.generals = null
+                if (generalsBean.city() != null) {
+                    generalsBean.city()!!.generals = null
                 }else {
                     GameData.INSTANCE.currentPlayer().generals.remove(generalsBean)
                 }
-                generalsBean.city = null
+                generalsBean.cityID = 0
                 if (playerBean != null) {
-                    generalsBean.owner = playerBean
+                    generalsBean.ownerID = playerBean.id
                     playerBean.generals.add(generalsBean)
                 }else {
                     generalsBean.action = generalsBean.life
@@ -252,10 +252,10 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseD
             if (equipmentBean != null) {
                 GameData.INSTANCE.currentPlayer().equipments.remove(equipmentBean)
                 if(playerBean != null) {
-                    equipmentBean.owner = playerBean
+                    equipmentBean.ownerID = playerBean.id
                     playerBean.equipments.add(equipmentBean)
                 }else {
-                    equipmentBean.owner = null
+                    equipmentBean.ownerID = 0
                     GameData.INSTANCE.equipmentData.add(equipmentBean)
                 }
 

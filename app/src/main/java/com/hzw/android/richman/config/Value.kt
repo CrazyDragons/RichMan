@@ -136,10 +136,10 @@ object Value {
     const val X_COMPUTER_DEFENSE = 80
 
     //电脑选择交费概率
-    const val X_COMPUTER_COST = 60
+    const val X_COMPUTER_COST = 40
 
     //电脑选择攻城概率
-    const val X_COMPUTER_ATTACK = 90
+    const val X_COMPUTER_ATTACK = 70
 
     //电脑购买兵力的经济占比
     const val X_COMPUTER_ARMY = 0.2

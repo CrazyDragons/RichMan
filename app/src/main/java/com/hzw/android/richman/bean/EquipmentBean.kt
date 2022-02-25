@@ -1,5 +1,7 @@
 package com.hzw.android.richman.bean
 
+import com.hzw.android.richman.game.GameData
+
 /**
  * class EquipmentBean
  *
@@ -20,7 +22,7 @@ class EquipmentBean(var type: TYPE) {
 
     var price = 1000
 
-    var owner:PlayerBean? = null
+    var ownerID = 0
 
     init {
         when(type) {
@@ -41,6 +43,15 @@ class EquipmentBean(var type: TYPE) {
                 desc = "道具4的说明"
             }
         }
+    }
+
+    fun owner():PlayerBean? {
+        for (item in GameData.INSTANCE.playerData) {
+            if (ownerID == item.id) {
+                return item
+            }
+        }
+        return null
     }
 
 }

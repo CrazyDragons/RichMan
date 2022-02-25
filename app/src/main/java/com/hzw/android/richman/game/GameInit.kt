@@ -1,6 +1,5 @@
 package com.hzw.android.richman.game
 
-import com.alibaba.fastjson.JSON
 import com.hzw.android.richman.R
 import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.*
@@ -94,7 +93,9 @@ class GameInit private constructor() {
         mapList.add(CityBean("云南", R.drawable.bg_yunnan, 2500, CityBean.Color.PURPLE))
         mapList.add(CityBean("浙江", R.drawable.bg_zhejiang, 4000, CityBean.Color.PURPLE))
 
-        GameSave.saveMap(JSON.toJSONString(mapList))
+        for (i in 0 until  mapList.size) {
+            mapList[i].id = i + 1
+        }
     }
 
     private fun initGenerals() {

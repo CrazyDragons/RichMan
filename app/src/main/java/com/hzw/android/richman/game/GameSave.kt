@@ -1,6 +1,9 @@
 package com.hzw.android.richman.game
 
+import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.serializer.SerializerFeature
 import com.hzw.android.richman.base.BaseSave
+import com.orhanobut.logger.Logger
 
 /**
  * class GameSave
@@ -11,15 +14,30 @@ import com.hzw.android.richman.base.BaseSave
  */
 object GameSave : BaseSave() {
 
-    private const val MAP = "map"
+    private const val NEW_GAME = "new_game"
+    private const val DATA = "data"
     private const val PLAYER = "player"
 
-    fun saveMap(json: String) {
-        putStringData(MAP, json)
+    fun newGame(newGame:Boolean) {
+        putBooleanData(NEW_GAME, newGame)
     }
 
-    fun loadMap(): String {
-        return getStringData(MAP)
+    fun newGame():Boolean {
+        return getBooleanData(NEW_GAME)
+    }
+
+    fun save() {
+        val json = JSON.toJSONString(GameData.INSTANCE, SerializerFeature.DisableCircularReferenceDetect)
+        Logger.d(json)
+        saveData(json)
+    }
+
+    private fun saveData(json: String) {
+        putStringData(DATA, json)
+    }
+
+    fun loadData():String {
+        return getStringData(DATA)
     }
 
     fun savePlayer(json: String) {
@@ -28,10 +46,5 @@ object GameSave : BaseSave() {
 
     fun loadPlayer(): String {
         return getStringData(PLAYER)
-    }
-
-    fun clean() {
-        saveMap("")
-        savePlayer("")
     }
 }

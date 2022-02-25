@@ -88,13 +88,13 @@ object MapUtil {
     }
 
     fun judgeAllColor(baseCityBean: BaseCityBean): Boolean {
-        if (baseCityBean.owner == null) {
+        if (baseCityBean.ownerID == 0) {
             return false
         }
         if (baseCityBean is CityBean) {
             val color = baseCityBean.color
             var x = 0
-            for (item in baseCityBean.owner!!.city) {
+            for (item in baseCityBean.owner()!!.city) {
                 if (item is CityBean && item.color == color) {
                     x += 1
                 }
@@ -104,7 +104,7 @@ object MapUtil {
             } else color == CityBean.Color.PURPLE && x == 4
         }
         if (baseCityBean is AreaBean) {
-            return baseCityBean.owner!!.allArea() == 5
+            return baseCityBean.owner()!!.allArea() == 5
         }
         return false
     }
@@ -211,15 +211,9 @@ object MapUtil {
         val money = playerBean.money
         val stock = 100 * playerBean.stockNumber()
         val army = 2 * playerBean.army
-        val city = playerBean.getCityMoney(playerBean.city) + playerBean.getAreaMoney()
+        val city = playerBean.cityMoney(playerBean.city) + playerBean.areaMoney()
         val generals = generalsGDP(playerBean.allGenerals())
         val equipments = 5000 * playerBean.equipments.size
-
-        LogUtil.print(
-            playerBean.name
-                    + "：金钱值" + money + "，股票值：" + stock + "，兵力值：" + army + "，城池值：" + city + "，武将值：" + generals + ", 装备值：" + equipments
-        )
-
         gdp = (money + army + stock + city + generals + equipments).toInt()
         return gdp
     }
@@ -251,11 +245,9 @@ object MapUtil {
         var x = 0.0
         var sum = 0.0
         for (i in GameData.INSTANCE.playerData) {
-            LogUtil.print(i.name + "的GPD为 " + getSingleGDP(i))
             sum += getSingleGDP(i).toDouble()
         }
         x = getSingleGDP(playerBean) / sum
-        LogUtil.print("当前" + playerBean.name + "的GPD为 " + getSingleGDP(playerBean) + "，x为" + x + ", 总和为" + sum)
         return getDouble2(x * 100).toString() + "%"
     }
 

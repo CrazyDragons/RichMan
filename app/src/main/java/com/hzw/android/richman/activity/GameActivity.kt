@@ -29,6 +29,7 @@ import com.hzw.android.richman.dialog.*
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
+import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.*
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.MapUtil.setNextTurn
@@ -57,11 +58,20 @@ class GameActivity : BaseActivity(),
     OnAddLogListener, OnItemClickListener, OnBaseCityOptionListener, OnItemLongClickListener,
     OnClickTipsListener, OnSpecialOptionListener, OnRefreshListener {
 
+    var mLastBackPressedTime: Long = 0
+
+    private var newGame = true
     private lateinit var computerOptionTipsDialog: ComputerOptionTisDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        GameData.INSTANCE.load()
+
+        newGame = GameSave.newGame()
+        if (newGame) {
+            GameData.INSTANCE.init()
+        }else {
+            GameData.INSTANCE.load()
+        }
         setContentView(R.layout.activity_game)
         initViews()
     }
@@ -86,7 +96,6 @@ class GameActivity : BaseActivity(),
         mRvStock.adapter = stockAdapter
         mRvPlayerInfo.adapter = playerInfoAdapter
         mRvLog.adapter = GameLog.INSTANCE.logAdapter
-        GameLog.INSTANCE.clear()
         Handler(Looper.getMainLooper()).postDelayed({
             initPlayerViews()
             TipsDialog(this, "准备开始游戏吧", this).show()
@@ -97,6 +106,8 @@ class GameActivity : BaseActivity(),
 
     private fun startGame() {
 
+        GameSave.save()
+
         optionStatus(walk = true, finish = false)
 
         TipsDialog(this, "轮到 " + GameData.INSTANCE.playerData[0].name).show()
@@ -105,6 +116,8 @@ class GameActivity : BaseActivity(),
         if (!GameData.INSTANCE.playerData[0].isPlayer) {
             mBtnWalk.performClick()
         }
+
+        GameSave.newGame(false)
     }
 
     private fun initPlayerViews() {
@@ -116,6 +129,10 @@ class GameActivity : BaseActivity(),
 
             movePlayer(playerView, item, 0, this)
         }
+        mCamera.smoothScrollTo(
+            mRootMap.playerViewList[GameData.INSTANCE.optionPlayerTurnIndex].x.toInt() - cameraOffsetX,
+            0
+        )
     }
 
     override fun onWalkStart(count: Int, isFinish: Boolean) {
@@ -161,9 +178,8 @@ class GameActivity : BaseActivity(),
     ) {
 
         if (count == 0) {
-            playerView.translationX = mRootMap.mBaseMap.mapViewList[0].x + playerOffsetX
-            playerView.translationY = mRootMap.mBaseMap.mapViewList[0].y + playerOffsetY
-            mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
+            playerView.translationX = mRootMap.mBaseMap.mapViewList[playerBean.walkIndex].x + playerOffsetX
+            playerView.translationY = mRootMap.mBaseMap.mapViewList[playerBean.walkIndex].y + playerOffsetY
             return
         }
 
@@ -497,6 +513,7 @@ class GameActivity : BaseActivity(),
         if (GameData.INSTANCE.currentPlayer().isPlayer) {
             TipsDialog(activity, "轮到 " + GameData.INSTANCE.currentPlayer().name).show()
             mRvPlayerInfo.adapter?.notifyDataSetChanged()
+            GameSave.save()
         } else {
             computerOptionTipsDialog.show()
         }
@@ -587,6 +604,14 @@ class GameActivity : BaseActivity(),
         }
 
         mRvPlayerInfo.adapter?.notifyDataSetChanged()
+    }
+
+    override fun onBackPressed() {
+        TipsDialog(this, "确认退出游戏？","退出", "取消", object : OnClickTipsListener{
+            override fun onClickYes() {
+                finish()
+            }
+        }).show()
     }
 
 }

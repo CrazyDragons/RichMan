@@ -11,8 +11,6 @@ import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.AddPlayerAdapter
 import com.hzw.android.richman.base.BaseActivity
 import com.hzw.android.richman.bean.PlayerBean
-import com.hzw.android.richman.config.Constants
-import com.hzw.android.richman.dialog.InputDialog
 import com.hzw.android.richman.dialog.ProgressDialog
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.OnInputListener
@@ -53,8 +51,8 @@ class ReadyActivity : BaseActivity(), OnInputListener {
                 ToastUtil.show("最多只能6人参加！")
                 return@setOnClickListener
             }
-//            adapter.addData(PlayerBean(resources.getString(R.string.player), randomBuff(),true))
-            InputDialog(this, this).show()
+            adapter.addData(PlayerBean(resources.getString(R.string.player), randomBuff(),true))
+//            InputDialog(this, this).show()
         }
 
         mTvAddComputer.setOnClickListener {
@@ -82,16 +80,14 @@ class ReadyActivity : BaseActivity(), OnInputListener {
                 adapter.data[i].id = i + 1
 //                adapter.data[i].name = (i + 1).toString() + adapter.data[i].name
                 if (!adapter.data[i].isPlayer) {
-                    adapter.data[i].name = adapter.data[i].name + (i + 1).toString()
+                    adapter.data[i].name = (i + 1).toString() + adapter.data[i].name
                 }
             }
             GameSave.savePlayer(JSON.toJSONString(adapter.data))
             startActivity(
-                Intent(this, GameActivity::class.java).putExtra(
-                    (Constants.NEW_GAME),
-                    true
-                )
+                Intent(this, GameActivity::class.java)
             )
+            GameSave.newGame(true)
             finish()
         }
 

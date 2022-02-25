@@ -8,7 +8,7 @@ import com.hzw.android.richman.config.Value.DEFENSE_ARMY_COST
 import com.hzw.android.richman.interfase.Option
 import com.hzw.android.richman.listener.OnBaseCityOptionListener
 import com.hzw.android.richman.listener.OnSpecialOptionListener
-import com.hzw.android.richman.utils.MapUtil
+import com.orhanobut.logger.Logger
 
 /**
  * class GameOption
@@ -24,6 +24,7 @@ object GameOption : Option {
 
     private fun randomOption(success: Int): Boolean {
         val x = Math.random() * Value.X_COMPUTER_BASE + 1
+        Logger.d("理论成功率："+success+", 实际成功率："+x)
         return success >= x
     }
 
@@ -36,7 +37,7 @@ object GameOption : Option {
         when (GameData.INSTANCE.currentMap()) {
             is BaseCityBean -> {
                 val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
-                if (baseCityBean.owner == null) {
+                if (baseCityBean.ownerID == 0) {
                     if (baseCityBean is CityBean) {
                         if ((playerBean.money - baseCityBean.buyPrice) >= Value.COMPUTER_MIN_MONEY) {
                             if (randomOption(Value.X_COMPUTER_BUY)) {
@@ -60,7 +61,7 @@ object GameOption : Option {
                         }
                     }
                 } else {
-                    if (baseCityBean.owner?.id == GameData.INSTANCE.currentPlayer().id) {
+                    if (baseCityBean.ownerID == GameData.INSTANCE.currentPlayer().id) {
                         val canLevel =
                             (GameData.INSTANCE.currentMap() is CityBean)
                                     && (GameData.INSTANCE.currentMap() as CityBean).level < 3
@@ -96,7 +97,7 @@ object GameOption : Option {
 
                             if (baseCityBean is AreaBean) {
                                 canAttack =
-                                    playerBean.army >= baseCityBean.owner!!.allAreaCostArmy() && playerBean.generals.size > 0
+                                    playerBean.army >= baseCityBean.owner()!!.allAreaCostArmy() && playerBean.generals.size > 0
                             }
 
                             val canPK: Boolean = playerBean.generals.size > 0
@@ -208,7 +209,7 @@ object GameOption : Option {
                 playerBean.army -= baseCityBean.army
             }
         }
-        baseCityBean.owner = playerBean
+        baseCityBean.ownerID = playerBean.id
         playerBean.city.add(baseCityBean)
         GameLog.INSTANCE.addBuyCityLog(baseCityBean)
         playerBean.status = PlayerBean.STATUS.OPTION_TRUE
@@ -218,7 +219,7 @@ object GameOption : Option {
     override fun levelCity(cityBean: CityBean, needFinish: Boolean) {
         val playerBean = GameData.INSTANCE.currentPlayer()
         playerBean.money -= (cityBean.buyPrice * Value.X_LEVEL_CITY_COST).toInt()
-        cityBean.level = cityBean.level + 1
+        cityBean.level += cityBean.level
         GameLog.INSTANCE.addLevelCityLog(cityBean)
         playerBean.status = PlayerBean.STATUS.OPTION_TRUE
         onBaseCityOptionListener?.onOnceOptionFinish(needFinish)
@@ -231,14 +232,14 @@ object GameOption : Option {
     ) {
         val playerBean = GameData.INSTANCE.currentPlayer()
         if (baseCityBean.generals != null) {
-            baseCityBean.generals?.city = null
+            baseCityBean.generals?.cityID = 0
             playerBean.generals.add(baseCityBean.generals!!)
         }
         if (generalsBean != null) {
             playerBean.generals.remove(generalsBean)
         }
         baseCityBean.generals = generalsBean
-        generalsBean?.city = baseCityBean
+        generalsBean?.cityID = baseCityBean.id
         GameLog.INSTANCE.addDefenseCityLog(baseCityBean, generalsBean)
         onBaseCityOptionListener?.onOnceOptionFinish(needFinish)
     }
@@ -249,12 +250,12 @@ object GameOption : Option {
         when (baseCityBean) {
             is CityBean -> {
                 playerBean.money -= baseCityBean.needCostMoney()
-                baseCityBean.owner!!.money += baseCityBean.needCostMoney()
+                baseCityBean.owner()!!.money += baseCityBean.needCostMoney()
             }
 
             is AreaBean -> {
-                playerBean.money -= baseCityBean.owner!!.allAreaCostMoney()
-                baseCityBean.owner!!.money += baseCityBean.owner!!.allAreaCostMoney()
+                playerBean.money -= baseCityBean.owner()!!.allAreaCostMoney()
+                baseCityBean.owner()!!.money += baseCityBean.owner()!!.allAreaCostMoney()
             }
         }
         playerBean.status = PlayerBean.STATUS.OPTION_TRUE
@@ -268,14 +269,12 @@ object GameOption : Option {
         if (baseCityBean.generals != null) {
             when {
                 //如果攻方获胜
-                generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0)
-                        > baseCityBean.generals!!.defense + (if (baseCityBean.generals!!.owner!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) -> {
+                generalsBean.attack > baseCityBean.generals!!.defense -> {
                     GameLog.INSTANCE.addPkLog(baseCityBean, generalsBean, true)
                     generalsLife(generalsBean, false)
                 }
                 //如果攻方失败
-                generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0)
-                        < baseCityBean.generals!!.defense + (if (baseCityBean.generals!!.owner!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) -> {
+                generalsBean.attack < baseCityBean.generals!!.defense -> {
                     GameLog.INSTANCE.addPkLog(baseCityBean, generalsBean, false)
                     costMoney(baseCityBean, generalsBean)
                     generalsLife(generalsBean, false)
@@ -286,15 +285,15 @@ object GameOption : Option {
                     GameLog.INSTANCE.addSystemLog("单挑同归于尽")
                     resetGenerals(baseCityBean.generals!!)
                     resetGenerals(generalsBean)
-                    baseCityBean.owner!!.generals.remove(baseCityBean.generals)
-                    generalsBean.owner!!.generals.remove(generalsBean)
+                    baseCityBean.owner()!!.generals.remove(baseCityBean.generals)
+                    generalsBean.owner()!!.generals.remove(generalsBean)
                 }
             }
         }
         //没有武将
         else {
             //攻方攻击力小于随机防御力
-            if (generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0) < Math.random() * 100) {
+            if (generalsBean.attack < Math.random() * 100) {
                 GameLog.INSTANCE.addPkLog(baseCityBean, generalsBean, false)
                 costMoney(baseCityBean, generalsBean)
             } else {
@@ -313,35 +312,25 @@ object GameOption : Option {
     ) {
         val playerBean = GameData.INSTANCE.currentPlayer()
 
-        if (baseCityBean.owner!!.army < DEFENSE_ARMY_COST) {
+        if (baseCityBean.owner()!!.army < DEFENSE_ARMY_COST) {
             if (baseCityBean.generals != null) {
                 win(generalsBean, baseCityBean.generals!!)
             }
-            baseCityBean.owner!!.city.remove(baseCityBean)
-            baseCityBean.owner = playerBean
+            baseCityBean.owner()!!.city.remove(baseCityBean)
+            baseCityBean.ownerID = playerBean.id
             baseCityBean.generals = null
             playerBean.city.add(baseCityBean)
             GameLog.INSTANCE.addSystemLog("由于驻守兵力不足，攻方直接占有城池并俘虏武将")
         } else {
             costArmy(baseCityBean, generalsBean)
             //如果城池有武将
-            val addDefense =
-                if (baseCityBean is CityBean) baseCityBean.level * Value.ADD_DEFENSE + if (MapUtil.judgeAllColor(
-                        baseCityBean
-                    )
-                ) Value.ALL_COLOR_DEFENSE else 0
-                else baseCityBean.owner!!.allArea() * Value.ADD_DEFENSE + if (MapUtil.judgeAllColor(
-                        baseCityBean
-                    )
-                ) Value.ALL_COLOR_DEFENSE else 0
             if (baseCityBean.generals != null) {
                 when {
                     //如果攻方获胜
-                    generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0)
-                            > baseCityBean.generals!!.defense + addDefense + (if (baseCityBean.generals!!.owner!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) -> {
+                    generalsBean.attack  > if (baseCityBean is CityBean) baseCityBean.defense else if (baseCityBean is AreaBean) baseCityBean.defense else 0 -> {
                         GameLog.INSTANCE.addAttackLog(baseCityBean, generalsBean, true)
-                        baseCityBean.owner!!.city.remove(baseCityBean)
-                        baseCityBean.owner = playerBean
+                        baseCityBean.owner()!!.city.remove(baseCityBean)
+                        baseCityBean.ownerID = playerBean.id
                         playerBean.city.add(baseCityBean)
                         if (generalsLife(generalsBean, true)) {
                             win(generalsBean, baseCityBean.generals!!)
@@ -349,8 +338,7 @@ object GameOption : Option {
                         baseCityBean.generals = null
                     }
                     //如果攻方失败
-                    generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0)
-                            < baseCityBean.generals!!.defense + addDefense + (if (baseCityBean.generals!!.owner!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) -> {
+                    generalsBean.attack <  if (baseCityBean is CityBean) baseCityBean.defense else if (baseCityBean is AreaBean) baseCityBean.defense else 0 -> {
                         GameLog.INSTANCE.addAttackLog(baseCityBean, generalsBean, false)
                         if (generalsLife(generalsBean, true)) {
 
@@ -363,18 +351,18 @@ object GameOption : Option {
                         GameLog.INSTANCE.addSystemLog("同归于尽")
                         resetGenerals(baseCityBean.generals!!)
                         resetGenerals(generalsBean)
-                        baseCityBean.owner!!.generals.remove(baseCityBean.generals)
-                        generalsBean.owner!!.generals.remove(generalsBean)
+                        baseCityBean.owner()!!.generals.remove(baseCityBean.generals)
+                        generalsBean.owner()!!.generals.remove(generalsBean)
                     }
                 }
             }
             //没有武将
             else {
                 //攻方攻击力大于随机防御力
-                if (generalsBean.attack + (if (generalsBean.owner!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0) >= Math.random() * Value.X_COMPUTER_BASE + addDefense) {
+                if (generalsBean.attack >= Math.random() * Value.X_COMPUTER_BASE) {
                     GameLog.INSTANCE.addAttackLog(baseCityBean, generalsBean, true)
-                    baseCityBean.owner!!.city.remove(baseCityBean)
-                    baseCityBean.owner = playerBean
+                    baseCityBean.owner()!!.city.remove(baseCityBean)
+                    baseCityBean.ownerID = playerBean.id
                     playerBean.city.add(baseCityBean)
                 } else {
                     GameLog.INSTANCE.addAttackLog(baseCityBean, generalsBean, false)
@@ -499,12 +487,12 @@ object GameOption : Option {
     private fun costMoney(baseCityBean: BaseCityBean, generalsBean: GeneralsBean) {
         val x = if (baseCityBean.generals != null) Value.X_PK_LOSER else Value.X_PK_LOSER_EMPTY
         if (baseCityBean is CityBean) {
-            generalsBean.owner!!.money -= (baseCityBean.needCostMoney() * x).toInt()
-            baseCityBean.owner!!.money += (baseCityBean.needCostMoney() * x).toInt()
+            generalsBean.owner()!!.money -= (baseCityBean.needCostMoney() * x).toInt()
+            baseCityBean.owner()!!.money += (baseCityBean.needCostMoney() * x).toInt()
         }
         if (baseCityBean is AreaBean) {
-            generalsBean.owner!!.money -= (baseCityBean.owner!!.allAreaCostMoney() * x).toInt()
-            baseCityBean.owner!!.money += (baseCityBean.owner!!.allAreaCostMoney() * x).toInt()
+            generalsBean.owner()!!.money -= (baseCityBean.owner()!!.allAreaCostMoney() * x).toInt()
+            baseCityBean.owner()!!.money += (baseCityBean.owner()!!.allAreaCostMoney() * x).toInt()
         }
     }
 
@@ -512,23 +500,23 @@ object GameOption : Option {
         val x =
             if (baseCityBean.generals != null) Value.X_ATTACK_LOSER else Value.X_ATTACK_LOSER_EMPTY
         if (baseCityBean is CityBean) {
-            generalsBean.owner!!.army -= baseCityBean.needCostArmy() * x
-            baseCityBean.owner!!.army -= DEFENSE_ARMY_COST
+            generalsBean.owner()!!.army -= baseCityBean.needCostArmy() * x
+            baseCityBean.owner()!!.army -= DEFENSE_ARMY_COST
         }
         if (baseCityBean is AreaBean) {
-            generalsBean.owner!!.army -= baseCityBean.owner!!.allAreaCostArmy() * x
-            baseCityBean.owner!!.army -= DEFENSE_ARMY_COST
+            generalsBean.owner()!!.army -= baseCityBean.owner()!!.allAreaCostArmy() * x
+            baseCityBean.owner()!!.army -= DEFENSE_ARMY_COST
         }
     }
 
     private fun win(win: GeneralsBean, loser: GeneralsBean) {
         //回血
         loser.action = loser.life
-        loser.city = null
+        loser.cityID = 0
         //败方失去武将
-        loser.owner!!.generals.remove(loser)
-        loser.owner = win.owner
-        win.owner!!.generals.add(loser)
+        loser.owner()!!.generals.remove(loser)
+        loser.ownerID = win.ownerID
+        win.owner()!!.generals.add(loser)
     }
 
     private fun generalsLife(generalsBean: GeneralsBean, attack: Boolean): Boolean {
@@ -538,7 +526,7 @@ object GameOption : Option {
         //如果体力为0
         if (generalsBean.action == 0) {
             //武将死亡
-            generalsBean.owner!!.generals.remove(generalsBean)
+            generalsBean.owner()!!.generals.remove(generalsBean)
             //回武将池
             resetGenerals(generalsBean)
 
@@ -549,8 +537,8 @@ object GameOption : Option {
     }
 
     private fun resetGenerals(generalsBean: GeneralsBean) {
-        generalsBean.city = null
-        generalsBean.owner = null
+        generalsBean.cityID = 0
+        generalsBean.ownerID = 0
         generalsBean.action = generalsBean.life
         GameData.INSTANCE.generalsData.add(generalsBean)
     }

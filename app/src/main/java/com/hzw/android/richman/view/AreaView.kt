@@ -35,8 +35,8 @@ class AreaView @JvmOverloads constructor(
         mTvName.text = areaBean.name
         mTvBuyArmy.text = areaBean.army.toString()
         mIvDefense.visibility = if (areaBean.generals == null) GONE else VISIBLE
-        mTvOwner.visibility = if (areaBean.owner == null) GONE else VISIBLE
-        mTvOwner.text = areaBean.owner?.name
+        mTvOwner.visibility = if (areaBean.ownerID == 0) GONE else VISIBLE
+        mTvOwner.text = areaBean.owner()?.name
     }
 
     fun update() {

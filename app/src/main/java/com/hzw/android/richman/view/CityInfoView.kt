@@ -38,9 +38,9 @@ class CityInfoView @JvmOverloads constructor(
         mTvCityName.text = cityBean.name
         mIvCityCover.setBackgroundResource(cityBean.cover)
         mTvCityLevel.setLevel(cityBean.level, true)
-        mTvOwner.visibility = if (cityBean.owner == null) GONE else VISIBLE
+        mTvOwner.visibility = if (cityBean.ownerID == 0) GONE else VISIBLE
         mIvCityGeneral.visibility = if (cityBean.generals == null) GONE else VISIBLE
-        mTvOwner.text = cityBean.owner?.name
+        mTvOwner.text = cityBean.owner()?.name
         mTvCityLevelCost.text =
             String.format(resources.getString(R.string.level_cost), (cityBean.buyPrice * Value.X_LEVEL_CITY_COST).toInt())
         mTvCityArmyCost.text =

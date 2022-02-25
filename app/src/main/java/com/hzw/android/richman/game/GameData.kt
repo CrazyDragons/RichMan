@@ -44,16 +44,27 @@ class GameData private constructor() {
         }
     }
 
+    private fun clean() {
+        turnCount = 0
+        optionPlayerTurnIndex = 0
+        playerData.clear()
+        generalsData.clear()
+        equipmentData.clear()
+        stocksData.clear()
+        mapData.clear()
+        logData.clear()
+    }
+
     fun giveBaseCity(playerBean: PlayerBean) {
         val list = mutableListOf<BaseCityBean>()
         for (item in mapData) {
-            if (item is BaseCityBean && item.owner == null) {
+            if (item is BaseCityBean && item.ownerID == 0) {
                 list.add(item)
             }
         }
         if (list.isNotEmpty()) {
             val baseCityBean = list[(Math.random() * list.size + 1).toInt()]
-            baseCityBean.owner = playerBean
+            baseCityBean.ownerID = playerBean.id
             playerBean.city.add(baseCityBean)
         }
 
@@ -63,7 +74,7 @@ class GameData private constructor() {
         for (i in 1 .. if (generalsData.size > number) number else generalsData.size) {
             val generalsBean = generalsData[(Math.random() * generalsData.size).toInt()]
             GameLog.INSTANCE.addGeneralsLog(generalsBean)
-            generalsBean.owner = playerBean
+            generalsBean.ownerID = playerBean.id
             playerBean.generals.add(generalsBean)
             generalsData.remove(generalsBean)
         }
@@ -72,15 +83,17 @@ class GameData private constructor() {
     fun giveEquipments(playerBean: PlayerBean, number: Int) {
         for (i in 1 .. if (equipmentData.size > number) number else equipmentData.size) {
             val equipmentBean = equipmentData[(Math.random() * equipmentData.size).toInt()]
-            equipmentBean.owner = playerBean
+            equipmentBean.ownerID = playerBean.id
             playerBean.equipments.add(equipmentBean)
             equipmentData.remove(equipmentBean)
         }
     }
 
-    fun load() {
-        playerData = JSON.parseArray(GameSave.loadPlayer(), PlayerBean::class.java)
-        parseMap()
+
+    fun init() {
+        clean()
+        parsePlayer(true, GameSave.loadPlayer())
+        mapData = GameInit.INSTANCE.mapList
         generalsData = GameInit.INSTANCE.generals
         equipmentData = GameInit.INSTANCE.equipments
         stocksData = GameInit.INSTANCE.stocks
@@ -96,11 +109,24 @@ class GameData private constructor() {
         for (item in playerData) {
             item.loadBuff()
         }
-
+        GameLog.INSTANCE.clear()
     }
 
-    private fun parseMap() {
-        val jsonArray = JSON.parseArray(GameSave.loadMap())
+    fun load() {
+        clean()
+        val jsonObject = JSON.parseObject(GameSave.loadData())
+        parseMap(jsonObject.getString("mapData"))
+        parsePlayer(false, jsonObject.getString("playerData"))
+        generalsData = JSON.parseArray(jsonObject.getString("generalsData"), GeneralsBean::class.java)
+        equipmentData = JSON.parseArray(jsonObject.getString("equipmentData"), EquipmentBean::class.java)
+        stocksData = JSON.parseArray(jsonObject.getString("stocksData"), StockBean::class.java)
+        logData = JSON.parseArray(jsonObject.getString("logData"), String::class.java)
+        turnCount = jsonObject.getIntValue("turnCount")
+        optionPlayerTurnIndex = jsonObject.getIntValue("optionPlayerTurnIndex")
+    }
+
+    private fun parseMap(json: String) {
+        val jsonArray = JSON.parseArray(json)
         for (i in 0 until jsonArray.size) {
             val jsonObject = jsonArray.getJSONObject(i)
             when (BaseMapBean.MapType.valueOf(jsonObject.getString("type"))) {
@@ -119,6 +145,15 @@ class GameData private constructor() {
             }
         }
     }
+
+    private fun parsePlayer(init:Boolean, json: String) {
+        val jsonArray = JSON.parseArray(json)
+        for (i in 0 until jsonArray.size) {
+            val jsonObject = jsonArray.getJSONObject(i)
+            playerData.add(PlayerBean(init, jsonObject))
+        }
+    }
+
 
     fun currentPlayer(): PlayerBean {
         return playerData[optionPlayerTurnIndex]
