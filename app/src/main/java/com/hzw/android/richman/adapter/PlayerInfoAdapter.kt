@@ -5,6 +5,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.hzw.android.richman.R
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.game.GameData
+import com.hzw.android.richman.utils.MapUtil
 
 /**
  * class PlayerInfoAdapter
@@ -22,7 +23,7 @@ class PlayerInfoAdapter : BaseQuickAdapter<PlayerBean, BaseViewHolder>(R.layout.
 
     override fun convert(holder: BaseViewHolder, item: PlayerBean) {
         holder.setText(R.id.mTvName, item.name)
-            .setText(R.id.mTvGDP, item.GDP())
+            .setText(R.id.mTvGDP, MapUtil.GDP(item))
             .setText(R.id.mTvStock, item.stockMoney().toString())
             .setText(R.id.mTvMoney, item.money.toString())
             .setText(R.id.mTvArmy, item.army.toString())

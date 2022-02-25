@@ -75,7 +75,8 @@ class SalePlayerView @JvmOverloads constructor(
     fun update(sum:Int) {
         for (i in 0 until playersData.size) {
             if (playersData[i].playerBean == null || !playersData[i].playerBean!!.isPlayer) {
-                getChildAt(i).findViewById<TextView>(R.id.mTvComputerPrice).text = sum.toString()
+                val price =  if (sum < playersData[i].playerBean!!.money) sum else playersData[i].playerBean!!.money
+                getChildAt(i).findViewById<TextView>(R.id.mTvComputerPrice).text = price.toString()
                 playersData[i].price = sum
             }
         }

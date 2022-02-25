@@ -138,7 +138,7 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseD
             var player = mLlPlayer.playersData[0]
             var max = 0
             for (item in mLlPlayer.playersData) {
-                if (item.price > max) {
+                if (item.price >= max) {
                     max = item.price
                     player = item
                 }
@@ -220,6 +220,7 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseD
             if (baseCityBean != null) {
                 GameData.INSTANCE.currentPlayer().city.remove(baseCityBean)
                 if (baseCityBean.generals != null) {
+                    GameData.INSTANCE.currentPlayer().generals.add(baseCityBean.generals!!)
                     baseCityBean.generals!!.city = null
                 }
                 baseCityBean.generals = null
@@ -232,9 +233,10 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseD
             }
 
             if (generalsBean != null) {
-                GameData.INSTANCE.currentPlayer().generals.remove(generalsBean)
                 if (generalsBean.city != null) {
                     generalsBean.city!!.generals = null
+                }else {
+                    GameData.INSTANCE.currentPlayer().generals.remove(generalsBean)
                 }
                 generalsBean.city = null
                 if (playerBean != null) {
@@ -274,7 +276,7 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseD
 
     private fun searchGenerals(name: String): GeneralsBean? {
         val generalsBean = null
-        for (item in GameData.INSTANCE.currentPlayer().generals) {
+        for (item in GameData.INSTANCE.currentPlayer().allGenerals()) {
             if (item.name == name) {
                 return item
             }

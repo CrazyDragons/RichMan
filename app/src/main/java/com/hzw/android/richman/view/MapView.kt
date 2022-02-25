@@ -11,7 +11,7 @@ import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.SpecialBean
 import com.hzw.android.richman.config.Value.COUNT_MAP_X
 import com.hzw.android.richman.config.Value.COUNT_MAP_Y
-import com.hzw.android.richman.game.GameInit
+import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.listener.OnMapClickListener
 import com.hzw.android.richman.utils.ScreenUtil
 
@@ -33,7 +33,7 @@ class MapView @JvmOverloads constructor(
 
     init {
 
-        val sumCount = GameInit.INSTANCE.mapList.size
+        val sumCount = GameData.INSTANCE.mapData.size
 
         val itemWidth = ScreenUtil.screenWidth / COUNT_MAP_Y / 2
         val itemHeight = ScreenUtil.screenHeight / COUNT_MAP_Y
@@ -43,18 +43,18 @@ class MapView @JvmOverloads constructor(
         for (i in 0 until sumCount) {
 
             var mapItem: View
-            when (GameInit.INSTANCE.mapList[i].type) {
+            when (GameData.INSTANCE.mapData[i].type) {
                 BaseMapBean.MapType.CITY -> {
                     mapItem = CityView(context)
-                    mapItem.setData(GameInit.INSTANCE.mapList[i] as CityBean)
+                    mapItem.setData(GameData.INSTANCE.mapData[i] as CityBean)
                 }
                 BaseMapBean.MapType.AREA -> {
                     mapItem = AreaView(context)
-                    mapItem.setData(GameInit.INSTANCE.mapList[i] as AreaBean)
+                    mapItem.setData(GameData.INSTANCE.mapData[i] as AreaBean)
                 }
                 else -> {
                     mapItem = SpecialView(context)
-                    mapItem.setData(GameInit.INSTANCE.mapList[i] as SpecialBean)
+                    mapItem.setData(GameData.INSTANCE.mapData[i] as SpecialBean)
                 }
             }
             mapItem.setOnClickListener {
@@ -149,5 +149,15 @@ class MapView @JvmOverloads constructor(
 
     }
 
+    fun update() {
+        for (view in mapViewList) {
+            if (view is CityView) {
+                view.update()
+            }
+            if (view is AreaView) {
+                view.update()
+            }
+        }
+    }
 
 }

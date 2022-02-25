@@ -31,7 +31,7 @@ object Value {
     const val WALK_TURN_TIME: Long = 20
 
     //单格行走时间
-    const val WALK_TIME: Long = 50
+    const val WALK_TIME: Long = 500
 
     //X轴地图数
     const val COUNT_MAP_X = 27
@@ -40,13 +40,13 @@ object Value {
     const val COUNT_MAP_Y = 5
 
     //战区兵力
-    const val AREA_ARMY = 2000
+    const val AREA_ARMY = 1000
 
     //升级城池系数
     const val X_LEVEL_CITY_COST = 0.5
 
-    //守城损兵系数
-    const val X_DEFENSE_ARMY_COST = 0.5
+    //守城损兵
+    const val DEFENSE_ARMY_COST = 500
 
     //抵押系数
     const val X_SALE = 0.5
@@ -64,31 +64,31 @@ object Value {
     const val X_CITY_MONEY_LEVEL_3 = 4
 
     //空城驻兵系数
-    const val X_CITY_ARMY_LEVEL_0 = 0.5
+    const val X_CITY_ARMY_LEVEL_0 = 1
 
     ///小城驻兵系数
-    const val X_CITY_ARMY_LEVEL_1 = 1
+    const val X_CITY_ARMY_LEVEL_1 = 2
 
     //中城驻兵系数
-    const val X_CITY_ARMY_LEVEL_2 = 2
+    const val X_CITY_ARMY_LEVEL_2 = 4
 
     ///大城驻兵系数
-    const val X_CITY_ARMY_LEVEL_3 = 4
+    const val X_CITY_ARMY_LEVEL_3 = 8
 
     ///一区过路费系数
-    const val X_AREA_MONEY_LEVEL_1 = 1
+    const val X_AREA_MONEY_LEVEL_1 = 2
 
     //二区过路费系数
-    const val X_AREA_MONEY_LEVEL_2 = 2
+    const val X_AREA_MONEY_LEVEL_2 = 4
 
     //三区过路费系数
-    const val X_AREA_MONEY_LEVEL_3 = 3
+    const val X_AREA_MONEY_LEVEL_3 = 8
 
     ///四区过路费系数
-    const val X_AREA_MONEY_LEVEL_4 = 5
+    const val X_AREA_MONEY_LEVEL_4 = 15
 
     //五区过路费系数
-    const val X_AREA_MONEY_LEVEL_5 = 10
+    const val X_AREA_MONEY_LEVEL_5 = 30
 
     ///一区驻兵系数
     const val X_AREA_ARMY_LEVEL_1 = 1
@@ -97,28 +97,28 @@ object Value {
     const val X_AREA_ARMY_LEVEL_2 = 2
 
     //三区驻兵系数
-    const val X_AREA_ARMY_LEVEL_3 = 3
+    const val X_AREA_ARMY_LEVEL_3 = 5
 
     //四区驻兵系数
-    const val X_AREA_ARMY_LEVEL_4 = 5
+    const val X_AREA_ARMY_LEVEL_4 = 10
 
     //五区驻兵系数
-    const val X_AREA_ARMY_LEVEL_5 = 10
+    const val X_AREA_ARMY_LEVEL_5 = 20
 
     //默认初始金钱
-    const val DEFAULT_MONEY = 10000
+    const val DEFAULT_MONEY = 20000
 
     //默认初始兵力
-    const val DEFAULT_ARMY = 2000
+    const val DEFAULT_ARMY = 4000
 
     //默认初始武将
-    const val DEFAULT_GENERALS = 5
+    const val DEFAULT_GENERALS = 8
 
     //默认初始道具
     const val DEFAULT_EQUIPMENTS = 0
 
     //电脑金钱高于此才会操作
-    const val COMPUTER_MIN_MONEY = 5000
+    const val COMPUTER_MIN_MONEY = 0
 
     //电脑兵力高于此才会操作
     const val COMPUTER_MIN_ARMY = 5000
@@ -127,7 +127,7 @@ object Value {
     const val X_COMPUTER_BASE = 100
 
     //电脑购买城池概率
-    const val X_COMPUTER_BUY = 90
+    const val X_COMPUTER_BUY = 100
 
     //电脑升级城池概率
     const val X_COMPUTER_LEVEL = 90

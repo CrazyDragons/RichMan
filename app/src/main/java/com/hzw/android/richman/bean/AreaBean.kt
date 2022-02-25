@@ -22,6 +22,7 @@ class AreaBean : BaseCityBean {
         army = jsonObject.getIntValue("army")
         type = MapType.valueOf(jsonObject.getString("type"))
         cover = jsonObject.getIntValue("cover")
+        buyPrice = army * 2
     }
 
     constructor(name: String?) {

@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.View
 import com.hzw.android.richman.R
 import com.hzw.android.richman.base.BaseActivity
-import com.hzw.android.richman.config.Constants
+import com.hzw.android.richman.game.GameInit
 import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.utils.LogUtil
+import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.ScreenUtil
+import com.hzw.android.richman.utils.ToastUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -31,7 +33,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         mTvGame.setOnClickListener(this)
         mTvGoOn.setOnClickListener(this)
+        mTvDesc.setOnClickListener(this)
         mTvExit.setOnClickListener(this)
+
+        MapUtil.generalsGDP(GameInit.INSTANCE.generals)
     }
 
     override fun onClick(view: View?) {
@@ -44,13 +49,18 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.mTvGoOn -> {
-                startActivity(
-                    Intent(this, GameActivity::class.java).putExtra(
-                        (Constants.NEW_GAME),
-                        false
-                    )
-                )
-                finish()
+                ToastUtil.show("暂未开发此功能")
+//                startActivity(
+//                    Intent(this, GameActivity::class.java).putExtra(
+//                        (Constants.NEW_GAME),
+//                        false
+//                    )
+//                )
+//                finish()
+            }
+
+            R.id.mTvDesc -> {
+                ToastUtil.show("暂未开发此功能")
             }
 
             R.id.mTvExit -> {

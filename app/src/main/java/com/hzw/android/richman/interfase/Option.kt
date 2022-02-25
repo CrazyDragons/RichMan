@@ -21,7 +21,7 @@ interface Option {
     fun attack(baseCityBean: BaseCityBean, generalsBean: GeneralsBean, needFinish: Boolean)
 
     fun buyArmy(army:Int)
-    fun buyGenerals()
+    fun buyGenerals(count: Int)
     fun bigMoney(count:Int)
     fun freeGenerals(count: Int)
     fun bank(count: Int)

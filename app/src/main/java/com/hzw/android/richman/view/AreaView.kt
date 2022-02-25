@@ -20,6 +20,8 @@ class AreaView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    lateinit var areaBean: AreaBean
+
     init {
         initViews(context)
     }
@@ -29,6 +31,7 @@ class AreaView @JvmOverloads constructor(
     }
 
     fun setData(areaBean: AreaBean) {
+        this.areaBean = areaBean
         mTvName.text = areaBean.name
         mTvBuyArmy.text = areaBean.army.toString()
         mIvDefense.visibility = if (areaBean.generals == null) GONE else VISIBLE
@@ -36,5 +39,7 @@ class AreaView @JvmOverloads constructor(
         mTvOwner.text = areaBean.owner?.name
     }
 
-
+    fun update() {
+        setData(areaBean)
+    }
 }

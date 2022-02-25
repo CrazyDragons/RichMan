@@ -42,7 +42,7 @@ class PlayerInfoView @JvmOverloads constructor(
 
     fun setData(playerBean: PlayerBean) {
         mTvName.text = playerBean.name
-        mTvGDP.text = playerBean.GDP()
+        mTvGDP.text = MapUtil.GDP(playerBean)
         mTvStock.text = playerBean.stockMoney().toString()
         mTvMoney.text = playerBean.money.toString()
         mTvArmy.text = playerBean.army.toString()

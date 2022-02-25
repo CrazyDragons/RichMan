@@ -83,10 +83,10 @@ class CityBean : BaseCityBean {
         val buff = if (owner!!.buff == PlayerBean.BUFF.ADD_ATTACK_ARMY) 1.1 else 1.0
         val deBuff = if (GameData.INSTANCE.currentPlayer().buff == PlayerBean.BUFF.REDUCE_ATTACK_ARMY) 0.9 else 1.0
         return when (level) {
-            0 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_0 * color * isPrison * buff * deBuff).toInt()
-            1 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_1 * color * isPrison * buff * deBuff).toInt()
-            2 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_2 * color * isPrison * buff * deBuff).toInt()
-            3 -> (buyPrice * Value.X_CITY_ARMY_LEVEL_3 * color * isPrison * buff * deBuff).toInt()
+            0 -> (Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_0 * color * isPrison * buff * deBuff).toInt()
+            1 -> (Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_1 * color * isPrison * buff * deBuff).toInt()
+            2 -> (Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_2 * color * isPrison * buff * deBuff).toInt()
+            3 -> (Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_3 * color * isPrison * buff * deBuff).toInt()
             else -> 0
         }
     }

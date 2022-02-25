@@ -1,6 +1,7 @@
 package com.hzw.android.richman.game
 
 import com.alibaba.fastjson.JSON
+import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.base.BaseMapBean
 import com.hzw.android.richman.bean.*
 import com.hzw.android.richman.config.Value
@@ -43,9 +44,25 @@ class GameData private constructor() {
         }
     }
 
+    fun giveBaseCity(playerBean: PlayerBean) {
+        val list = mutableListOf<BaseCityBean>()
+        for (item in mapData) {
+            if (item is BaseCityBean && item.owner == null) {
+                list.add(item)
+            }
+        }
+        if (list.isNotEmpty()) {
+            val baseCityBean = list[(Math.random() * list.size + 1).toInt()]
+            baseCityBean.owner = playerBean
+            playerBean.city.add(baseCityBean)
+        }
+
+    }
+
     fun giveGenerals(playerBean: PlayerBean, number: Int) {
         for (i in 1 .. if (generalsData.size > number) number else generalsData.size) {
             val generalsBean = generalsData[(Math.random() * generalsData.size).toInt()]
+            GameLog.INSTANCE.addGeneralsLog(generalsBean)
             generalsBean.owner = playerBean
             playerBean.generals.add(generalsBean)
             generalsData.remove(generalsBean)

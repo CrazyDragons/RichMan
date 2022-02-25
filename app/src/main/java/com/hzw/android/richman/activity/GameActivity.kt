@@ -29,7 +29,6 @@ import com.hzw.android.richman.dialog.*
 import com.hzw.android.richman.game.GameData
 import com.hzw.android.richman.game.GameLog
 import com.hzw.android.richman.game.GameOption
-import com.hzw.android.richman.game.GameSave
 import com.hzw.android.richman.listener.*
 import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.MapUtil.setNextTurn
@@ -62,17 +61,8 @@ class GameActivity : BaseActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
-
-        val isNewGame = intent.getBooleanExtra("newGame", true)
-        if (isNewGame) {
-            //新游戏
-        } else {
-            GameSave.loadMap()
-        }
-
         GameData.INSTANCE.load()
-
+        setContentView(R.layout.activity_game)
         initViews()
     }
 
@@ -100,6 +90,7 @@ class GameActivity : BaseActivity(),
         Handler(Looper.getMainLooper()).postDelayed({
             initPlayerViews()
             TipsDialog(this, "准备开始游戏吧", this).show()
+            mRootMap.update()
         }, 200)
     }
 
@@ -109,6 +100,7 @@ class GameActivity : BaseActivity(),
         optionStatus(walk = true, finish = false)
 
         TipsDialog(this, "轮到 " + GameData.INSTANCE.playerData[0].name).show()
+        GameData.INSTANCE.playerData[0].status = PlayerBean.STATUS.OPTION_FALSE
 
         if (!GameData.INSTANCE.playerData[0].isPlayer) {
             mBtnWalk.performClick()
@@ -133,6 +125,8 @@ class GameActivity : BaseActivity(),
         if (isFinish) {
 
             GameLog.INSTANCE.addWalkLog(count)
+
+            walkMoney(count)
 
             movePlayer(
                 mRootMap.playerViewList[GameData.INSTANCE.optionPlayerTurnIndex],
@@ -200,84 +194,36 @@ class GameActivity : BaseActivity(),
                     playerView.translationY = mRootMap.mBaseMap.mapViewList[next].y + playerOffsetY
                     mCamera.smoothScrollTo(playerView.x.toInt() - cameraOffsetX, 0)
                     if (restart) {
+
+                        var getMoney = 0
+
                         when (GameData.INSTANCE.currentPlayer().bank) {
                             PlayerBean.BANK.ABC -> {
-                                GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY
+                                getMoney = Value.START_ADD_MONEY
                             }
                             PlayerBean.BANK.BOC -> {
-                                GameData.INSTANCE.currentPlayer().money += if (Math.random() > 0.5) Value.START_ADD_MONEY * 2 else 0
+                                getMoney = if (Math.random() > 0.5) Value.START_ADD_MONEY * 2 else 0
                             }
                             PlayerBean.BANK.BOCM -> {
-                                GameData.INSTANCE.currentPlayer().money += (GameData.INSTANCE.currentPlayer().money * 0.2).toInt()
+                                getMoney = (GameData.INSTANCE.currentPlayer().money * 0.2).toInt()
                             }
                             PlayerBean.BANK.CCB -> {
-                                GameData.INSTANCE.currentPlayer().money += t.toInt() * 500
+                                getMoney = t.toInt() * 500
                             }
                             PlayerBean.BANK.ICBC -> {
-                                GameData.INSTANCE.currentPlayer().money += GameData.INSTANCE.currentPlayer().stockNumber() * 100
+                                getMoney =  GameData.INSTANCE.currentPlayer().stockNumber() * 100
                             }
                         }
-
+                        GameData.INSTANCE.currentPlayer().money += getMoney
+                        GameLog.INSTANCE.addSystemLog("起点奖励：获得$getMoney")
+                        mRvPlayerInfo.adapter?.notifyDataSetChanged()
+                        restart = false
                     }
 
                     if (t == count.toLong()) {
 
-
-                        if (count == 1) {
-                            when (GameData.INSTANCE.currentPlayer().bank) {
-                                PlayerBean.BANK.ABC -> {
-                                    GameData.INSTANCE.currentPlayer().money -= Value.START_ADD_MONEY/2
-                                }
-                                PlayerBean.BANK.BOC -> {
-                                    GameData.INSTANCE.currentPlayer().money -= if (Math.random() > 0.5) Value.START_ADD_MONEY else 0
-                                }
-                                PlayerBean.BANK.BOCM -> {
-                                    GameData.INSTANCE.currentPlayer().money -= (GameData.INSTANCE.currentPlayer().money * 0.15).toInt()
-                                }
-                                PlayerBean.BANK.CCB -> {
-                                    GameData.INSTANCE.currentPlayer().money -= 500
-                                }
-                                PlayerBean.BANK.ICBC -> {
-                                    GameData.INSTANCE.currentPlayer().money -= GameData.INSTANCE.currentPlayer().stockNumber() * 20
-                                }
-                            }
-                        }
-
-
-                        if (count == 12) {
-                            when (GameData.INSTANCE.currentPlayer().bank) {
-                                PlayerBean.BANK.ABC -> {
-                                    GameData.INSTANCE.currentPlayer().money += Value.START_ADD_MONEY/2
-                                }
-                                PlayerBean.BANK.BOC -> {
-                                    GameData.INSTANCE.currentPlayer().money += if (Math.random() > 0.5) Value.START_ADD_MONEY else 0
-                                }
-                                PlayerBean.BANK.BOCM -> {
-                                    GameData.INSTANCE.currentPlayer().money += (GameData.INSTANCE.currentPlayer().money * 0.05).toInt()
-                                }
-                                PlayerBean.BANK.CCB -> {
-                                    GameData.INSTANCE.currentPlayer().money += 1500
-                                }
-                                PlayerBean.BANK.ICBC -> {
-                                    GameData.INSTANCE.currentPlayer().money += GameData.INSTANCE.currentPlayer().stockNumber() * 20
-                                }
-                            }
-                        }
-
-
-
-
-
                         playerBean.walkIndex = next
 
-
-                        if (restart) {
-                            whenOnlyStart()
-                        }
-
-
-
-                        restart = false
                         onWalkListener.onWalkFinish()
                         playerView.mDisposable?.dispose()
                     } else {
@@ -309,8 +255,6 @@ class GameActivity : BaseActivity(),
                 if (GameData.INSTANCE.currentPlayer().money < 0) {
 
 
-
-
                     if (GameData.INSTANCE.currentPlayer().army == 0 && GameData.INSTANCE.currentPlayer().city.size == 0 && GameData.INSTANCE.currentPlayer().generals.size == 0 && GameData.INSTANCE.currentPlayer().equipments.size == 0) {
                         TipsDialog(this, "很遗憾，你破产了", object : OnClickTipsListener{
                             @SuppressLint("NotifyDataSetChanged")
@@ -318,8 +262,8 @@ class GameActivity : BaseActivity(),
                                 val killIndex = GameData.INSTANCE.optionPlayerTurnIndex
                                 GameLog.INSTANCE.addSystemLog(GameData.INSTANCE.playerData[killIndex].name+"退出游戏")
                                 GameData.INSTANCE.playerData.remove(GameData.INSTANCE.playerData[killIndex])
-                                mRootMap.removePlayerView(mRootMap.playerViewList[killIndex])
-                                mRvPlayerInfo.adapter?.notifyDataSetChanged()
+                                GameData.INSTANCE.optionPlayerTurnIndex -= 1
+                                computerOptionTipsDialog.dismiss()
 
 
                                 if (GameData.INSTANCE.playerData.size == 1) {
@@ -333,7 +277,9 @@ class GameActivity : BaseActivity(),
                                     return
                                 }
 
-                                GameData.INSTANCE.optionPlayerTurnIndex -= 1
+
+                                mRootMap.removePlayerView(mRootMap.playerViewList[killIndex])
+                                mRvPlayerInfo.adapter?.notifyDataSetChanged()
 
 
                                 setNextTurn()
@@ -361,6 +307,9 @@ class GameActivity : BaseActivity(),
                             GameData.INSTANCE.currentPlayer().status =
                                 PlayerBean.STATUS.OPTION_FALSE
                             mBtnFinishOption.performClick()
+                            if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+                                computerOptionTipsDialog.dismiss()
+                            }
                         }
                     }).show()
                 } else {
@@ -374,6 +323,14 @@ class GameActivity : BaseActivity(),
                 if (GameData.INSTANCE.currentPlayer().money < 0) {
                     TipsDialog(this, "注意，刚刚银行已经帮你垫付费用，请立即卖出股票还清债务，否则下回合将强制进行拍卖", object : OnClickTipsListener{
                         override fun onClickYes() {
+                            if (!GameData.INSTANCE.currentPlayer().isPlayer) {
+                                if ( GameData.INSTANCE.currentPlayer().stockMoney() > 0) {
+                                    GameData.INSTANCE.currentPlayer().money += GameData.INSTANCE.currentPlayer().stockMoney()
+                                    GameData.INSTANCE.currentPlayer().stocks.clear()
+                                    GameLog.INSTANCE.addSystemLog("抛售了股票")
+                                }
+                                computerOptionTipsDialog.dismiss()
+                            }
                             onClickFinish()
                         }
                     }).show()
@@ -384,6 +341,7 @@ class GameActivity : BaseActivity(),
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun onClickFinish() {
         mLlOption.removeAllViews()
         setNextTurn()
@@ -491,6 +449,7 @@ class GameActivity : BaseActivity(),
                 mLlOption.addView(specialInfoView)
             }
         }
+        mRootMap.update()
         mRvPlayerInfo.adapter?.notifyDataSetChanged()
     }
 
@@ -498,6 +457,10 @@ class GameActivity : BaseActivity(),
         if (adapter is PlayerInfoAdapter) {
             mCamera.smoothScrollTo(mRootMap.playerViewList[position].x.toInt() - cameraOffsetX, 0)
         } else if (adapter is StockAdapter) {
+            if (adapter.data[position].newPrice == 0) {
+                TipsDialog(this, adapter.data[position].name+"已跌停，暂不能购买").show()
+                return
+            }
             StockDialog(this, adapter.data[position], this).show()
         }
     }
@@ -529,9 +492,11 @@ class GameActivity : BaseActivity(),
         mBtnFinishOption.performClick()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showTurnTips(activity: GameActivity) {
         if (GameData.INSTANCE.currentPlayer().isPlayer) {
             TipsDialog(activity, "轮到 " + GameData.INSTANCE.currentPlayer().name).show()
+            mRvPlayerInfo.adapter?.notifyDataSetChanged()
         } else {
             computerOptionTipsDialog.show()
         }
@@ -555,13 +520,73 @@ class GameActivity : BaseActivity(),
     @SuppressLint("NotifyDataSetChanged")
     override fun onRefreshData(needWalk: Boolean) {
         mRvPlayerInfo.adapter?.notifyDataSetChanged()
+        mRootMap.update()
+
+        if (GameData.INSTANCE.currentPlayer().money < 0) {
+            TipsDialog(this, "先把欠银行的钱还了吧", object : OnClickTipsListener{
+                override fun onClickYes() {
+                    SaleDialog(this@GameActivity, this@GameActivity).show()
+                }
+            }).show()
+        }
+
         if (needWalk) {
             mBtnWalk.performClick()
         }
     }
 
-    private fun whenOnlyStart() {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun walkMoney(count: Int) {
+        if (count == 1) {
+            var loseMoney = 0
+            when (GameData.INSTANCE.currentPlayer().bank) {
+                PlayerBean.BANK.ABC -> {
+                    loseMoney = Value.START_ADD_MONEY/2
+                }
+                PlayerBean.BANK.BOC -> {
+                    loseMoney = if (Math.random() > 0.5) Value.START_ADD_MONEY else 0
+                }
+                PlayerBean.BANK.BOCM -> {
+                    loseMoney = (GameData.INSTANCE.currentPlayer().money * 0.15).toInt()
+                }
+                PlayerBean.BANK.CCB -> {
+                    loseMoney = 500
+                }
+                PlayerBean.BANK.ICBC -> {
+                    loseMoney = GameData.INSTANCE.currentPlayer().stockNumber() * 20
+                }
+            }
+            GameLog.INSTANCE.addSystemLog("获得1点惩罚：失去$loseMoney")
+            GameData.INSTANCE.currentPlayer().money -= loseMoney
+        }
 
+
+        if (count == 12) {
+            var getMoney = 0
+
+            when (GameData.INSTANCE.currentPlayer().bank) {
+                PlayerBean.BANK.ABC -> {
+                    getMoney = Value.START_ADD_MONEY/2
+                }
+                PlayerBean.BANK.BOC -> {
+                    getMoney = if (Math.random() > 0.5) Value.START_ADD_MONEY else 0
+                }
+                PlayerBean.BANK.BOCM -> {
+                    getMoney = (GameData.INSTANCE.currentPlayer().money * 0.05).toInt()
+                }
+                PlayerBean.BANK.CCB -> {
+                    getMoney = 1500
+                }
+                PlayerBean.BANK.ICBC -> {
+                    getMoney = GameData.INSTANCE.currentPlayer().stockNumber() * 20
+                }
+            }
+
+            GameData.INSTANCE.currentPlayer().money += getMoney
+            GameLog.INSTANCE.addSystemLog("12点奖励：获得$getMoney")
+        }
+
+        mRvPlayerInfo.adapter?.notifyDataSetChanged()
     }
 
 }

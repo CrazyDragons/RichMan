@@ -62,6 +62,7 @@ class SpecialInfoView @JvmOverloads constructor(
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 army = Value.X_BUY_ARMY * progress
                 mTvArmy.text = army.toString()
+                mTvArmyMoney.text = (army * 2).toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -113,7 +114,21 @@ class SpecialInfoView @JvmOverloads constructor(
                         ToastUtil.show("穷逼，钱不够")
                         return@setOnClickListener
                     }
-                    GameOption.buyGenerals()
+                    MapUtil.count(mTvCount, object : OnCountListener {
+                        override fun onCount(finalCount: Int) {
+                            val buyCount = if (finalCount >= 10) 2 else 1
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                TipsDialog(
+                                    context, "可购买" + buyCount+"名武将",
+                                    object : OnClickTipsListener {
+                                        override fun onClickYes() {
+                                            GameOption.buyGenerals(buyCount)
+
+                                        }
+                                    }).show()
+                            }, 500)
+                        }
+                    })
                 }
 
                 BaseMapBean.MapType.BIG_MONEY -> {

@@ -38,6 +38,6 @@ class StockBean(var name: String) {
     }
 
     fun randomX() {
-        x =  (Math.random() * 30 + 1).toInt()
+        x =  (Math.random() * 10 + 1).toInt()
     }
 }

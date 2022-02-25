@@ -21,6 +21,8 @@ class CityView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    lateinit var cityBean:CityBean
+
     init {
         initViews(context)
     }
@@ -30,6 +32,7 @@ class CityView @JvmOverloads constructor(
     }
 
     fun setData(cityBean: CityBean) {
+        this.cityBean = cityBean
         mTvName.text = cityBean.name
         mTvPrice.text = cityBean.buyPrice.toString()
         mIvCityCover.setBackgroundResource(cityBean.cover)
@@ -79,6 +82,10 @@ class CityView @JvmOverloads constructor(
             }
 
         }
+    }
+
+    fun update() {
+        setData(cityBean)
     }
 
 

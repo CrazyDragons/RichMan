@@ -34,17 +34,16 @@ class SpecialBean : BaseMapBean {
         if (mapType == MapType.START) {
             name = MyApplication.getContext().resources.getString(R.string.start)
             background = R.drawable.bg_start
-            desc = "经过获得"+Value.START_ADD_MONEY+", 停留则翻倍"
         }
         if (mapType == MapType.ARMY) {
             name = MyApplication.getContext().resources.getString(R.string.army)
             background = R.drawable.bg_army
-            desc = "以每名小兵"+Value.X_ARMY_MONEY+"价格征兵"
+            desc = "以每名小兵"+Value.X_ARMY_MONEY+"两的价格征兵"
         }
         if (mapType == MapType.GENERALS) {
             name = MyApplication.getContext().resources.getString(R.string.generals)
             background = R.drawable.bg_generals
-            desc = "每次以"+Value.X_BUY_GENERALS+"价格随机获得一名武将"
+            desc = "每次以"+Value.X_BUY_GENERALS +"价格随机获得1-2名武将（大于10点获得2名）"
         }
         if (mapType == MapType.CHANCE) {
             name = MyApplication.getContext().resources.getString(R.string.chance)

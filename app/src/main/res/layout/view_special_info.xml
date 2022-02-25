@@ -32,21 +32,22 @@
 
         <LinearLayout
             android:id="@+id/mLlArmy"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/shape_rectangle_solid_transparent_r10"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:padding="10dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/mTvArmy"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:text="@string/zero"
                     android:textColor="@color/white" />
@@ -54,7 +55,8 @@
 
                 <SeekBar
                     android:id="@+id/mSbArmy"
-                    android:layout_width="200dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
@@ -64,18 +66,17 @@
 
                 <TextView
                     android:id="@+id/mTvMaxArmy"
-                    android:layout_width="wrap_content"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/mTvArmy"
+                android:id="@+id/mTvArmyMoney"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@string/zero"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 

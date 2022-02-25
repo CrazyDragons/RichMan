@@ -3,7 +3,6 @@ package com.hzw.android.richman.bean
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.game.GameData
-import java.math.BigDecimal
 import kotlin.math.pow
 
 /**
@@ -104,12 +103,14 @@ class PlayerBean(//昵称
             army += (army*0.2).toInt()
         }
         if (buff == BUFF.ADD_STOCK) {
-            stocks.add(StockBean("A", 50))
+            if (stockNumber("A") == 50) {
+                stocks[0].number += 50
+            }else {
+                stocks.add(StockBean("A", 50))
+            }
         }
         if (buff == BUFF.ADD_CITY) {
-            val baseCityBean = GameData.INSTANCE.mapData[1] as BaseCityBean
-            baseCityBean.owner = this
-            city.add(baseCityBean)
+            GameData.INSTANCE.giveBaseCity(this)
         }
         if (buff == BUFF.ADD_GENERALS) {
             GameData.INSTANCE.giveGenerals(this, 2)
@@ -119,13 +120,7 @@ class PlayerBean(//昵称
         }
     }
 
-
-    private fun getSingleGDP(playerBean: PlayerBean): Double {
-        return playerBean.money + playerBean.army * 2 +
-                getCityMoney(playerBean.city) + playerBean.allGenerals().size * 2000 + playerBean.equipments.size * 2000
-    }
-
-    private fun getCityMoney(arrayList: MutableList<BaseCityBean>): Double {
+    fun getCityMoney(arrayList: MutableList<BaseCityBean>): Double {
         var money = 0.0
         for (i in arrayList.indices) {
 
@@ -135,6 +130,10 @@ class PlayerBean(//昵称
 
         }
         return money
+    }
+
+    fun getAreaMoney(): Double {
+        return if (allArea() > 0) Value.AREA_ARMY * 2 * 2.0.pow(allArea()) else 0.0
     }
 
     fun allGenerals(): MutableList<GeneralsBean> {
@@ -183,11 +182,11 @@ class PlayerBean(//昵称
         val buff = if (buff == BUFF.ADD_ATTACK_ARMY) 1.1 else 1.0
         val deBuff = if (GameData.INSTANCE.currentPlayer().buff == BUFF.REDUCE_ATTACK_ARMY) 0.9 else 1.0
         return when (allArea()) {
-            1 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_1 * x * isPrison * buff * deBuff).toInt()
-            2 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_2 * x * isPrison * buff * deBuff).toInt()
-            3 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_3 * x * isPrison * buff * deBuff).toInt()
-            4 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_4 * x * isPrison * buff * deBuff).toInt()
-            5 -> return (Value.AREA_ARMY * Value.X_AREA_ARMY_LEVEL_5 * x * isPrison * buff * deBuff).toInt()
+            1 -> return (Value.DEFENSE_ARMY_COST * Value.X_AREA_ARMY_LEVEL_1 * x * isPrison * buff * deBuff).toInt()
+            2 -> return (Value.DEFENSE_ARMY_COST * Value.X_AREA_ARMY_LEVEL_2 * x * isPrison * buff * deBuff).toInt()
+            3 -> return (Value.DEFENSE_ARMY_COST * Value.X_AREA_ARMY_LEVEL_3 * x * isPrison * buff * deBuff).toInt()
+            4 -> return (Value.DEFENSE_ARMY_COST * Value.X_AREA_ARMY_LEVEL_4 * x * isPrison * buff * deBuff).toInt()
+            5 -> return (Value.DEFENSE_ARMY_COST * Value.X_AREA_ARMY_LEVEL_5 * x * isPrison * buff * deBuff).toInt()
             else -> {
                 0
             }
@@ -202,20 +201,6 @@ class PlayerBean(//昵称
             }
         }
         return x
-    }
-
-    fun GDP(): String {
-        val x: Double
-        var sum = 0.0
-        for (i in GameData.INSTANCE.playerData) {
-            sum += getSingleGDP(i)
-        }
-        x = getSingleGDP(this) / sum
-        return (getDouble2(x) * 100).toInt().toString() + "%"
-    }
-
-    private fun getDouble2(value: Double): Double {
-        return BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
     }
 
     fun stockMoney():Int{

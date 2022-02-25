@@ -235,15 +235,23 @@ class BaseCityOptionView @JvmOverloads constructor(
 
             R.id.mBtnAttack -> {
                 val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
+
                 var msg = ""
-                if (baseCityBean is CityBean) {
-                    msg =
-                        "是否用 " + (baseCityBean.needCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+
+                if (baseCityBean.owner!!.army < Value.DEFENSE_ARMY_COST) {
+                    msg = "好机会！对方驻守兵力不足，城池可直接占有并俘虏武将"
+                }else {
+                    if (baseCityBean is CityBean) {
+                        msg =
+                            "是否用 " + (baseCityBean.needCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+                    }
+                    if (baseCityBean is AreaBean) {
+                        msg =
+                            "是否用 " + (baseCityBean.owner!!.allAreaCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+                    }
                 }
-                if (baseCityBean is AreaBean) {
-                    msg =
-                        "是否用 " + (baseCityBean.owner!!.allAreaCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
-                }
+
+
                 showNormalDialog(
                     msg,
                     object : OnClickTipsListener {

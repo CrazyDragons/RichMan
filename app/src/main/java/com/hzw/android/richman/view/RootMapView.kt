@@ -40,4 +40,8 @@ class RootMapView @JvmOverloads constructor(
         playerViewList.remove(playerView)
         removeView(playerView)
     }
+
+    fun update() {
+        mBaseMap.update()
+    }
 }

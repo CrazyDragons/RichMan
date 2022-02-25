@@ -26,19 +26,19 @@ class EquipmentBean(var type: TYPE) {
         when(type) {
             TYPE.A -> {
                 name = "道具1"
-                desc = "道具1的说明 巴拉巴拉小魔仙"
+                desc = "道具1的说明"
             }
             TYPE.B -> {
                 name = "道具2"
-                desc = "道具1的说明 巴拉巴拉小魔仙"
+                desc = "道具2的说明"
             }
             TYPE.C -> {
                 name = "道具3"
-                desc = "道具1的说明 巴拉巴拉小魔仙"
+                desc = "道具2的说明"
             }
             TYPE.D -> {
                 name = "道具4"
-                desc = "道具1的说明 巴拉巴拉小魔仙"
+                desc = "道具4的说明"
             }
         }
     }

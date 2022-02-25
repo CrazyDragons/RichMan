@@ -44,28 +44,28 @@ class CityInfoView @JvmOverloads constructor(
         mTvCityLevelCost.text =
             String.format(resources.getString(R.string.level_cost), (cityBean.buyPrice * Value.X_LEVEL_CITY_COST).toInt())
         mTvCityArmyCost.text =
-            String.format(resources.getString(R.string.defense_cost), (cityBean.buyPrice * Value.X_DEFENSE_ARMY_COST).toInt())
+            String.format(resources.getString(R.string.defense_cost), Value.DEFENSE_ARMY_COST)
         mTvCityLevel_0.text =
             String.format(
                 resources.getString(R.string.city_level_0),
                 (cityBean.buyPrice * Value.X_CITY_MONEY_LEVEL_0).toInt(),
-                (cityBean.buyPrice * Value.X_CITY_ARMY_LEVEL_0).toInt()
+                (Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_0).toInt()
             )
         mTvCityLevel_1.text =
             String.format(
                 resources.getString(R.string.city_level_1),
                 cityBean.buyPrice * Value.X_CITY_MONEY_LEVEL_1,
-                cityBean.buyPrice * Value.X_CITY_ARMY_LEVEL_1
+                Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_1
             )
         mTvCityLevel_2.text =
             String.format(
                 resources.getString(R.string.city_level_2) , cityBean.buyPrice * Value.X_CITY_MONEY_LEVEL_2,
-                cityBean.buyPrice * Value.X_CITY_ARMY_LEVEL_2
+                Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_2
             )
         mTvCityLevel_3.text =
             String.format(
                 resources.getString(R.string.city_level_3) , cityBean.buyPrice * Value.X_CITY_MONEY_LEVEL_3,
-                cityBean.buyPrice * Value.X_CITY_ARMY_LEVEL_3
+                Value.DEFENSE_ARMY_COST * Value.X_CITY_ARMY_LEVEL_3
             )
         mTvCitySale.text =
             String.format(resources.getString(R.string.sale_cost), (cityBean.buyPrice * Value.X_SALE).toInt())
