@@ -11,27 +11,10 @@ import com.hzw.android.richman.bean.*
  * note
  * create date 2022/2/9
  */
-class GameInit private constructor() {
+object GameInit {
 
-    var mapList = mutableListOf<BaseMapBean>()
-    var generals = mutableListOf<GeneralsBean>()
-    var equipments = mutableListOf<EquipmentBean>()
-    var stocks = mutableListOf<StockBean>()
-
-    companion object {
-        val INSTANCE: GameInit by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-            GameInit()
-        }
-    }
-
-    init {
-        initMap()
-        initGenerals()
-        initEquipments()
-        initStocks()
-    }
-
-    private fun initMap() {
+     fun initMap(): MutableList<BaseMapBean> {
+        val mapList = mutableListOf<BaseMapBean>()
         mapList.add(SpecialBean(BaseMapBean.MapType.START))
         mapList.add(CityBean("安徽", R.drawable.bg_anhui, 3000, CityBean.Color.RED))
         mapList.add(SpecialBean(BaseMapBean.MapType.GENERALS))
@@ -89,17 +72,18 @@ class GameInit private constructor() {
         mapList.add(SpecialBean(BaseMapBean.MapType.ARMY))
         mapList.add(AreaBean("南部战区"))
         mapList.add(CityBean("西藏", R.drawable.bg_xizang, 1000, CityBean.Color.PURPLE))
-        mapList.add(SpecialBean(BaseMapBean.MapType.GENERALS))
+        mapList.add(SpecialBean(BaseMapBean.MapType.FREE_GENERALS))
         mapList.add(CityBean("云南", R.drawable.bg_yunnan, 2500, CityBean.Color.PURPLE))
         mapList.add(CityBean("浙江", R.drawable.bg_zhejiang, 4000, CityBean.Color.PURPLE))
 
         for (i in 0 until  mapList.size) {
             mapList[i].id = i + 1
         }
+        return mapList
     }
 
-    private fun initGenerals() {
-
+     fun initGenerals(): MutableList<GeneralsBean> {
+        val generals = mutableListOf<GeneralsBean>()
         //18
         generals.add(GeneralsBean("刘备",  R.drawable.icon_test, 5, 75, 70))
         generals.add(GeneralsBean("关羽",  R.drawable.icon_test, 3, 99, 85))
@@ -169,9 +153,13 @@ class GameInit private constructor() {
         generals.add(GeneralsBean("张角",  R.drawable.icon_test, 5, 79, 83))
         generals.add(GeneralsBean("貂蝉",  R.drawable.icon_test, 6, 67, 94))
 
+        return generals
+
     }
 
-    private fun initEquipments() {
+     fun initEquipments(): MutableList<EquipmentBean> {
+        val equipments = mutableListOf<EquipmentBean>()
+
         equipments.add(EquipmentBean(EquipmentBean.TYPE.A))
         equipments.add(EquipmentBean(EquipmentBean.TYPE.A))
         equipments.add(EquipmentBean(EquipmentBean.TYPE.B))
@@ -180,14 +168,20 @@ class GameInit private constructor() {
         equipments.add(EquipmentBean(EquipmentBean.TYPE.C))
         equipments.add(EquipmentBean(EquipmentBean.TYPE.D))
         equipments.add(EquipmentBean(EquipmentBean.TYPE.D))
+
+        return equipments
     }
 
-    private fun initStocks() {
+    fun initStocks(): MutableList<StockBean> {
+        val stocks = mutableListOf<StockBean>()
+
         stocks.add(StockBean("A"))
         stocks.add(StockBean("B"))
         stocks.add(StockBean("C"))
         stocks.add(StockBean("D"))
         stocks.add(StockBean("E"))
         stocks.add(StockBean("F"))
+
+        return stocks
     }
 }

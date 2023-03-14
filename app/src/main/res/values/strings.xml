@@ -25,7 +25,7 @@
     <string name="add_computer">添加电脑</string>
     <string name="start_game">开始</string>
     <string name="delete">删除</string>
-    <string name="all_color_tips">若持全部同色\n过路费 x 2\n驻兵 x 1.5\n城防力 + 20</string>
+    <string name="all_color_tips">若持全部同色\n过路费 x 2\n驻兵 x 1.5\n城防力 + 10</string>
 
     <string name="owner">拥有者 %s</string>
     <string name="level_cost">城墙建设费用 %d</string>

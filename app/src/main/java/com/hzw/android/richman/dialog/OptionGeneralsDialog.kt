@@ -9,6 +9,8 @@ import com.hzw.android.richman.R
 import com.hzw.android.richman.adapter.GeneralsAdapter
 import com.hzw.android.richman.base.BaseCityBean
 import com.hzw.android.richman.base.BaseDialog
+import com.hzw.android.richman.bean.AreaBean
+import com.hzw.android.richman.bean.CityBean
 import com.hzw.android.richman.bean.GeneralsBean
 import com.hzw.android.richman.config.Value
 import com.hzw.android.richman.game.GameData
@@ -38,6 +40,8 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
         when (type) {
             TYPE.DEFENSE -> {
                 mTvTips.visibility = View.VISIBLE
+                mTvDefense.visibility = View.VISIBLE
+                mTvDefense.text = "当前城防力"+if (cityBean is CityBean) cityBean.defense() else if ( cityBean is AreaBean) cityBean.defense() else 0
                 mTvTips.setOnClickListener {
                     GameOption.defense(cityBean, null, false)
                     dismiss()
@@ -50,6 +54,7 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
 
             TYPE.PK -> {
                 mTvTips.visibility = View.GONE
+                mTvDefense.visibility = View.GONE
                 generalsAdapter.setOnItemClickListener { _, _, position ->
                     GameOption.pk(cityBean, generalsAdapter.data[position], false)
                     dismiss()
@@ -58,8 +63,9 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
 
             TYPE.ATTACK -> {
                 mTvTips.visibility = View.GONE
+                mTvDefense.visibility = View.GONE
                 generalsAdapter.setOnItemClickListener { _, _, position ->
-                    GameOption.attack(cityBean, generalsAdapter.data[position], false)
+                    GameOption.attack(cityBean, generalsAdapter.data[position])
                     dismiss()
                 }
             }
@@ -74,7 +80,7 @@ class OptionGeneralsDialog(context: Context, type: TYPE, cityBean: BaseCityBean)
         for (item in GameData.INSTANCE.currentPlayer().generals) {
             if (item.cityID == 0) {
                 if (isAttack) {
-                    if (item.action > Value.ACTION_ATTACK) {
+                    if (item.action() > Value.ACTION_ATTACK) {
                         list.add(item)
                     }
                 } else {

@@ -116,13 +116,12 @@ class SpecialInfoView @JvmOverloads constructor(
                     }
                     MapUtil.count(mTvCount, object : OnCountListener {
                         override fun onCount(finalCount: Int) {
-                            val buyCount = if (finalCount >= 10) 2 else 1
                             Handler(Looper.getMainLooper()).postDelayed({
                                 TipsDialog(
-                                    context, "可购买" + buyCount+"名武将",
+                                    context, if (finalCount <= 9) "获得A级武将" else "获得S级武将",
                                     object : OnClickTipsListener {
                                         override fun onClickYes() {
-                                            GameOption.buyGenerals(buyCount)
+                                            GameOption.buyGenerals(finalCount)
 
                                         }
                                     }).show()

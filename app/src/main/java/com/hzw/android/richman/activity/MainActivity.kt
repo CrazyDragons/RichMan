@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.View
 import com.hzw.android.richman.R
 import com.hzw.android.richman.base.BaseActivity
+import com.hzw.android.richman.dialog.ProgressDialog
 import com.hzw.android.richman.game.GameData
-import com.hzw.android.richman.game.GameInit
 import com.hzw.android.richman.game.GameSave
-import com.hzw.android.richman.utils.MapUtil
 import com.hzw.android.richman.utils.ScreenUtil
 import com.hzw.android.richman.utils.ToastUtil
 import com.orhanobut.logger.Logger
@@ -24,10 +23,12 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 class MainActivity : BaseActivity(), View.OnClickListener {
 
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        progressDialog = ProgressDialog(this)
 
         Logger.d(ScreenUtil.getScreenWidth(this))
         Logger.d(ScreenUtil.getScreenHeight(this))
@@ -36,8 +37,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         mTvGoOn.setOnClickListener(this)
         mTvDesc.setOnClickListener(this)
         mTvExit.setOnClickListener(this)
-
-        MapUtil.generalsGDP(GameInit.INSTANCE.generals)
     }
 
     override fun onClick(view: View?) {
@@ -49,6 +48,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.mTvGoOn -> {
+                progressDialog.show()
+                GameData.INSTANCE.load()
                 startActivity(
                     Intent(this, GameActivity::class.java)
                 )
@@ -68,6 +69,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         mTvGoOn.isEnabled = !GameSave.newGame()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        progressDialog.dismiss()
     }
 
 }

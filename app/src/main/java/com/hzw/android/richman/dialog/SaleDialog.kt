@@ -230,6 +230,7 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseD
                 }else {
                     baseCityBean.ownerID = 0
                 }
+                updateMapData(baseCityBean)
             }
 
             if (generalsBean != null) {
@@ -292,5 +293,14 @@ class SaleDialog(context: Context, onRefreshListener: OnRefreshListener) : BaseD
             }
         }
         return equipmentBean
+    }
+
+    fun updateMapData(baseCityBean: BaseCityBean) {
+       for (i in 0 until GameData.INSTANCE.mapData.size) {
+           if (GameData.INSTANCE.mapData[i].id == baseCityBean.id) {
+               GameData.INSTANCE.mapData[i] = baseCityBean
+               return
+           }
+       }
     }
 }

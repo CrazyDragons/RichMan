@@ -22,19 +22,12 @@ class GeneralsBean {
     var cover = 0
 
     var life = 0
-        get() = field + if (owner() != null && !owner()!!.isPlayer) 2 else 0
 
     var action = 0
 
     var attack = 0
-        get() = field +
-                if (owner() != null && owner()!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0 +
-                        if (owner() != null && !owner()!!.isPlayer) 10 else 0
 
     var defense = 0
-        get() = field +
-                if (owner() != null && owner()!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0 +
-                        if (owner() != null && !owner()!!.isPlayer) 10 else 0
 
     constructor() {}
 
@@ -64,5 +57,20 @@ class GeneralsBean {
         return null
     }
 
+    fun life():Int {
+        return life + if (owner() != null && !owner()!!.isPlayer) 2 else 0
+    }
+
+    fun action():Int {
+        return action + if (owner() != null && !owner()!!.isPlayer) 2 else 0
+    }
+
+    fun attack():Int {
+        return  attack +  (if (owner() != null && owner()!!.buff == PlayerBean.BUFF.ADD_ATTACK) 5 else 0) + (if (owner() != null && !owner()!!.isPlayer) 5 else 0)
+    }
+
+    fun defense():Int {
+        return  defense + (if (owner() != null && owner()!!.buff == PlayerBean.BUFF.ADD_DEFENSE) 5 else 0) + (if (owner() != null && !owner()!!.isPlayer) 5 else 0)
+    }
 
 }

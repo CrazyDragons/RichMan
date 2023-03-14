@@ -42,6 +42,8 @@ class BaseCityOptionView @JvmOverloads constructor(
         mBtnBuy.setOnClickListener(this)
         mBtnLevel.setOnClickListener(this)
         mBtnDefense.setOnClickListener(this)
+        mBtnSearch.setOnClickListener(this)
+        mBtnRecover.setOnClickListener(this)
         mBtnCost.setOnClickListener(this)
         mBtnPk.setOnClickListener(this)
         mBtnAttack.setOnClickListener(this)
@@ -63,6 +65,8 @@ class BaseCityOptionView @JvmOverloads constructor(
                         canBuy,
                         level = false,
                         defense = false,
+                        search = false,
+                        recover = false,
                         cost = false,
                         pk = false,
                         attack = false
@@ -73,10 +77,14 @@ class BaseCityOptionView @JvmOverloads constructor(
                             (GameData.INSTANCE.currentMap() is CityBean)
                                     && (GameData.INSTANCE.currentMap() as CityBean).level < 3
                                     && playerBean.status == PlayerBean.STATUS.OPTION_FALSE && playerBean.money >= (GameData.INSTANCE.currentMap() as CityBean).buyPrice * Value.X_LEVEL_CITY_COST
+                        val canSearch = (GameData.INSTANCE.currentMap() is CityBean) && GameData.INSTANCE.currentPlayer().money >= Value.X_BUY_GENERALS && (GameData.INSTANCE.currentMap() as CityBean).search
+                        val canRecover = (GameData.INSTANCE.currentMap() is AreaBean) && GameData.INSTANCE.currentPlayer().money >= Value.X_BUY_GENERALS && (GameData.INSTANCE.currentMap() as AreaBean).recover
                         buttonStatus(
                             false,
                             canLevel,
                             defense = true,
+                            search = canSearch,
+                            recover = canRecover,
                             cost = false,
                             pk = false,
                             attack = false
@@ -87,6 +95,8 @@ class BaseCityOptionView @JvmOverloads constructor(
                                 buy = false,
                                 level = false,
                                 defense = false,
+                                search = false,
+                                recover = false,
                                 cost = false,
                                 pk = false,
                                 attack = false
@@ -99,14 +109,16 @@ class BaseCityOptionView @JvmOverloads constructor(
 
                             if (baseCityBean is CityBean) {
                                 canCost = playerBean.money >= baseCityBean.needCostMoney()
-                                canAttack = playerBean.army >= baseCityBean.needCostArmy() && playerBean.allAttackGenerals().size > 0
+                                canAttack =
+                                    playerBean.army >= baseCityBean.needCostArmy() && playerBean.allAttackGenerals().size > 0
                             }
 
                             if (baseCityBean is AreaBean) {
                                 canCost =
                                     playerBean.money >= baseCityBean.owner()!!.allAreaCostMoney()
                                 canAttack =
-                                    playerBean.army >= baseCityBean.owner()!!.allAreaCostArmy() && playerBean.allAttackGenerals().size > 0
+                                    playerBean.army >= baseCityBean.owner()!!
+                                        .allAreaCostArmy() && playerBean.allAttackGenerals().size > 0
                             }
 
                             val canPK: Boolean = playerBean.generals.size > 0
@@ -115,15 +127,21 @@ class BaseCityOptionView @JvmOverloads constructor(
                                 buy = false,
                                 level = false,
                                 defense = false,
+                                recover = false,
+                                search = false,
                                 cost = true,
                                 pk = canPK,
                                 attack = canAttack
                             )
 
                             if (!canCost && !canPK && !canAttack) {
-                                TipsDialog(context, "注意，你已经不能支付过路费，现在银行先垫付，如有股票请抛出，否则下次轮到你时需要进行强制拍卖").show()
+                                TipsDialog(
+                                    context,
+                                    "注意，你已经不能支付过路费，现在银行先垫付，如有股票请抛出，否则下次轮到你时需要进行强制拍卖"
+                                ).show()
                                 if (!GameData.INSTANCE.currentPlayer().isPlayer) {
-                                    GameData.INSTANCE.currentPlayer().money += GameData.INSTANCE.currentPlayer().stockMoney()
+                                    GameData.INSTANCE.currentPlayer().money += GameData.INSTANCE.currentPlayer()
+                                        .stockMoney()
                                     GameData.INSTANCE.currentPlayer().stocks.clear()
                                     GameLog.INSTANCE.addSystemLog("抛售了股票")
                                 }
@@ -146,6 +164,8 @@ class BaseCityOptionView @JvmOverloads constructor(
         buy: Boolean,
         level: Boolean,
         defense: Boolean,
+        search: Boolean,
+        recover: Boolean,
         cost: Boolean,
         pk: Boolean,
         attack: Boolean
@@ -153,6 +173,8 @@ class BaseCityOptionView @JvmOverloads constructor(
         mBtnBuy.visibility = if (buy) VISIBLE else GONE
         mBtnLevel.visibility = if (level) VISIBLE else GONE
         mBtnDefense.visibility = if (defense) VISIBLE else GONE
+        mBtnSearch.visibility = if (search) VISIBLE else GONE
+        mBtnRecover.visibility = if (recover) VISIBLE else GONE
         mBtnCost.visibility = if (cost) VISIBLE else GONE
         mBtnPk.visibility = if (pk) VISIBLE else GONE
         mBtnAttack.visibility = if (attack) VISIBLE else GONE
@@ -171,7 +193,7 @@ class BaseCityOptionView @JvmOverloads constructor(
                     is CityBean -> {
                         val cityBean = GameData.INSTANCE.currentMap() as CityBean
                         showNormalDialog(
-                            "是否用 " + cityBean.buyPrice + " 购买 " + cityBean.name + " ?",
+                            "是否花费 " + cityBean.buyPrice + " 购买 " + cityBean.name + " ?",
                             object : OnClickTipsListener {
                                 override fun onClickYes() {
                                     GameOption.buyBaseCity(cityBean)
@@ -183,7 +205,7 @@ class BaseCityOptionView @JvmOverloads constructor(
                     is AreaBean -> {
                         val areaBean = GameData.INSTANCE.currentMap() as AreaBean
                         showNormalDialog(
-                            "是否用 " + areaBean.army + " 兵力攻占 " + areaBean.name + " ?",
+                            "是否花费 " + areaBean.army + " 兵力攻占 " + areaBean.name + " ?",
                             object : OnClickTipsListener {
                                 override fun onClickYes() {
                                     GameOption.buyBaseCity(areaBean)
@@ -198,7 +220,7 @@ class BaseCityOptionView @JvmOverloads constructor(
                 if (GameData.INSTANCE.currentMap() is CityBean) {
                     val cityBean = GameData.INSTANCE.currentMap() as CityBean
                     showNormalDialog(
-                        "是否用 " + (cityBean.buyPrice * Value.X_LEVEL_CITY_COST).toInt() + " 升级 " + cityBean.name + " ?",
+                        "是否花费 " + (cityBean.buyPrice * Value.X_LEVEL_CITY_COST).toInt() + " 升级 " + cityBean.name + " ?",
                         object : OnClickTipsListener {
                             override fun onClickYes() {
                                 GameOption.levelCity(cityBean, false)
@@ -217,10 +239,33 @@ class BaseCityOptionView @JvmOverloads constructor(
                 ).show()
             }
 
+
+            R.id.mBtnSearch -> {
+                showNormalDialog(
+                    "是否花费 " + Value.X_BUY_GENERALS + " 搜索武将?（70%概率搜到）",
+                    object : OnClickTipsListener {
+                        override fun onClickYes() {
+                            GameOption.search()
+                        }
+
+                    })
+            }
+
+            R.id.mBtnRecover -> {
+                showNormalDialog(
+                    "是否花费 " + Value.X_BUY_GENERALS + " 回复武将体力?（+1）",
+                    object : OnClickTipsListener {
+                        override fun onClickYes() {
+                            GameOption.recover()
+                        }
+
+                    })
+            }
+
             R.id.mBtnPk -> {
                 val baseCityBean = GameData.INSTANCE.currentMap() as BaseCityBean
                 showNormalDialog(
-                    "是否在 "+baseCityBean.name+" 派武将单挑?",
+                    "是否在 " + baseCityBean.name + " 派武将单挑?",
                     object : OnClickTipsListener {
                         override fun onClickYes() {
                             OptionGeneralsDialog(
@@ -240,14 +285,15 @@ class BaseCityOptionView @JvmOverloads constructor(
 
                 if (baseCityBean.owner()!!.army < Value.DEFENSE_ARMY_COST) {
                     msg = "好机会！对方驻守兵力不足，城池可直接占有并俘虏武将"
-                }else {
+                } else {
                     if (baseCityBean is CityBean) {
                         msg =
                             "是否用 " + (baseCityBean.needCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
                     }
                     if (baseCityBean is AreaBean) {
                         msg =
-                            "是否用 " + (baseCityBean.owner()!!.allAreaCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
+                            "是否用 " + (baseCityBean.owner()!!
+                                .allAreaCostArmy()) + " 兵力并派武将攻打 " + baseCityBean.name + " ?"
                     }
                 }
 
@@ -285,7 +331,10 @@ class BaseCityOptionView @JvmOverloads constructor(
                     msg,
                     object : OnClickTipsListener {
                         override fun onClickYes() {
-                            GameOption.costBaseCity(GameData.INSTANCE.currentMap() as BaseCityBean, false)
+                            GameOption.costBaseCity(
+                                GameData.INSTANCE.currentMap() as BaseCityBean,
+                                false
+                            )
                         }
 
                     })

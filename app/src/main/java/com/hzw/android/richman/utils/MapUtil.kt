@@ -44,6 +44,7 @@ object MapUtil {
                     onWalkListener.onWalkStart(count, false)
                     if (t == Value.WALK_TURN) {
                         onWalkListener.onWalkStart(count, true)
+//                        onWalkListener.onWalkStart(Value.TEST, true)
                         mWalkDisposable?.dispose()
                     }
 
@@ -69,9 +70,7 @@ object MapUtil {
                 }
             }
             GameData.INSTANCE.optionPlayerTurnIndex = 0
-            for (stock in GameData.INSTANCE.stocksData) {
-                stock.change()
-            }
+            GameData.INSTANCE.changeStock(0.5)
         }
     }
 
@@ -84,6 +83,14 @@ object MapUtil {
         }
         if (GameData.INSTANCE.currentPlayer().status != PlayerBean.STATUS.PRISON) {
             GameData.INSTANCE.currentPlayer().status = PlayerBean.STATUS.OPTION_FALSE
+        }
+        for (item in GameData.INSTANCE.mapData) {
+            if (item is CityBean) {
+                item.search = true
+            }
+            if (item is AreaBean) {
+                item.recover = true
+            }
         }
     }
 
@@ -189,19 +196,19 @@ object MapUtil {
     fun bankDesc(bank: PlayerBean.BANK): String {
         return when (bank) {
             PlayerBean.BANK.ABC -> {
-                "经过起点：得2000\n12点奖励：得1000\n1点惩罚：亏1000"
+                "经过起点：得4000\n12点奖励：得2000\n1点惩罚：亏2000"
             }
             PlayerBean.BANK.BOC -> {
-                "经过起点：得4000（50%）\n12点奖励：得2000（50%）\n1点惩罚：亏2000（50%）"
+                "经过起点：得8000（50%）\n12点奖励：得4000（50%）\n1点惩罚：亏4000（50%）"
             }
             PlayerBean.BANK.BOCM -> {
-                "经过起点：得本金20%\n12点奖励：得本金5%\n1点惩罚：亏本金15%"
+                "经过起点：得本金40%\n12点奖励：得本金10%\n1点惩罚：亏本30%"
             }
             PlayerBean.BANK.CCB -> {
-                "经过起点：得距离起点步数*500\n12点奖励：得500\n1点惩罚：亏1500"
+                "经过起点：得距离起点步数*1000\n12点奖励：得1000\n1点惩罚：亏3000"
             }
             PlayerBean.BANK.ICBC -> {
-                "经过起点：得股票数*100\n12点奖励：得股票数*20\n1点惩罚：亏股票数*20"
+                "经过起点：得股票数*50\n12点奖励：得股票数*20\n1点惩罚：亏股票数*20"
             }
         }
     }
@@ -224,20 +231,17 @@ object MapUtil {
         var b = 0
         var c = 0
         for (item in list) {
-            if (item.attack >= 95 || item.defense >= 95) {
+            if (item.attack() >= 95 || item.defense() >= 95) {
                 a++
                 s += 5000
-            }else if (item.attack in 85..94 || item.defense in 85..94) {
+            }else if (item.attack() in 85..94 || item.defense() in 85..94) {
                 b++
                 s += 3000
-            }else if (item.attack in 70..84 || item.defense in 70..84) {
+            }else if (item.attack() in 70..84 || item.defense() in 70..84) {
                 c++
                 s += 2000
             }
         }
-//        LogUtil.print("A级"+a)
-//        LogUtil.print("B级"+b)
-//        LogUtil.print("C级"+c)
         return s
     }
 

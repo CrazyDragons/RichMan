@@ -40,6 +40,7 @@ class SalePlayerView @JvmOverloads constructor(
             if (playersData[i].playerBean != null) {
                 if (playersData[i].playerBean!!.isPlayer) {
                     textView.visibility = GONE
+                    editText.hint = "上限"+playersData[i].playerBean!!.money
                 }else {
                     editText.visibility = GONE
                     textView.text = playersData[i].price.toString()
@@ -75,9 +76,14 @@ class SalePlayerView @JvmOverloads constructor(
     fun update(sum:Int) {
         for (i in 0 until playersData.size) {
             if (playersData[i].playerBean == null || !playersData[i].playerBean!!.isPlayer) {
-                val price =  if (sum < playersData[i].playerBean!!.money) sum else playersData[i].playerBean!!.money
+                var price = 0
+                if (playersData[i].playerBean != null) {
+                    price =  if (sum < playersData[i].playerBean!!.money) sum else playersData[i].playerBean!!.money
+                }else {
+                    price = sum
+                }
                 getChildAt(i).findViewById<TextView>(R.id.mTvComputerPrice).text = price.toString()
-                playersData[i].price = sum
+                playersData[i].price = price
             }
         }
     }

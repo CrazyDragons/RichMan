@@ -24,8 +24,7 @@ class CityBean : BaseCityBean {
     //城池级别
     var level = 0
 
-    var defense = 0
-        get() = field + level * Value.ADD_DEFENSE + if (MapUtil.judgeAllColor(this)) Value.ALL_COLOR_DEFENSE else 0
+    var search = true
 
     enum class Color {
         //红
@@ -61,7 +60,6 @@ class CityBean : BaseCityBean {
         color = Color.valueOf(jsonObject.getString("color"))
         cover = jsonObject.getIntValue("cover")
         level = jsonObject.getIntValue("level")
-        defense = jsonObject.getIntValue("defense")
     }
 
     constructor(name: String?, @DrawableRes cover: Int, buyPrice: Int, color: Color?) {
@@ -70,6 +68,10 @@ class CityBean : BaseCityBean {
         this.buyPrice = buyPrice
         type = MapType.CITY
         this.color = color
+    }
+
+    fun defense():Int {
+        return  if (generals != null) generals!!.defense() else 0 + (level * Value.ADD_DEFENSE) + (if (MapUtil.judgeAllColor(this)) Value.ALL_COLOR_DEFENSE else 0)
     }
 
     fun needCostMoney(): Int {

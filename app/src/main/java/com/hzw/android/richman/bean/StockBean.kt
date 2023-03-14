@@ -23,21 +23,20 @@ class StockBean(var name: String) {
         this.number = number
     }
 
-
-    fun change() {
+    fun change(double: Double) {
         oldPrice = newPrice
-        newPrice = oldPrice + isAddOrReduce() * x
+        newPrice = oldPrice + isAddOrReduce(double) * x
         if (newPrice < 0) {
             newPrice = 0
         }
 
     }
 
-    private fun isAddOrReduce():Int {
-        return if (Math.random() >= 0.5) 1 else -1
+    private fun isAddOrReduce(double: Double):Int {
+        return if (double >= Math.random()) 1 else -1
     }
 
     fun randomX() {
-        x =  (Math.random() * 10 + 1).toInt()
+        x =  (Math.random() * 15 + 1).toInt()
     }
 }

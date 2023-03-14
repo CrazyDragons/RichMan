@@ -58,20 +58,10 @@ class GameActivity : BaseActivity(),
     OnAddLogListener, OnItemClickListener, OnBaseCityOptionListener, OnItemLongClickListener,
     OnClickTipsListener, OnSpecialOptionListener, OnRefreshListener {
 
-    var mLastBackPressedTime: Long = 0
-
-    private var newGame = true
     private lateinit var computerOptionTipsDialog: ComputerOptionTisDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        newGame = GameSave.newGame()
-        if (newGame) {
-            GameData.INSTANCE.init()
-        }else {
-            GameData.INSTANCE.load()
-        }
         setContentView(R.layout.activity_game)
         initViews()
     }
@@ -221,13 +211,13 @@ class GameActivity : BaseActivity(),
                                 getMoney = if (Math.random() > 0.5) Value.START_ADD_MONEY * 2 else 0
                             }
                             PlayerBean.BANK.BOCM -> {
-                                getMoney = (GameData.INSTANCE.currentPlayer().money * 0.2).toInt()
+                                getMoney = (GameData.INSTANCE.currentPlayer().money * 0.4).toInt()
                             }
                             PlayerBean.BANK.CCB -> {
-                                getMoney = t.toInt() * 500
+                                getMoney = t.toInt() * 1000
                             }
                             PlayerBean.BANK.ICBC -> {
-                                getMoney =  GameData.INSTANCE.currentPlayer().stockNumber() * 100
+                                getMoney =  GameData.INSTANCE.currentPlayer().stockNumber() * 50
                             }
                         }
                         GameData.INSTANCE.currentPlayer().money += getMoney
@@ -478,6 +468,7 @@ class GameActivity : BaseActivity(),
                 return
             }
             StockDialog(this, adapter.data[position], this).show()
+//            SaleDialog(this, this).show()
         }
     }
 
@@ -555,6 +546,10 @@ class GameActivity : BaseActivity(),
     @SuppressLint("NotifyDataSetChanged")
     private fun walkMoney(count: Int) {
         if (count == 1) {
+
+            GameData.INSTANCE.changeStock(0.2)
+            mRvStock.adapter?.notifyDataSetChanged()
+
             var loseMoney = 0
             when (GameData.INSTANCE.currentPlayer().bank) {
                 PlayerBean.BANK.ABC -> {
@@ -564,10 +559,10 @@ class GameActivity : BaseActivity(),
                     loseMoney = if (Math.random() > 0.5) Value.START_ADD_MONEY else 0
                 }
                 PlayerBean.BANK.BOCM -> {
-                    loseMoney = (GameData.INSTANCE.currentPlayer().money * 0.15).toInt()
+                    loseMoney = (GameData.INSTANCE.currentPlayer().money * 0.3).toInt()
                 }
                 PlayerBean.BANK.CCB -> {
-                    loseMoney = 500
+                    loseMoney = 1000
                 }
                 PlayerBean.BANK.ICBC -> {
                     loseMoney = GameData.INSTANCE.currentPlayer().stockNumber() * 20
@@ -579,6 +574,10 @@ class GameActivity : BaseActivity(),
 
 
         if (count == 12) {
+
+            GameData.INSTANCE.changeStock(0.8)
+            mRvStock.adapter?.notifyDataSetChanged()
+
             var getMoney = 0
 
             when (GameData.INSTANCE.currentPlayer().bank) {
@@ -589,10 +588,10 @@ class GameActivity : BaseActivity(),
                     getMoney = if (Math.random() > 0.5) Value.START_ADD_MONEY else 0
                 }
                 PlayerBean.BANK.BOCM -> {
-                    getMoney = (GameData.INSTANCE.currentPlayer().money * 0.05).toInt()
+                    getMoney = (GameData.INSTANCE.currentPlayer().money * 0.1).toInt()
                 }
                 PlayerBean.BANK.CCB -> {
-                    getMoney = 1500
+                    getMoney = 3000
                 }
                 PlayerBean.BANK.ICBC -> {
                     getMoney = GameData.INSTANCE.currentPlayer().stockNumber() * 20

@@ -27,6 +27,7 @@ object GameSave : BaseSave() {
     }
 
     fun save() {
+        GameLog.INSTANCE.addSystemLog("自动存档成功")
         val json = JSON.toJSONString(GameData.INSTANCE, SerializerFeature.DisableCircularReferenceDetect)
         Logger.d(json)
         saveData(json)

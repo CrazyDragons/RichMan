@@ -28,8 +28,8 @@ class BaseCityAdapter : BaseQuickAdapter<BaseCityBean, BaseViewHolder>(R.layout.
             .setText(
                 R.id.mTvDefense,
                 when (item) {
-                    is CityBean -> item.defense.toString()
-                    is AreaBean -> item.defense.toString()
+                    is CityBean -> item.defense().toString()
+                    is AreaBean -> item.defense().toString()
                     else -> "0"
                 }
             )

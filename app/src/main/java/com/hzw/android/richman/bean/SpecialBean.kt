@@ -43,7 +43,7 @@ class SpecialBean : BaseMapBean {
         if (mapType == MapType.GENERALS) {
             name = MyApplication.getContext().resources.getString(R.string.generals)
             background = R.drawable.bg_generals
-            desc = "每次以"+Value.X_BUY_GENERALS +"价格随机获得1-2名武将（大于10点获得2名）"
+            desc = "每次以"+Value.X_BUY_GENERALS +"价格随机获得1名高级武将\n（A级:1-9,S级:10-12）"
         }
         if (mapType == MapType.CHANCE) {
             name = MyApplication.getContext().resources.getString(R.string.chance)

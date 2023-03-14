@@ -7,6 +7,7 @@ import com.hzw.android.richman.bean.EquipmentBean
 import com.hzw.android.richman.bean.GeneralsBean
 import com.hzw.android.richman.bean.PlayerBean
 import com.hzw.android.richman.listener.OnAddLogListener
+import com.orhanobut.logger.Logger
 
 /**
  * class GameLog
@@ -37,6 +38,7 @@ class GameLog {
 
     fun addWalkLog(walk: Int) {
         logAdapter.addData(GameData.INSTANCE.currentPlayer().name + "：投掷了 " + walk + " 点")
+        Logger.d(GameData.INSTANCE.currentPlayer().name + "：投掷了 " + walk + " 点")
         onAddLogListener?.onAddLog()
     }
 

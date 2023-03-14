@@ -36,7 +36,6 @@ public abstract class BaseSave {
         return editor.commit();
     }
 
-
     protected boolean getBooleanData(String key) {
         return preferences.getBoolean(key, true);
     }

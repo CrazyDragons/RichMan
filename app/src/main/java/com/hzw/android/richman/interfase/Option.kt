@@ -15,10 +15,12 @@ import com.hzw.android.richman.bean.GeneralsBean
 interface Option {
     fun buyBaseCity(baseCityBean: BaseCityBean)
     fun levelCity(cityBean: CityBean, needFinish:Boolean)
-    fun costBaseCity(baseCityBean: BaseCityBean, needFinish:Boolean)
     fun defense(baseCityBean: BaseCityBean, generalsBean: GeneralsBean?, needFinish:Boolean)
+    fun search()
+    fun recover()
+    fun costBaseCity(baseCityBean: BaseCityBean, needFinish:Boolean)
     fun pk(baseCityBean: BaseCityBean, generalsBean: GeneralsBean, needFinish: Boolean)
-    fun attack(baseCityBean: BaseCityBean, generalsBean: GeneralsBean, needFinish: Boolean)
+    fun attack(baseCityBean: BaseCityBean, generalsBean: GeneralsBean)
 
     fun buyArmy(army:Int)
     fun buyGenerals(count: Int)

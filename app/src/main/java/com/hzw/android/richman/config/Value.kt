@@ -109,10 +109,10 @@ object Value {
     const val DEFAULT_MONEY = 20000
 
     //默认初始兵力
-    const val DEFAULT_ARMY = 4000
+    const val DEFAULT_ARMY = 5000
 
     //默认初始武将
-    const val DEFAULT_GENERALS = 8
+    const val DEFAULT_GENERALS = 5
 
     //默认初始道具
     const val DEFAULT_EQUIPMENTS = 0
@@ -121,7 +121,10 @@ object Value {
     const val COMPUTER_MIN_MONEY = 0
 
     //电脑兵力高于此才会操作
-    const val COMPUTER_MIN_ARMY = 5000
+    const val COMPUTER_MIN_ARMY = 2000
+
+    //空城防守系数
+    const val X_COMPUTER_EMPTY_CITY = 50
 
     //最大概率
     const val X_COMPUTER_BASE = 100
@@ -130,10 +133,10 @@ object Value {
     const val X_COMPUTER_BUY = 100
 
     //电脑升级城池概率
-    const val X_COMPUTER_LEVEL = 90
+    const val X_COMPUTER_LEVEL = 100
 
     //电脑驻守城池概率
-    const val X_COMPUTER_DEFENSE = 80
+    const val X_COMPUTER_DEFENSE = 100
 
     //电脑选择交费概率
     const val X_COMPUTER_COST = 40
@@ -141,11 +144,8 @@ object Value {
     //电脑选择攻城概率
     const val X_COMPUTER_ATTACK = 70
 
-    //电脑购买兵力的经济占比
-    const val X_COMPUTER_ARMY = 0.2
-
     //经过起点增加金钱
-    const val START_ADD_MONEY = 2000
+    const val START_ADD_MONEY = 4000
 
     //有驻守武将PK失败损钱系数
     const val X_PK_LOSER = 1.5
@@ -169,7 +169,7 @@ object Value {
     const val X_ALL_COLOR_ARMY = 1.5
 
     //同色增防
-    const val ALL_COLOR_DEFENSE = 20
+    const val ALL_COLOR_DEFENSE = 10
 
     //攻城消耗行动力
     const val ACTION_ATTACK = 2

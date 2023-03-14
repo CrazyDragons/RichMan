@@ -97,7 +97,7 @@ class PlayerBean {
         this.isPlayer = isPlayer
     }
 
-    constructor(init:Boolean, jsonObject: JSONObject) {
+    constructor(jsonObject: JSONObject) {
         id = jsonObject.getIntValue("id")
         name = jsonObject.getString("name")
         isPlayer = jsonObject.getBooleanValue("player")
@@ -127,13 +127,6 @@ class PlayerBean {
         status = STATUS.valueOf(jsonObject.getString("status"))
         bank = BANK.valueOf(jsonObject.getString("bank"))
         buff = BUFF.valueOf(jsonObject.getString("buff"))
-
-        if (init) {
-            if (!isPlayer) {
-                money += Value.DEFAULT_MONEY/2
-                stocks.add(StockBean("A", 50))
-            }
-        }
     }
 
     fun loadBuff(){

@@ -89,14 +89,20 @@ class GameData private constructor() {
         }
     }
 
+    fun changeStock(double: Double) {
+        for (stock in stocksData) {
+            stock.change(double)
+        }
+    }
+
 
     fun init() {
         clean()
-        parsePlayer(true, GameSave.loadPlayer())
-        mapData = GameInit.INSTANCE.mapList
-        generalsData = GameInit.INSTANCE.generals
-        equipmentData = GameInit.INSTANCE.equipments
-        stocksData = GameInit.INSTANCE.stocks
+        parsePlayer(GameSave.loadPlayer())
+        mapData = GameInit.initMap()
+        generalsData = GameInit.initGenerals()
+        equipmentData = GameInit.initEquipments()
+        stocksData = GameInit.initStocks()
 
         for (item in playerData) {
             giveGenerals(item, Value.DEFAULT_GENERALS)
@@ -109,6 +115,15 @@ class GameData private constructor() {
         for (item in playerData) {
             item.loadBuff()
         }
+
+        for (item in playerData) {
+            if (!item.isPlayer) {
+                item.money += Value.DEFAULT_MONEY/2
+                item.stocks.add(StockBean("A", 50))
+                giveGenerals(item, 3)
+            }
+        }
+
         GameLog.INSTANCE.clear()
     }
 
@@ -116,7 +131,7 @@ class GameData private constructor() {
         clean()
         val jsonObject = JSON.parseObject(GameSave.loadData())
         parseMap(jsonObject.getString("mapData"))
-        parsePlayer(false, jsonObject.getString("playerData"))
+        parsePlayer(jsonObject.getString("playerData"))
         generalsData = JSON.parseArray(jsonObject.getString("generalsData"), GeneralsBean::class.java)
         equipmentData = JSON.parseArray(jsonObject.getString("equipmentData"), EquipmentBean::class.java)
         stocksData = JSON.parseArray(jsonObject.getString("stocksData"), StockBean::class.java)
@@ -146,11 +161,11 @@ class GameData private constructor() {
         }
     }
 
-    private fun parsePlayer(init:Boolean, json: String) {
+    private fun parsePlayer(json: String) {
         val jsonArray = JSON.parseArray(json)
         for (i in 0 until jsonArray.size) {
             val jsonObject = jsonArray.getJSONObject(i)
-            playerData.add(PlayerBean(init, jsonObject))
+            playerData.add(PlayerBean(jsonObject))
         }
     }
 

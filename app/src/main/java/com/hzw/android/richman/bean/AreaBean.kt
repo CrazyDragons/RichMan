@@ -20,9 +20,7 @@ class AreaBean : BaseCityBean {
     //兵力
     var army = AREA_ARMY
 
-    var defense = 0
-        get() = field + if (owner() != null) owner()!!.allArea() * Value.ADD_DEFENSE else 0 + if (MapUtil.judgeAllColor(this)) Value.ALL_COLOR_DEFENSE else 0
-
+    var recover = true
 
     constructor(jsonObject: JSONObject) {
         id = jsonObject.getIntValue("id")
@@ -33,12 +31,15 @@ class AreaBean : BaseCityBean {
         buyPrice = army * 2
         ownerID = jsonObject.getIntValue("ownerID")
         generals = JSON.parseObject(jsonObject.getString("generals"), GeneralsBean::class.java)
-        defense = jsonObject.getIntValue("defense")
 
     }
 
     constructor(name: String?) {
         this.name = name
         type = MapType.AREA
+    }
+
+    fun defense():Int {
+        return if (generals != null) generals!!.defense() else 0  + (if (owner() != null) owner()!!.allArea() * Value.ADD_DEFENSE else 0) + (if (MapUtil.judgeAllColor(this)) Value.ALL_COLOR_DEFENSE else 0)
     }
 }
